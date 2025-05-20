@@ -1,29 +1,95 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SMS100</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Signal Encoder/Decoder</title>
   <style>
     body {
-      background-color: #111;
-      color: #fff;
-      font-family: sans-serif;
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
       text-align: center;
-      padding: 50px;
     }
-    h1 {
-      color: #00ffcc;
+    textarea {
+      width: 90%;
+      height: 100px;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      resize: none;
+      background: #1a1a1a;
+      color: #00ff99;
     }
-    p {
-      font-size: 18px;
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #00ff99;
+      color: #000;
+    }
+    button:hover {
+      background-color: #00cc77;
+    }
+    .copy-btn {
+      background-color: #444;
+      color: #00ff99;
+    }
+    .copy-btn:hover {
+      background-color: #666;
     }
   </style>
 </head>
 <body>
-  <h1>স্বাগতম SMS100 এ</h1>
-  <p>এটি একটি গিটহাব পেইজে হোস্ট করা সফল পরীক্ষামূলক পেইজ।</p>
-  <p>যে কোনো সিক্রেট সিস্টেম এখানে যুক্ত করা যাবে।</p>
+
+  <h2>MSMS | Signal Encoder / Decoder</h2>
+  <textarea id="input" placeholder="A বা B টাইপ ইনপুট দিন..."></textarea>
+  <br>
+  <button onclick="convert()">Smart Ncode / Dcode</button>
+  <button class="copy-btn" onclick="copyToClipboard('input')">A</button>
+  <button class="copy-btn" onclick="copyToClipboard('output')">B</button>
+  <br>
+  <textarea id="output" placeholder="ফলাফল এখানে দেখাবে..."></textarea>
+
+  <script>
+    const mapAtoB = { 
+      "A": "37444", "B": "53656", "C": "47565", "D": "56565", "E": "65810", "F": "79521", "G": "50454", "H": "91162", "I": "64503", "J": "83631", "K": "25530", "L": "38508", "M": "71655", "N": "84566", "O": "92230", "P": "66677", "Q": "31699", "R": "42805", "S": "76464", "T": "18765", "U": "33600", "V": "27686", "W": "96481", "X": "55660", "Y": "81517", "Z": "66934",
+      "a": "16652", "b": "90550", "c": "34465", "d": "29590", "e": "61411", "f": "72418", "g": "58480", "h": "40253", "i": "10352", "j": "39560", "k": "25567", "l": "37437", "m": "70577", "n": "80152", "o": "95410", "p": "19951", "q": "32842", "r": "46599", "s": "57858", "t": "18574", "u": "20520", "v": "43543", "w": "61566", "x": "55001", "y": "74620", "z": "68366",
+      "অ": "00555", "আ": "20065", "ই": "47646", "ঈ": "55886", "উ": "91632", "ঊ": "72699", "ঋ": "35371", "এ": "86215", "ঐ": "64682", "ও": "10647", "ঔ": "26873",
+      "ক": "52471", "খ": "84550", "গ": "90413", "ঘ": "62588", "ঙ": "33260", "চ": "19544", "ছ": "78622", "জ": "50581", "ঝ": "26207", "ঞ": "15663", "ট": "33565", "ঠ": "68600", "ড": "22767", "ঢ": "59613", "ণ": "83352", "ত": "46521", "থ": "71363", "দ": "95908", "ধ": "13459", "ন": "26561", "প": "37504", "ফ": "55657", "ব": "28582", "ভ": "74551", "ম": "86509", "য": "42502", "র": "10598", "ল": "50634", "শ": "61686", "ষ": "75690", "স": "68462", "হ": "89699", "ড়": "31540", "ঢ়": "28690", "য়": "47563", "ৎ": "10677", "ং": "33501", "ঃ": "22602", "ঁ": "46866", "ঽ": "91655",
+      "া": "56255", "ি": "55664", "ী": "56536", "ু": "57463", "ূ": "35566", "ৃ": "24784", "্": "27783", "্য": "36633",
+      "0": "!£+!/", "1": "&{\"/", "2": "/#'&/", "3": "%*'/!", "4": "/£'+/", "5": "/$-£/", "6": "'<+%", "7": "|*>&", "8": "/!<|%", "9": "{:/&",
+      "~": "26427", "`": "32552", "|": "43683", "√": "73401", "π": "62218", "÷": "70992", "×": "81634", "}": "21309", "{": "87144", "£": "58432", "$": "94501", "℅": "75209", "^": "68213", "°": "39012", "•": "17734", "_": "13481", "=": "80800", "]": "94103", "[": "41076", "®": "67334", "©": "81291", "™": "55791", "\\": "72290", "<": "39884", ",": "54662", ".": "26372", "@": "73929", "#": "19120", "৳": "84255", "%": "36930", "&": "61209", "*": "20808", "-": "70442", "+": "18674", ")": "98521", "(": "34699", "!": "49217", "\"": "71380", "'": "62503", ":": "58066", ";": "70291", "/": "83110", "?": "94041", "★": "78551", "Π": "47180", "←": "69205", "↑": "51149", "↓": "97441", "→": "62402", "§": "82580", "¢": "26566", "∞": "13153", "∆": "54510", "∑": "46634", "∫": "51250", "±": "37450", "≈": "68502", "∅": "90581", "∈": "71491", "∉": "92752", "∩": "26660", "∪": "13643", "⊂": "85150", "⊆": "11582", "⊄": "77451", "∝": "42642"
+    };
+
+    const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([k, v]) => [v, k]));
+
+    function convert() {
+      const input = document.getElementById("input").value.trim();
+      let result = "";
+      if (input.length === 0) return;
+
+      const isB = input.split(/[\s]+/).every(part => mapBtoA[part]);
+      if (isB) {
+        result = input.split(/[\s]+/).map(part => mapBtoA[part] || part).join('');
+      } else {
+        result = input.split('').map(ch => mapAtoB[ch] || ch).join(' ');
+      }
+
+      document.getElementById("output").value = result;
+    }
+
+    function copyToClipboard(id) {
+      const text = document.getElementById(id);
+      text.select();
+      document.execCommand("copy");
+    }
+  </script>
 </body>
 </html>
