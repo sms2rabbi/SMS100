@@ -1,85 +1,58 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MSMS | Secret Encode-Decode</title>
+  <title>Secret D Signal</title>
   <style>
     body {
-      background-color: #121212;
-      color: #ffffff;
-      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #eee;
+      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
     }
-
-    h1 {
-      color: #00ffcc;
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
     textarea {
       width: 90%;
-      max-width: 600px;
       height: 120px;
       margin: 10px 0;
       padding: 10px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 10px;
       font-size: 16px;
-      background-color: #1e1e1e;
-      color: #ffffff;
-      border: 1px solid #333;
-      border-radius: 8px;
-      resize: vertical;
-      overflow: auto;
     }
-
     button {
-      padding: 10px 20px;
       margin: 10px;
-      font-size: 16px;
-      background-color: #00ffcc;
-      color: #000000;
+      padding: 10px 20px;
+      background: #333;
+      color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-size: 16px;
     }
-
     button:hover {
-      background-color: #00ccaa;
-    }
-
-    .copy-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .status {
-      margin-top: 10px;
-      color: #00ffcc;
-      font-size: 14px;
-      height: 18px;
+      background: #444;
     }
   </style>
 </head>
 <body>
-  <h1>MSMS Secret Signal System</h1>
+  <h2>Secret D Encoder/Decoder</h2>
 
-  <textarea id="inputText" placeholder="এখানে লিখুন..."></textarea>
-  <div class="copy-buttons">
-    <button onclick="detectAndTranslate()">Ncode / Dcode</button>
-    <button onclick="copyText('input')">A</button>
-    <button onclick="copyText('output')">B</button>
-  </div>
-  <textarea id="outputText" placeholder="ফলাফল এখানে দেখাবে..." readonly></textarea>
-  <div class="status" id="statusMsg"></div>
+  <textarea id="input" placeholder="Enter text..."></textarea>
+  <button onclick="convert()" id="convertBtn">Run</button>
+
+  <textarea id="output" placeholder="Output will appear here..."></textarea>
+  <button onclick="copyOutput()">Copy</button>
 
   <script>
-    const mapAtoB = {
+    const mapAtoB = 
+    
+{
     "A": "37444", "B": "53656", "C": "47565", "D": "56565", "E": "65810", "F": "79521", "G": "50454", "H": "91162", "I": "64503", "J": "83631", "K": "25530", "L": "38508", "M": "71655", "N": "84566", "O": "92230", "P": "66677", "Q": "31699", "R": "42805", "S": "76464", "T": "18765", "U": "33600", "V": "27686", "W": "96481", "X": "55660", "Y": "81517", "Z": "66934",
       "a": "16652", "b": "90550", "c": "34465", "d": "29590", "e": "61411", "f": "72418", "g": "58480", "h": "40253", "i": "10352", "j": "39560", "k": "25567", "l": "37437", "m": "70577", "n": "80152", "o": "95410", "p": "19951", "q": "32842", "r": "46599", "s": "57858", "t": "18574", "u": "20520", "v": "43543", "w": "61566", "x": "55001", "y": "74620", "z": "68366",
       "অ": "00555", "আ": "20065", "ই": "47646", "ঈ": "55886", "উ": "91632", "ঊ": "72699", "ঋ": "35371", "এ": "86215", "ঐ": "64682", "ও": "10647", "ঔ": "26873",
@@ -88,94 +61,34 @@
       "0": "!£+!/", "1": "&{\"/", "2": "/#'&/", "3": "%*'/!", "4": "/£'+/", "5": "/$-£/", "6": "'<+%", "7": "|*>&", "8": "/!<|%", "9": "{:/&",
       "~": "26427", "`": "32552", "|": "43683", "√": "73401", "π": "62218", "÷": "70992", "×": "81634", "}": "21309", "{": "87144", "£": "58432", "$": "94501", "℅": "75209", "^": "68213", "°": "39012", "•": "17734", "_": "13481", "=": "80800", "]": "94103", "[": "41076", "®": "67334", "©": "81291", "™": "55791", "\\": "72290", "<": "39884", ",": "54662", ".": "26372", "@": "73929", "#": "19120", "৳": "84255", "%": "36930", "&": "61209", "*": "20808", "-": "70442", "+": "18674", ")": "98521", "(": "34699", "!": "49217", "\"": "71380", "'": "62503", ":": "58066", ";": "70291", "/": "83110", "?": "94041", "★": "78551", "Π": "47180", "←": "69205", "↑": "51149", "↓": "97441", "→": "62402", "§": "82580", "¢": "26566", "∞": "13153", "∆": "54510", "∑": "46634", "∫": "51250", "±": "37450", "≈": "68502", "∅": "90581", "∈": "71491", "∉": "92752", "∩": "26660", "∪": "13643", "⊂": "85150", "⊆": "11582", "⊄": "77451", "∝": "42642"
     };
+    const mapBtoA = Object.fromEntries(
+      Object.entries(mapAtoB).map(([k, v]) => [v, k])
+    );
 
-    const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([k, v]) => [v, k]));
+    function convert() {
+      const input = document.getElementById("input").value;
+      let output = "";
 
-    function detectAndTranslate() {
-      const input = document.getElementById('inputText').value.trim();
-      const outputText = document.getElementById('outputText');
-      const statusMsg = document.getElementById('statusMsg');
+      const isEncoded = [...input].some(char => mapBtoA[char]);
 
-      if (!input) {
-        outputText.value = "";
-        statusMsg.textContent = "ইনপুট খালি!";
-        return;
-      }
-
-      // Determine type by majority
-      const tokens = input.split(/(\s+|x\d+|y\d+|z\d+|w\d+|v\d+|u\d+|\d+)/g).filter(t => t.trim() !== "");
-      let bCount = 0;
-      let aCount = 0;
-      for (const t of tokens) {
-        if (mapBtoA[t]) bCount++;
-        else if (mapAtoB[t]) aCount++;
-      }
-
-      const isEncoded = bCount >= aCount;
-
-      let result = "";
       if (isEncoded) {
-        const matches = input.match(/x\d+|y\d+|z\d+|w\d+|v\d+|u\d+|\d+|[a-zA-Z_]/g);
-        if (matches) {
-          for (let char of matches) {
-            result += mapBtoA[char] || char;
-          }
-        } else {
-          result = "ডিকোড করতে ব্যর্থ!";
+        for (const char of input) {
+          output += mapBtoA[char] !== undefined ? mapBtoA[char] : char;
         }
-        statusMsg.textContent = "Decoded (B → A)";
       } else {
-        for (let char of input) {
-          result += mapAtoB[char] || char;
+        for (const char of input) {
+          output += mapAtoB[char] !== undefined ? mapAtoB[char] : char;
         }
-        statusMsg.textContent = "Encoded (A → B)";
       }
 
-      outputText.value = result;
+      document.getElementById("output").value = output;
     }
 
-function copyText(type) {
-  const inputEl = document.getElementById('inputText');
-  const outputEl = document.getElementById('outputText');
-  const statusEl = document.getElementById('statusMsg');
-
-  const text = type === 'input' ? inputEl?.value : outputEl?.value;
-  if (!text) {
-    statusEl.textContent = "কিছু কপি করার মতো নেই!";
-    return;
-  }
-
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(() => {
-      statusEl.textContent = `${type === 'input' ? 'A' : 'B'} কপি হয়েছে!`;
-    }).catch(() => {
-      fallbackCopy(text, type);
-    });
-  } else {
-    fallbackCopy(text, type);
-  }
-}
-
-function fallbackCopy(text, type) {
-  const statusEl = document.getElementById('statusMsg');
-  const temp = document.createElement('textarea');
-  temp.value = text;
-  temp.style.position = 'fixed';
-  temp.style.opacity = '0';
-  document.body.appendChild(temp);
-  temp.select();
-
-  try {
-    const successful = document.execCommand('copy');
-    statusEl.textContent = successful
-      ? `${type === 'input' ? 'A' : 'B'} কপি হয়েছে!`
-      : "কপি করা যায়নি!";
-  } catch (err) {
-    statusEl.textContent = "কপি করা যায়নি!";
-  }
-
-  document.body.removeChild(temp);
-}  
+    function copyOutput() {
+      const output = document.getElementById("output");
+      output.select();
+      document.execCommand("copy");
+    }
   </script>
 </body>
 </html>
