@@ -127,56 +127,56 @@
   "00010": " ", "00011": "\n",
     };
 
+
     const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([key, value]) => [value, key]));
 
-    function encodeAtoB(text) {
-      let output = '';
-      let i = 0;
-      const chars = Object.values(mapAtoB).sort((a, b) => b.length - a.length);
-      while (i < text.length) {
-        let matched = false;
-        for (let ch of chars) {
-          if (text.startsWith(ch, i)) {
-            output += mapBtoA[ch];
-            i += ch.length;
-            matched = true;
-            break;
-          }
-        }
-
-        
-        if (!matched) {
-  alert(`Error: '${char}' not in A or B map`);
-  return '';
-}
-          
-        }
+function encodeAtoB(text) {
+  let output = '';
+  let i = 0;
+  const chars = Object.values(mapAtoB).sort((a, b) => b.length - a.length);
+  while (i < text.length) {
+    let matched = false;
+    for (let ch of chars) {
+      if (text.startsWith(ch, i)) {
+        output += mapBtoA[ch];
+        i += ch.length;
+        matched = true;
+        break;
       }
-      return output;
     }
 
-    function decodeBtoA(text) {
-      let output = '';
-      let token = '';
-      for (let i = 0; i < text.length; i++) {
-        token += text[i];
-        if (token.length === 5) {
-          if (mapAtoB[token]) {
-            output += mapAtoB[token];
-          } else {
-          alert(`Error: '${text[i]}' not in A or B map`);
-            return '';
-          }
-          token = '';
-        }
-      }।
-      if (token) {
-        alert(`Error: Incomplete code '${token}'`);
+    if (!matched) {
+      alert(`Error: '${text.slice(i, i + 1)}' not in A or B map`);
+      return '';
+    }
+  }
+  return output;
+}
+
+function decodeBtoA(text) {
+  let output = '';
+  let token = '';
+  for (let i = 0; i < text.length; i++) {
+    token += text[i];
+    if (token.length === 5) {
+      if (mapAtoB[token]) {
+        output += mapAtoB[token];
+      } else {
+        alert(`Error: '${token}' not in A or B map`);
         return '';
       }
-      return output;
+      token = '';
     }
+  }
+  if (token) {
+    alert(`Error: Incomplete code '${token}'`);
+    return '';
+  }
+  return output;
+}
 
+    
+    
     function process() {
       const input = document.getElementById('inputText').value.trim();
       const onlyDigits = /^[\d\s\n]+$/;
