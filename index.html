@@ -27,24 +27,41 @@
       resize: none;
       font-size: 16px;
     }
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      background-color: #333;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #555;
-    }
+    
     .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
-    }
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.button-group button:hover {
+  background-color: #555;
+}
+
+textarea {
+  background-color: #222;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+
   </style>
 </head>
 <body>
@@ -54,14 +71,13 @@
   <textarea id="outputText" placeholder="এখানে ফলাফল দেখাবে" readonly></textarea>
 
   <div class="button-group">
-    <button onclick="process()">Run</button>
-    <button onclick="copyOutput('A')">Copy A</button>
-    <button onclick="copyOutput('B')">Copy B</button>
-    <button onclick="clearText()">Clean</button>
-  </div>
-
-  <script>
-    const mapAtoB = {
+  <button onclick="process()" id="runBtn">Run</button>
+  <button onclick="copyOutput('B')" id="copyBtn">Copy</button>
+  <button onclick="clearText()" id="cleanBtn">Clean</button>
+</div>
+  
+ <script>
+const mapAtoB = {
       "07971": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
       "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ", "67384": "।",
       "79064": "া", "01478": "ি", "52168": "ী", "90234": "ক্ত", "09164": "ক্স", "21359": "গ্গ", "48963": "গ্ধ",
@@ -126,27 +142,20 @@
       
   "00010": " ", "00011": "\n",
     };
+  
 
-
-    const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([key, value]) => [value, key]));
+const mapBtoA = {};
+for (let key in mapAtoB) {
+  mapBtoA[mapAtoB[key]] = key;
+}
 
 function encodeAtoB(text) {
   let output = '';
-  let i = 0;
-  const chars = Object.values(mapAtoB).sort((a, b) => b.length - a.length);
-  while (i < text.length) {
-    let matched = false;
-    for (let ch of chars) {
-      if (text.startsWith(ch, i)) {
-        output += mapBtoA[ch];
-        i += ch.length;
-        matched = true;
-        break;
-      }
-    }
-
-    if (!matched) {
-      alert(`Error: '${text.slice(i, i + 1)}' not in A or B map`);
+  for (let ch of text) {
+    if (mapAtoB[ch]) {
+      output += mapAtoB[ch];
+    } else {
+      alert(`Error: '${ch}' not in A↔B map`);
       return '';
     }
   }
@@ -159,10 +168,10 @@ function decodeBtoA(text) {
   for (let i = 0; i < text.length; i++) {
     token += text[i];
     if (token.length === 5) {
-      if (mapAtoB[token]) {
-        output += mapAtoB[token];
+      if (mapBtoA[token]) {
+        output += mapBtoA[token];
       } else {
-        alert(`Error: '${token}' not in A or B map`);
+        alert(`Error: '${token}' not in A↔B map`);
         return '';
       }
       token = '';
@@ -175,27 +184,29 @@ function decodeBtoA(text) {
   return output;
 }
 
-    
-    
-    function process() {
-      const input = document.getElementById('inputText').value.trim();
-      const onlyDigits = /^[\d\s\n]+$/;
-      const isEncoded = onlyDigits.test(input.replace(/[^0-9]/g, ''));
-      const output = isEncoded ? decodeBtoA(input) : encodeAtoB(input);
-      document.getElementById('outputText').value = output;
-    }
+function process() {
+  const input = document.getElementById('inputText').value.trim();
+  const onlyDigits = /^[\d\s\n]+$/;
+  const isEncoded = onlyDigits.test(input.replace(/[^0-9]/g, ''));
+  const output = isEncoded ? decodeBtoA(input) : encodeAtoB(input);
+  document.getElementById('outputText').value = output;
+}
 
-    function copyOutput(type) {
-      const output = document.getElementById('outputText');
-      output.select();
-      document.execCommand('copy');
-      alert(`${type} copied`);
-    }
+function copyOutput() {
+  const output = document.getElementById('outputText');
+  output.select();
+  document.execCommand('copy');
+  document.getElementById('copyBtn').textContent = 'Copied';
+  setTimeout(() => {
+    document.getElementById('copyBtn').textContent = 'Copy';
+  }, 1500);
+}
 
-    function clearText() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('outputText').value = '';
-    }
+function clearText() {
+  document.getElementById('inputText').value = '';
+  document.getElementById('outputText').value = '';
+}
+
   </script>
 </body>
 </html>
