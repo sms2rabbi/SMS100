@@ -1,306 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> 100-SMS </title>
+  <title>MSMS Encoder</title>
   <style>
     body {
       background-color: #121212;
       color: #ffffff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px;
     }
     textarea {
-      width: 90%;
-      max-width: 500px;
-      height: 150px;
+      width: 100%;
+      height: 120px;
       margin: 10px 0;
       padding: 10px;
+      font-size: 16px;
       background-color: #1e1e1e;
       color: #ffffff;
-      border: 1px solid #444;
-      border-radius: 10px;
-      resize: none;
+      border: 1px solid #333;
+      border-radius: 8px;
+      resize: vertical;
+    }
+    button {
+      margin-right: 10px;
+      margin-top: 5px;
+      padding: 10px 20px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
       font-size: 16px;
     }
-    
+    button:hover {
+      background-color: #444;
+    }
     .button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  gap: 10px;
-}
-
-.button-group button {
-  flex: 1;
-  padding: 10px 20px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: center;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.button-group button:hover {
-  background-color: #555;
-}
-
-textarea {
-  background-color: #222;
-  color: white;
-  border: 1px solid #555;
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 16px;
-}
-
-
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
-  <h2> সাংকেতিক বার্তা </h2>
+  <h1>MSMS Encoder</h1>
 
-  <textarea id="inputText" placeholder="বার্তা লিখুন সংকেত হবে, সংকেত দিন বার্তা হবে।"></textarea>
-  <textarea id="outputText" placeholder="এখানে ফলাফল দেখাবে" readonly></textarea>
+  <label for="inputText">Input</label>
+  <textarea id="inputText" placeholder="এখানে টেক্সট লিখুন..."></textarea>
 
   <div class="button-group">
-  <button onclick="process()" id="runBtn">Run</button>
-  <button onclick="copyOutput('B')" id="copyBtn">Copy</button>
-  <button onclick="clearText()" id="cleanBtn">Clean</button>
-</div>
-  
-<script>
-const mapAtoB = {
-      "17111": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
-      "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ", "67384": "।",
-      "79064": "া", "01478": "ি", "52168": "ী", "90234": "ক্ত", "09164": "ক্স", "21359": "গ্গ", "48963": "গ্ধ",
-      "60892": ">", "05397": ",", "91827": ".", "27068": "/", "38460": "?",
-      "02396": "`", "16408": "~", "00010": " ", "00011": "\n",
-      "47396": "ক্ক", "82694": "ক্ত", "09164": "ক্স", "21359": "গ্গ", "48963": "গ্ধ",
-      "86720": "ঙ্ক", "13087": "ঙ্ক্ষ", "60718": "ঙ্ঘ", "90263": "চ্চ", "53170": "চ্ছ",
-      "47803": "জ্জ", "34219": "জ্জ্ব", "51026": "জ্ঝ", "76892": "ঞ্ছ", "10942": "ঞ্ঝ",
-      "34690": "ণ্ট", "29475": "ণ্ট্ব", "60753": "ড্ড", "14538": "ত্ত", "07361": "ত্ত্ব",
-      "91804": "ত্র", "15079": "থ্ব", "82064": "দ্দ", "03567": "দ্দ্ব", "67013": "দ্ব",
-      "78902": "দ্ধ", "29016": "ন্ন", "60739": "ন্ত", "18492": "ন্ত্ব", "96413": "ন্ত্র",
-      "04293": "ন্থ", "36718": "ন্দ", "85206": "ন্দ্ব", "47091": "ন্ধ", "63048": "প্ট",
-      "23784": "প্প", "87196": "প্স", "12073": "ব্জ", "61089": "ব্দ", "93067": "ব্ধ",
-      "74862": "ভ্র", "08961": "ম্ন", "21368": "ম্প", "08746": "ম্ব", "97014": "ম্ভ",
-      "10486": "য্য", "30257": "র্ক", "80135": "র্খ", "91760": "র্গ", "23419": "র্ঘ",
-      "84319": "র্ঘ্য", "17603": "র্ঙ", "50396": "র্চ", "68039": "র্ছ", "29564": "র্জ",
-      "91473": "র্জ্জ", "75812": "র্জ্ঞ", "04682": "র্ঝ", "16734": "র্ট", "63091": "র্ড",
-      "18430": "র্ঢ", "90167": "র্ণ", "32049": "র্ত", "58602": "র্ত্ব", "94285": "ত্রু",
-      "60381": "র্থ", "71890": "র্দ", "09432": "র্দ্ব", "53781": "র্দ্র", "04618": "র্দ্ধ",
-      "09368": "র্ন", "80413": "র্প", "28147": "র্ফ", "30526": "র্ব", "47825": "র্ভ",
-      "69184": "র্ম", "53094": "র্য", "87320": "র্ল", "69204": "র্শ", "12089": "র্ষ",
-      "36729": "র্স", "91670": "র্হ", "20587": "হ্ম", "83162": "হ্ন", "57019": "হ্ল",
-      "64801": "হ্ব", "88441": "্য", "11213": "ল্ল",
- 
-      "07971": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
-      "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ",
+    <button onclick="run()">Run</button>
+    <button onclick="copyResult('A')">Copy A</button>
+    <button onclick="copyResult('B')">Copy B</button>
+    <button onclick="clean()">Clean</button>
+  </div>
 
-       "79064": "া", "01478": "ি", "52168": "ী", "90234": "ু", "37415": "ূ",
-       "68920": "ৃ", "43706": "ে", "81245": "ৈ", "16983": "ো", "05429": "ৌ",
+  <label for="outputText">Output</label>
+  <textarea id="outputText" readonly placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
 
-         "39048": "ক", "26187": "খ", "58971": "গ", "71680": "ঘ", "12096": "ঙ",
-  "98453": "চ", "04518": "ছ", "87941": "জ", "61375": "ঝ", "34821": "ঞ",
-  "76139": "ট", "20358": "ঠ", "48679": "ড", "19730": "ঢ", "89420": "ণ",
-  "68103": "ত", "43295": "থ", "90716": "দ", "15234": "ধ", "32598": "ন",
-  "21086": "প", "70894": "ফ", "04392": "ব", "19304": "ভ", "62470": "ম",
-  "47861": "য", "98263": "র", "14097": "ল", "01564": "শ", "28930": "ষ", "90476": "স",
-  "68024": "হ", "76805": "ড়", "50913": "ঢ়", "37261": "য়", "60428": "ং",
-  "89307": "ঃ", "31970": "ঁ",
-
-  "76293": "A", "48907": "B", "13098": "C", "60431": "D", "98713": "E",
-  "20836": "F", "15904": "G", "27018": "H", "30497": "I", "80196": "J",
-  "19083": "K", "35029": "L", "79012": "M", "48305": "N", "68140": "O",
-  "23471": "P", "91783": "Q", "03519": "R", "12876": "S", "90428": "T",
-  "60317": "U", "58049": "V", "14762": "W", "89073": "X", "20861": "Y", "60137": "Z",
-
-  "89314": "a", "27059": "b", "37418": "c", "40293": "d", "89146": "e", "01743": "f",
-  "14062": "g", "73690": "h", "90341": "i", "29486": "j", "76083": "k", "31059": "l",
-  "97025": "m", "05493": "n", "82031": "o", "64095": "p", "38519": "q", "71960": "r",
-  "24906": "s", "09587": "t", "60384": "u", "31850": "v", "29406": "w", "18064": "x",
-  "90561": "y", "80347": "z",
-
-  "46920": "0", "20964": "1", "81750": "2", "03861": "3", "49078": "4",
-  "76508": "5", "12389": "6", "68243": "7", "97086": "8", "30417": "9",
-
-  "09814": "!", "27860": "@", "90368": "#", "16437": "$", "08639": "%",
-  "40267": "^", "19370": "&", "52104": "*", "98031": "(", "70341": ")",
-  "01496": "-", "80714": "_", "18493": "=", "06249": "+", "39825": "[",
-  "18073": "]", "93602": "{", "57084": "}", "10376": "|", "29384": "\\",
-  "07641": ":", "87403": ";", "19507": "\"", "90347": "'", "78103": "<",
-  "60892": ">", "05397": ",", "91827": ".", "27068": "/", "38460": "?",
-  "02396": "`", "16408": "~",
-      
-  "00010": " ", "00011": "\n",
+  <script>
+    const mapAtoB = {
+      "অ": "১", "আ": "২", "ই": "৩", "ঈ": "৪", "উ": "৫", "ঊ": "৬",
+      "ঋ": "৭", "এ": "৮", "ঐ": "৯", "ও": "০", "ঔ": "!", "ক": "@",
+      "খ": "#", "গ": "$", "ঘ": "%", "ঙ": "^", "চ": "&", "ছ": "*",
+      "জ": "(", "ঝ": ")", "ঞ": "-", "ট": "+", "ঠ": "=", "ড": "{",
+      "ঢ": "}", "ণ": "[", "ত": "]", "থ": ";", "দ": ":", "ধ": ",",
+      "ন": ".", "প": "<", "ফ": ">", "ব": "?", "ভ": "/", "ম": "|",
+      "য": "~", "র": "`", "ল": "৳", "শ": "¢", "ষ": "£", "স": "¥",
+      "হ": "§", "ড়": "¤", "ঢ়": "●", "য়": "□", "ৎ": "■", "ং": "◘",
+      "ঃ": "◙", "ঁ": "○", "া": "◦", "ি": "☼", "ী": "►", "ু": "◄",
+      "ূ": "↕", "ৃ": "‼", "ে": "¶", "ৈ": "§", "ো": "▬", "ৌ": "↨",
+      "০": "a", "১": "b", "২": "c", "৩": "d", "৪": "e",
+      "৫": "f", "৬": "g", "৭": "h", "৮": "i", "৯": "j",
+      " ": " ", "\n": "\n"
     };
 
-// Reverse map creation (B to A)
-const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([key, value]) => [value, key]));
+    const mapBtoA = Object.fromEntries(
+      Object.entries(mapAtoB).map(([a, b]) => [b, a])
+    );
 
-// Encode A to B (with support for longest possible match — for যুক্তবর্ণs)
-function encodeAtoB(text) {
-  let output = '';
-  let i = 0;
-  const chars = Object.values(mapAtoB).sort((a, b) => b.length - a.length); // longest match first
-  while (i < text.length) {
-    let matched = false;
-    for (let ch of chars) {
-      if (text.startsWith(ch, i)) {
-        output += mapBtoA[ch];
-        i += ch.length;
-        matched = true;
-        break;
-      }
+    function isAtoB(input) {
+      const last5 = input.slice(-5);
+      return [...input.slice(0, -5)].some(ch => mapAtoB[ch]);
     }
-    if (!matched) {
-      alert(`Error: '${text.slice(i, i + 1)}' not in A or B map`);
-      return '';
-    }
-  }
-  return output;
-}
 
-// Decode B to A (cleans newlines, spaces, and decodes by 5-digit tokens)
-function decodeBtoA(text) {
-  text = text.replace(/\s+/g, ''); // remove all whitespace
-  let output = '';
-  let token = '';
-  for (let i = 0; i < text.length; i++) {
-    token += text[i];
-    if (token.length === 5) {
-      if (mapAtoB[token]) {
-        output += mapAtoB[token];
+    function run() {
+      const input = document.getElementById("inputText").value.trim();
+      if (!input) return;
+
+      let output = "";
+      let signal = Math.floor(10000 + Math.random() * 89999).toString();
+
+      if (isAtoB(input)) {
+        for (let char of input) {
+          output += mapAtoB[char] || char;
+        }
+        output += signal;
       } else {
-        alert(`Error: '${token}' not in A or B map`);
-        return '';
+        const core = input.slice(0, -5); // remove signal
+        for (let char of core) {
+          output += mapBtoA[char] || char;
+        }
       }
-      token = '';
-    }
-  }
-  if (token) {
-    alert(`Error: Incomplete code '${token}'`);
-    return '';
-  }
-  return output;
-}
 
-// Detect and process text automatically (A→B or B→A)
-function process() {
-  const input = document.getElementById('inputText').value.trim();
-  const onlyDigits = /^[\d\s\n]+$/;
-  const isEncoded = onlyDigits.test(input.replace(/[^0-9]/g, ''));
-  const output = isEncoded ? decodeBtoA(input) : encodeAtoB(input);
-  document.getElementById('outputText').value = output;
-}
-
-// Copy output (no UI change)
-function copyOutput() {
-  const output = document.getElementById('outputText');
-  output.select();
-  document.execCommand('copy');
-  document.getElementById('copyBtn').textContent = 'Copied';
-  setTimeout(() => {
-    document.getElementById('copyBtn').textContent = 'Copy';
-  }, 1500);
-}
-
-// Clear input and output
-function clearText() {
-  document.getElementById('inputText').value = '';
-  document.getElementById('outputText').value = '';
-}
-</script>
-
-
-  
-
-const mapBtoA = {};
-for (let key in mapAtoB) {
-  mapBtoA[mapAtoB[key]] = key;
-}
-
-
-const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([key, value]) => [value, key]));
-
-function encodeAtoB(text) {
-  let output = '';
-  let i = 0;
-  const chars = Object.values(mapAtoB).sort((a, b) => b.length - a.length);
-  while (i < text.length) {
-    let matched = false;
-    for (let ch of chars) {
-      if (text.startsWith(ch, i)) {
-        output += mapBtoA[ch];
-        i += ch.length;
-        matched = true;
-        break;
-      }
+      document.getElementById("outputText").value = output;
     }
 
-    if (!matched) {
-      alert(`Error: '${text.slice(i, i + 1)}' not in A or B map`);
-      return '';
+    function copyResult(type) {
+      const output = document.getElementById("outputText").value;
+      if (!output) return;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("Copied to clipboard as " + type);
+      });
     }
-  }
-  return output;
-}
 
-function decodeBtoA(text) {
-  let output = '';
-  let token = '';
-  for (let i = 0; i < text.length; i++) {
-    token += text[i];
-    if (token.length === 5) {
-      if (mapAtoB[token]) {
-        output += mapAtoB[token];
-      } else {
-        alert(`Error: '${token}' not in A or B map`);
-        return '';
-      }
-      token = '';
+    function clean() {
+      document.getElementById("inputText").value = "";
+      document.getElementById("outputText").value = "";
     }
-  }
-  if (token) {
-    alert(`Error: Incomplete code '${token}'`);
-    return '';
-  }
-  return output;
-}
-
-
-   
-function process() {
-  const input = document.getElementById('inputText').value.trim();
-  const onlyDigits = /^[\d\s\n]+$/;
-  const isEncoded = onlyDigits.test(input.replace(/[^0-9]/g, ''));
-  const output = isEncoded ? decodeBtoA(input) : encodeAtoB(input);
-  document.getElementById('outputText').value = output;
-}
-
-function copyOutput() {
-  const output = document.getElementById('outputText');
-  output.select();
-  document.execCommand('copy');
-  document.getElementById('copyBtn').textContent = 'Copied';
-  setTimeout(() => {
-    document.getElementById('copyBtn').textContent = 'Copy';
-  }, 1500);
-}
-
-function clearText() {
-  document.getElementById('inputText').value = '';
-  document.getElementById('outputText').value = '';
-}
-
   </script>
 </body>
 </html>
