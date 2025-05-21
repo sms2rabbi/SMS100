@@ -3,66 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MSMS Signal 7</title>
+  <title>5</title>
   <style>
     body {
-      background-color: #121212;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: monospace;
       padding: 20px;
     }
     textarea {
-      width: 90%;
-      max-width: 500px;
-      height: 150px;
-      margin: 10px 0;
+      width: 100%;
       padding: 10px;
-      background-color: #1e1e1e;
-      color: #ffffff;
-      border: 1px solid #444;
-      border-radius: 10px;
-      resize: none;
-      font-size: 16px;
+      margin-bottom: 10px;
+      background-color: #161b22;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
     }
     button {
-      margin: 5px;
-      padding: 10px 20px;
-      background-color: #333;
+      flex: 1;
+      padding: 10px;
+      background-color: #238636;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 4px;
       cursor: pointer;
+      font-weight: bold;
     }
     button:hover {
-      background-color: #555;
-    }
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
+      background-color: #2ea043;
     }
   </style>
 </head>
 <body>
-  <h2>MSMS Signal (7)</h2>
-
-  <textarea id="inputText" placeholder="Enter A or B"></textarea>
-  <textarea id="outputText" placeholder="Output" readonly></textarea>
-
-  <div class="button-group">
-    <button onclick="process()">Smart</button>
-    <button onclick="copyOutput('A')">Copy A</button>
-    <button onclick="copyOutput('B')">Copy B</button>
-    <button onclick="clearText()">Clear Tex</button>
+  <h1>5</h1>
+  <textarea id="inputText" rows="5" placeholder="Type here..."></textarea>
+  
+  <div class="button-row">
+    <button onclick="run()">Run</button>
+    <button onclick="copyResult()">Copy</button>
+    <button onclick="clearText()">Clear Text</button>
   </div>
+  
+  <textarea id="outputText" rows="5" placeholder="Result..." readonly></textarea>
 
   <script>
     const mapAtoB = {
-     
+
+      // ফুল ম্যাপ
 "07971": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
       "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ", "67384": "।",
       "79064": "া", "01478": "ি", "52168": "ী", "90234": "ু", "37415": "ূ",
@@ -114,43 +108,48 @@
       "02396": "`", "16408": "~",
       "00010": " ", "00011": "\n"
     };
-
+   
     const mapBtoA = Object.fromEntries(
-      Object.entries(mapAtoB).map(([a, b]) => [b, a])
+      Object.entries(mapAtoB).map(([key, value]) => [value, key])
     );
 
-    function encodeAtoB(text) {
-      return text.split('').map(c => mapAtoB[c] || c).join('');
+    function detectInputType(text) {
+      for (let char of text) {
+        if (mapAtoB[char]) return 'A';
+        if (mapBtoA[char]) return 'B';
+      }
+      return 'Unknown';
     }
 
-    function decodeBtoA(text) {
-      return text.split('').map(c => mapBtoA[c] || c).join('');
-    }
+    function run() {
+      const input = document.getElementById("inputText").value;
+      const inputType = detectInputType(input);
+      let output = "";
 
-    function process() {
-      const input = document.getElementById('inputText').value;
-      let countB = 0;
-      let countA = 0;
-
-      for (let char of input) {
-        if (mapBtoA[char]) countB++;
-        else if (mapAtoB[char]) countA++;
+      if (inputType === "A") {
+        for (let char of input) {
+          output += mapAtoB[char] || char;
+        }
+      } else if (inputType === "B") {
+        for (let char of input) {
+          output += mapBtoA[char] || char;
+        }
+      } else {
+        output = "Unrecognized input.";
       }
 
-      const output = (countB >= countA) ? decodeBtoA(input) : encodeAtoB(input);
-      document.getElementById('outputText').value = output;
+      document.getElementById("outputText").value = output;
     }
 
-    function copyOutput(type) {
-      const output = document.getElementById('outputText');
-      output.select();
-      document.execCommand('copy');
-      alert(`${type} copied`);
+    function copyResult() {
+      const outputText = document.getElementById("outputText");
+      outputText.select();
+      document.execCommand("copy");
     }
 
     function clearText() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('outputText').value = '';
+      document.getElementById("inputText").value = "";
+      document.getElementById("outputText").value = "";
     }
   </script>
 </body>
