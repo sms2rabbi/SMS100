@@ -76,10 +76,7 @@ textarea {
   <button onclick="clearText()" id="cleanBtn">Clean</button>
 </div>
   
-
-
 <script>
-
 const mapAtoB = {
       "17111": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
       "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ", "67384": "।",
@@ -145,7 +142,6 @@ const mapAtoB = {
       
   "00010": " ", "00011": "\n",
     };
-
 
 // Reverse map creation (B to A)
 const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([key, value]) => [value, key]));
