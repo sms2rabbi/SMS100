@@ -149,13 +149,26 @@ for (let key in mapAtoB) {
   mapBtoA[mapAtoB[key]] = key;
 }
 
+
+const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([key, value]) => [value, key]));
+
 function encodeAtoB(text) {
   let output = '';
-  for (let ch of text) {
-    if (mapAtoB[ch]) {
-      output += mapAtoB[ch];
-    } else {
-      alert(`Error: '${ch}' not in A↔B map`);
+  let i = 0;
+  const chars = Object.values(mapAtoB).sort((a, b) => b.length - a.length);
+  while (i < text.length) {
+    let matched = false;
+    for (let ch of chars) {
+      if (text.startsWith(ch, i)) {
+        output += mapBtoA[ch];
+        i += ch.length;
+        matched = true;
+        break;
+      }
+    }
+
+    if (!matched) {
+      alert(`Error: '${text.slice(i, i + 1)}' not in A or B map`);
       return '';
     }
   }
@@ -168,10 +181,10 @@ function decodeBtoA(text) {
   for (let i = 0; i < text.length; i++) {
     token += text[i];
     if (token.length === 5) {
-      if (mapBtoA[token]) {
-        output += mapBtoA[token];
+      if (mapAtoB[token]) {
+        output += mapAtoB[token];
       } else {
-        alert(`Error: '${token}' not in A↔B map`);
+        alert(`Error: '${token}' not in A or B map`);
         return '';
       }
       token = '';
@@ -184,6 +197,8 @@ function decodeBtoA(text) {
   return output;
 }
 
+
+   
 function process() {
   const input = document.getElementById('inputText').value.trim();
   const onlyDigits = /^[\d\s\n]+$/;
