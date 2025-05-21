@@ -171,14 +171,8 @@ function process() {
     if (input.includes(token)) countB++;
   }
   for (let token in mapAtoB) {
-    if (input.includes(token)) countA++;
-  }
 
-  const output = (countB >= countA) ? decodeBtoA(input) : encodeAtoB(input);
-  document.getElementById('outputText').value = output;
-}
-
-    function copyOutput(type) {
+ function copyOutput(type) {
       const output = document.getElementById('outputText');
       output.select();
       document.execCommand('copy');
@@ -192,3 +186,6 @@ function process() {
   </script>
 </body>
 </html>
+
+
+    
