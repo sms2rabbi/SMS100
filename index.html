@@ -1,153 +1,146 @@
 <!DOCTYPE html><html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Secret A↔B Encoder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 Encode/Decode</title>
   <style>
     body {
       background-color: #121212;
       color: #fff;
       font-family: sans-serif;
-      padding: 20px;
       text-align: center;
+      padding: 20px;
     }
     textarea {
       width: 90%;
-      height: 100px;
-      margin: 10px 0;
-      padding: 10px;
+      height: 120px;
+      margin-bottom: 10px;
+      background: #1e1e1e;
+      color: #fff;
       border: none;
-      border-radius: 5px;
-      resize: none;
+      padding: 10px;
       font-size: 16px;
+      resize: none;
     }
     button {
       margin: 10px 5px;
       padding: 10px 20px;
+      background-color: #333;
+      color: #fff;
       border: none;
-      border-radius: 5px;
-      background-color: #1e88e5;
-      color: white;
-      font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-size: 16px;
+      transition: 0.3s ease;
     }
     button:hover {
-      background-color: #1565c0;
-      transform: scale(1.05);
+      background-color: #555;
     }
-    .slide {
-      animation: slide-in 0.5s ease forwards;
+    .copy-message, .error-message {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
-    @keyframes slide-in {
-      0% { transform: translateY(-20px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
+    .copy-message.show, .error-message.show {
+      opacity: 1;
     }
-    .notification {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #43a047;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: none;
-      z-index: 1000;
+    .error-message {
+      color: red;
     }
   </style>
 </head>
 <body>
-  <h1>Secret A↔B Encoder</h1>
-  <textarea id="inputText" placeholder="Type or paste your message here..."></textarea>
+  <h2>5 Encoder / Decoder</h2>
+  <textarea id="inputText" placeholder="Enter text here..."></textarea>
   <br>
-  <button onclick="runTranslation()">Run</button>
-  <button onclick="clearText()">Clear Text</button>
+  <button onclick="runTranslate()">Run</button>
+  <button onclick="clearText()">Clear</button>
   <br>
-  <textarea id="outputText" placeholder="Result will appear here..." readonly></textarea>
+  <textarea id="outputText" readonly></textarea>
   <br>
-  <button onclick="copyOutput()">Copy</button>
-  <div id="notification" class="notification"></div>  <script>
-    const mapAtoB = {
-      // Bangla স্বরবর্ণ
-      "অ": "10001A", "আ": "10002B", "ই": "10003C", "ঈ": "10004D", "উ": "10005E", "ঊ": "10006F",
-      "ঋ": "10007G", "ৠ": "10008H", "এ": "10009I", "ঐ": "10010J", "ও": "10011K", "ঔ": "10012L",
-      // কার
-      "া": "10013M", "ি": "10014N", "ী": "10015O", "ু": "10016P", "ূ": "10017Q", "ৃ": "10018R",
-      "ৄ": "10019S", "ে": "10020T", "ৈ": "10021U", "ো": "10022V", "ৌ": "10023W",
-      // ব্যঞ্জনবর্ণ (সম্পূর্ণ)
-      "ক": "10024X", "খ": "10025Y", "গ": "10026Z", "ঘ": "10027a", "ঙ": "10028b",
-      "চ": "10029c", "ছ": "10030d", "জ": "10031e", "ঝ": "10032f", "ঞ": "10033g",
-      "ট": "10034h", "ঠ": "10035i", "ড": "10036j", "ঢ": "10037k", "ণ": "10038l",
-      "ত": "10039m", "থ": "10040n", "দ": "10041o", "ধ": "10042p", "ন": "10043q",
-      "প": "10044r", "ফ": "10045s", "ব": "10046t", "ভ": "10047u", "ম": "10048v",
-      "য": "10049w", "র": "10050x", "ল": "10051y", "শ": "10052z", "ষ": "10053A",
-      "স": "10054B", "হ": "10055C", "ড়": "10056D", "ঢ়": "10057E", "য়": "10058F",
-      "ৎ": "10059G", "ং": "10060H", "ঃ": "10061I", "ঁ": "10062J",
-      // English Uppercase
-      "A": "10063K", "B": "10064L", "C": "10065M", "D": "10066N", "E": "10067O", "F": "10068P",
-      "G": "10069Q", "H": "10070R", "I": "10071S", "J": "10072T", "K": "10073U", "L": "10074V",
-      "M": "10075W", "N": "10076X", "O": "10077Y", "P": "10078Z", "Q": "10079a", "R": "10080b",
-      "S": "10081c", "T": "10082d", "U": "10083e", "V": "10084f", "W": "10085g", "X": "10086h",
-      "Y": "10087i", "Z": "10088j",
-      // English Lowercase
-      "a": "10089k", "b": "10090l", "c": "10091m", "d": "10092n", "e": "10093o", "f": "10094p",
-      "g": "10095q", "h": "10096r", "i": "10097s", "j": "10098t", "k": "10099u", "l": "10100v",
-      "m": "10101w", "n": "10102x", "o": "10103y", "p": "10104z", "q": "10105A", "r": "10106B",
-      "s": "10107C", "t": "10108D", "u": "10109E", "v": "10110F", "w": "10111G", "x": "10112H",
-      "y": "10113I", "z": "10114J",
-      // Digits
-      "0": "10115K", "1": "10116L", "2": "10117M", "3": "10118N", "4": "10119O",
-      "5": "10120P", "6": "10121Q", "7": "10122R", "8": "10123S", "9": "10124T",
-      // Symbols
-      "!": "10125U", "@": "10126V", "#": "10127W", "$": "10128X", "%": "10129Y",
-      "^": "10130Z", "&": "10131a", "*": "10132b", "(": "10133c", ")": "10134d",
-      "-": "10135e", "_": "10136f", "=": "10137g", "+": "10138h", "[": "10139i",
-      "]": "10140j", "{": "10141k", "}": "10142l", "|": "10143m", ":": "10144n",
-      ";": "10145o", "\"": "10146p", "'": "10147q", "<": "10148r", ">": "10149s",
-      ",": "10150t", ".": "10151u", "?": "10152v", "/": "10153w", "\\": "10154x",
-      " ": " " // Preserve space
-    };
+  <button onclick="copyToClipboard('outputText')">Copy</button>
+  <div class="copy-message" id="copyMessage">Copied!</div>
+  <div class="error-message" id="errorMessage">Wrong Character!</div><script>
+const map = {
+  // স্বরবর্ণ
+  "অ":"10001","আ":"10002","ই":"10003","ঈ":"10004","উ":"10005","ঊ":"10006","ঋ":"10007","এ":"10008","ঐ":"10009","ও":"10010","ঔ":"10011",
+  // কার
+  "া":"10012","ি":"10013","ী":"10014","ু":"10015","ূ":"10016","ৃ":"10017","ে":"10018","ৈ":"10019","ো":"10020","ৌ":"10021",
+  // ব্যঞ্জনবর্ণ
+  "ক":"10022","খ":"10023","গ":"10024","ঘ":"10025","ঙ":"10026","চ":"10027","ছ":"10028","জ":"10029","ঝ":"10030","ঞ":"10031",
+  "ট":"10032","ঠ":"10033","ড":"10034","ঢ":"10035","ণ":"10036","ত":"10037","থ":"10038","দ":"10039","ধ":"10040","ন":"10041",
+  "প":"10042","ফ":"10043","ব":"10044","ভ":"10045","ম":"10046","য":"10047","র":"10048","ল":"10049","শ":"10050","ষ":"10051",
+  "স":"10052","হ":"10053","ড়":"10054","ঢ়":"10055","য়":"10056","ৎ":"10057","ং":"10058","ঃ":"10059","ঁ":"10060",
+  // যুক্তবর্ণ
+  "ক্ত":"10061","ন্ত্র":"10062","স্থ":"10063","গ্ন":"10064","স্ক":"10065","হ্ন":"10066","ন্ড":"10067","ম্ন":"10068","দ্র":"10069",
+  "স্ন":"10070","প্র":"10071","স্প":"10072","ত্র":"10073","ভ্র":"10074","ক্র":"10075","গ্র":"10076","ব্ধ":"10077","ম্ভ":"10078",
+  "চ্ছ":"10079","শ্র":"10080","জ্ঞ":"10081","হ্ম":"10082","চ্ছ্ব":"10083",
+  // ইংরেজি বড় হাত
+  "A":"10084","B":"10085","C":"10086","D":"10087","E":"10088","F":"10089","G":"10090","H":"10091","I":"10092","J":"10093",
+  "K":"10094","L":"10095","M":"10096","N":"10097","O":"10098","P":"10099","Q":"10100","R":"10101","S":"10102","T":"10103",
+  "U":"10104","V":"10105","W":"10106","X":"10107","Y":"10108","Z":"10109",
+  // ইংরেজি ছোট হাত
+  "a":"10110","b":"10111","c":"10112","d":"10113","e":"10114","f":"10115","g":"10116","h":"10117","i":"10118","j":"10119",
+  "k":"10120","l":"10121","m":"10122","n":"10123","o":"10124","p":"10125","q":"10126","r":"10127","s":"10128","t":"10129",
+  "u":"10130","v":"10131","w":"10132","x":"10133","y":"10134","z":"10135",
+  // সংখ্যা
+  "0":"10136","1":"10137","2":"10138","3":"10139","4":"10140","5":"10141","6":"10142","7":"10143","8":"10144","9":"10145",
+  // সিম্বল
+  "!":"10146","@":"10147","#":"10148","$":"10149","%":"10150","^":"10151","&":"10152","*":"10153","(":"10154",")":"10155",
+  "-":"10156","_":"10157","=":"10158","+":"10159","[":"10160","]":"10161","{":"10162","}":"10163","\\":"10164","|":"10165",
+  ";":"10166",":":"10167","'":"10168","\"":"10169",",":" +
+    ""10170",".":"10171","/":"10172","<":"10173",">":"10174","?":"10175","`":"10176","~":"10177","’":"10178","“":"10179","”":"10180"
+};
 
-    const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([k, v]) => [v, k]));
+function runTranslate() {
+  const input = document.getElementById("inputText").value;
+  let output = "";
+  let error = false;
 
-    function runTranslation() {
-      const input = document.getElementById("inputText").value;
-      const output = translate(input);
-      document.getElementById("outputText").value = output;
-      showNotification("Translation complete");
+  const keys = Object.keys(map).sort((a, b) => b.length - a.length); // দীর্ঘতম অক্ষর আগে
+
+  for (let i = 0; i < input.length;) {
+    let matched = false;
+    for (let key of keys) {
+      if (input.substr(i, key.length) === key) {
+        output += map[key];
+        i += key.length;
+        matched = true;
+        break;
+      }
     }
-
-    function translate(text) {
-      if (!text) return "";
-      const isEncoded = /^[0-9]{5}[A-Za-z]?$/.test(text.trim().split(" ")[0]);
-      const segments = isEncoded ? text.trim().split(" ") : text.split("");
-      const map = isEncoded ? mapBtoA : mapAtoB;
-      return segments.map(char => map[char] || char).join(isEncoded ? "" : " ");
+    if (!matched) {
+      error = true;
+      break;
     }
+  }
 
-    function copyOutput() {
-      const output = document.getElementById("outputText");
-      output.select();
-      document.execCommand("copy");
-      showNotification("Copied to clipboard");
-    }
+  if (error) {
+    showError();
+    document.getElementById("outputText").value = "";
+  } else {
+    document.getElementById("outputText").value = output;
+  }
+}
 
-    function clearText() {
-      document.getElementById("inputText").value = "";
-      document.getElementById("outputText").value = "";
-      showNotification("Cleared");
-    }
+function copyToClipboard(id) {
+  const el = document.getElementById(id);
+  el.select();
+  document.execCommand("copy");
+  const msg = document.getElementById("copyMessage");
+  msg.classList.add("show");
+  setTimeout(() => msg.classList.remove("show"), 1500);
+}
 
-    function showNotification(message) {
-      const box = document.getElementById("notification");
-      box.textContent = message;
-      box.style.display = "block";
-      box.classList.add("slide");
-      setTimeout(() => {
-        box.style.display = "none";
-        box.classList.remove("slide");
-      }, 1500);
-    }
-  </script></body>
+function clearText() {
+  document.getElementById("inputText").value = "";
+  document.getElementById("outputText").value = "";
+}
+
+function showError() {
+  const err = document.getElementById("errorMessage");
+  err.classList.add("show");
+  setTimeout(() => err.classList.remove("show"), 2000);
+}
+</script></body>
 </html>
