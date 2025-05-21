@@ -123,66 +123,48 @@
 
   "00010": " ", "00011": "\n"
 };
+    
+const mapBtoA = Object.fromEntries(
+  Object.entries(mapAtoB).map(([key, value]) => [value, key])
+);
 
-const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
-
-function encodeAtoB(text) {
-  let output = '';
-  let i = 0;
-  while (i < text.length) {
-    let found = false;
-    // সর্বোচ্চ 4 অক্ষর পর্যন্ত মিলায়
-    for (let len = 4; len > 0; len--) {
-      const slice = text.substr(i, len);
-      if (mapAtoB[slice]) {
-        output += mapAtoB[slice];
-        i += len;
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      output += text[i];
-      i++;
-    }
-  }
-  return output;
-}
-
-function decodeBtoA(text) {
-  let output = '';
-  let token = '';
-  for (let char of text) {
-    token += char;
-    if (mapBtoA[token]) {
-      output += mapBtoA[token];
-      token = '';
-    }
-  }
-  if (token !== '') output += token; // বাকি থাকলে
-  return output;
+function detectMode(text) {
+  return /^\d{5}( \d{5})*$/.test(text.trim()) ? "decode" : "encode";
 }
 
 function process() {
-  const input = document.getElementById('inputText').value;
-  let countB = 0, countA = 0;
+  const input = document.getElementById("inputText").value.trim();
+  const output = detectMode(input) === "encode" ? encode(input) : decode(input);
+  document.getElementById("outputText").value = output;
+}
 
-  for (let token in mapBtoA) {
-    if (input.includes(token)) countB++;
-  }
-  for (let token in mapAtoB) {
+function encode(text) {
+  const chars = Array.from(text);
+  return chars.map(char => mapAtoB[char] || char).join(' ');
+}
 
- function copyOutput(type) {
-      const output = document.getElementById('outputText');
-      output.select();
-      document.execCommand('copy');
-      alert(`${type} copied`);
-    }
+function decode(text) {
+  return text.trim().split(/\s+/).map(token => mapBtoA[token] || token).join('');
+}
 
-    function clearText() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('outputText').value = '';
-    }
+function copyOutput(type) {
+  const text = document.getElementById("outputText").value;
+  if (!text) return;
+  const dummy = document.createElement("textarea");
+  dummy.value = text;
+  document.body.appendChild(dummy);
+  dummy.select();
+  document.execCommand("copy");
+  document.body.removeChild(dummy);
+  alert(`${type} copied`);
+}
+
+function clearText() {
+  document.getElementById("inputText").value = "";
+  document.getElementById("outputText").value = "";
+}
+
+
   </script>
 </body>
 </html>
