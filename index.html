@@ -1,157 +1,199 @@
-<!DOCTYPE html><html lang="bn">
+<!DOCTYPE html>
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>5 Encoder Decoder</title>
+  <meta charset="UTF-8">
+  <title>Smart Encoder/Decoder</title>
   <style>
     body {
-      background: #121212;
+      background-color: #121212;
       color: #fff;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: Arial, sans-serif;
       padding: 20px;
     }
     textarea {
-      width: 90%;
-      max-width: 500px;
-      height: 120px;
-      background: #1e1e1e;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #1e1e1e;
       color: #fff;
       border: none;
-      margin: 10px 0;
-      padding: 10px;
+      resize: none;
       font-size: 16px;
-      resize: vertical;
     }
     button {
-      background: #333;
-      color: #fff;
+      background-color: #333;
+      color: white;
       border: none;
-      padding: 10px 20px;
-      margin: 5px;
+      padding: 10px;
       cursor: pointer;
-      border-radius: 5px;
-      width: 90%;
-      max-width: 500px;
+      font-size: 16px;
+      margin-right: 10px;
+      transition: 0.3s;
+      width: 100%;
     }
     button:hover {
-      background: #555;
+      background-color: #555;
+    }
+    .copied, .alert-box {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      animation: slide 0.5s ease-in-out;
+    }
+    .copied {
+      background-color: #2e7d32;
+      color: white;
+    }
+    .alert-box {
+      background-color: #121212;
+      color: red;
+      border: 1px solid red;
+    }
+    @keyframes slide {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <h2>5 Encoder Decoder</h2>
-  <textarea id="inputText" placeholder="A বা B টাইপ করুন..."></textarea>
-  <div>
-    <button onclick="processText()">Convert</button>
-    <button onclick="copyText('A')">A</button>
-    <button onclick="copyText('B')">B</button>
+  <h2>Smart Encoder / Decoder</h2>
+
+  <textarea id="inputText" placeholder="লিখুন..."></textarea>
+  <textarea id="outputText" placeholder="ফলাফল..." readonly></textarea>
+
+  <div style="display: flex; gap: 10px; margin-top: 10px;">
+    <button id="runBtn">Run</button>
+    <button id="copyBtn">Copy</button>
   </div>
-  <textarea id="outputText" placeholder="ফলাফল এখানে দেখাবে..."></textarea>  <script>
-    const mapAtoB = {
-      // Bengali Sworoborno
-      'অ': '00001', 'আ': '00002', 'ই': '00003', 'ঈ': '00004', 'উ': '00005', 'ঊ': '00006', 'ঋ': '00007', 'এ': '00008', 'ঐ': '00009', 'ও': '00010', 'ঔ': '00011',
 
-      // Bengali Kar
-      'া': '00012', 'ি': '00013', 'ী': '00014', 'ু': '00015', 'ূ': '00016', 'ৃ': '00017', 'ে': '00018', 'ৈ': '00019', 'ো': '00020', 'ৌ': '00021',
+  <script>
+    const map = {
 
-      // Bengali Benjonborno
-      'ক': '00022', 'খ': '00023', 'গ': '00024', 'ঘ': '00025', 'ঙ': '00026',
-      'চ': '00027', 'ছ': '00028', 'জ': '00029', 'ঝ': '00030', 'ঞ': '00031',
-      'ট': '00032', 'ঠ': '00033', 'ড': '00034', 'ঢ': '00035', 'ণ': '00036',
-      'ত': '00037', 'থ': '00038', 'দ': '00039', 'ধ': '00040', 'ন': '00041',
-      'প': '00042', 'ফ': '00043', 'ব': '00044', 'ভ': '00045', 'ম': '00046',
-      'য': '00047', 'র': '00048', 'ল': '00049', 'শ': '00050', 'ষ': '00051', 'স': '00052',
-      'হ': '00053', 'ড়': '00054', 'ঢ়': '00055', 'য়': '00056', 'ং': '00057', 'ঃ': '00058', 'ঁ': '00059',
+//বাংলা ব্যঞ্জনবর্ণ 
+  "07971": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
+  "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ", "67384": "।",
 
-      // Bengali Juktoborno
-      "ক্ক": "00061", "ক্ত": "00062", "ক্স": "00063", "গ্গ": "00064", "গ্ধ": "00065",
-  "ঙ্ক": "00066", "ঙ্ক্ষ": "00067", "ঙ্ঘ": "00068", "চ্চ": "00069", "চ্ছ": "00070",
-  "জ্জ": "00071", "জ্জ্ব": "00072", "জ্ঝ": "00073", "ঞ্ছ": "00074", "ঞ্ঝ": "00075",
-  "ণ্ট": "00076", "ণ্ট্ব": "00077", "ড্ড": "00078", "ত্ত": "00079", "ত্ত্ব": "00080",
-  "ত্র": "00081", "থ্ব": "00082", "দ্দ": "00083", "দ্দ্ব": "00084", "দ্ব": "00085",
-  "দ্ধ": "00086", "ন্ন": "00087", "ন্ত": "00088", "ন্ত্ব": "00089", "ন্ত্র": "00090",
-  "ন্থ": "00091", "ন্দ": "00092", "ন্দ্ব": "00093", "ন্ধ": "00094", "প্ট": "00095",
-  "প্প": "00096", "প্স": "00097", "ব্জ": "00098", "ব্দ": "00099", "ব্ধ": "00100",
-  "ভ্র": "00101", "ম্ন": "00102", "ম্প": "00103", "ম্ব": "00104", "ম্ভ": "00105",
-  "য্য": "00106", "র্ক": "00107", "র্খ": "00108", "র্গ": "00109", "র্ঘ": "00110",
-  "র্ঘ্য": "00111", "র্ঙ": "00112", "র্চ": "00113", "র্ছ": "00114", "র্জ": "00115",
-  "র্জ্জ": "00116", "র্জ্ঞ": "00117", "র্ঝ": "00118", "র্ট": "00119", "র্ড": "00120",
-  "র্ঢ": "00121", "র্ণ": "00122", "র্ত": "00123", "র্ত্ব": "00124", "ত্রু": "00125",
-  "র্থ": "00126", "র্দ": "00127", "র্দ্ব": "00128", "র্দ্র": "00129", "র্দ্ধ": "00130",
-  "র্ন": "00131", "র্প": "00132", "র্ফ": "00133", "র্ব": "00134", "র্ভ": "00135",
-  "র্ম": "00136", "র্য": "00137", "র্ল": "00138", "র্শ": "00139", "র্ষ": "00140",
-  "র্স": "00141", "র্হ": "00142", "হ্ম": "00143", "হ্ন": "00144", "হ্ল": "00145",
-  "হ্ব": "00146",
+//বাংলা কার চিহ্ন
+  "79064": "া", "01478": "ি", "52168": "ী", "90234": "ু", "37415": "ূ",
+  "68920": "ৃ", "43706": "ে", "81245": "ৈ", "16983": "ো", "05429": "ৌ",
 
-      // English Uppercase
-      'A': '00077', 'B': '00078', 'C': '00079', 'D': '00080', 'E': '00081', 'F': '00082', 'G': '00083', 'H': '00084', 'I': '00085', 'J': '00086',
-      'K': '00087', 'L': '00088', 'M': '00089', 'N': '00090', 'O': '00091', 'P': '00092', 'Q': '00093', 'R': '00094', 'S': '00095', 'T': '00096',
-      'U': '00097', 'V': '00098', 'W': '00099', 'X': '00100', 'Y': '00101', 'Z': '00102',
+//বাংলা ব্যঞ্জনবর্ণ
+  "39048": "ক", "26187": "খ", "58971": "গ", "71680": "ঘ", "12096": "ঙ",
+  "98453": "চ", "04518": "ছ", "87941": "জ", "61375": "ঝ", "34821": "ঞ",
+  "76139": "ট", "20358": "ঠ", "48679": "ড", "19730": "ঢ", "89420": "ণ",
+  "68103": "ত", "43295": "থ", "90716": "দ", "15234": "ধ", "32598": "ন",
+  "21086": "প", "70894": "ফ", "04392": "ব", "19304": "ভ", "62470": "ম",
+  "47861": "য", "98263": "র", "14097": "ল", "01564": "শ", "28930": "ষ", "90476": "স",
+  "68024": "হ", "76805": "ড়", "50913": "ঢ়", "37261": "য়", "60428": "ং",
+  "89307": "ঃ", "31970": "ঁ",
 
-      // English Lowercase
-      'a': '00103', 'b': '00104', 'c': '00105', 'd': '00106', 'e': '00107', 'f': '00108', 'g': '00109', 'h': '00110', 'i': '00111', 'j': '00112',
-      'k': '00113', 'l': '00114', 'm': '00115', 'n': '00116', 'o': '00117', 'p': '00118', 'q': '00119', 'r': '00120', 's': '00121', 't': '00122',
-      'u': '00123', 'v': '00124', 'w': '00125', 'x': '00126', 'y': '00127', 'z': '00128',
+//বাংলা যুক্তবর্ণ 
+  "47396": "ক্ক", "82694": "ক্ত", "09164": "ক্স", "21359": "গ্গ", "48963": "গ্ধ",
+  "86720": "ঙ্ক", "13087": "ঙ্ক্ষ", "60718": "ঙ্ঘ", "90263": "চ্চ", "53170": "চ্ছ",
+  "47803": "জ্জ", "34219": "জ্জ্ব", "51026": "জ্ঝ", "76892": "ঞ্ছ", "10942": "ঞ্ঝ",
+  "34690": "ণ্ট", "29475": "ণ্ট্ব", "60753": "ড্ড", "14538": "ত্ত", "07361": "ত্ত্ব",
+  "91804": "ত্র", "15079": "থ্ব", "82064": "দ্দ", "03567": "দ্দ্ব", "67013": "দ্ব",
+  "78902": "দ্ধ", "29016": "ন্ন", "60739": "ন্ত", "18492": "ন্ত্ব", "96413": "ন্ত্র",
+  "04293": "ন্থ", "36718": "ন্দ", "85206": "ন্দ্ব", "47091": "ন্ধ", "63048": "প্ট",
+  "23784": "প্প", "87196": "প্স", "12073": "ব্জ", "61089": "ব্দ", "93067": "ব্ধ",
+  "74862": "ভ্র", "08961": "ম্ন", "21368": "ম্প", "08746": "ম্ব", "97014": "ম্ভ",
+  "10486": "য্য", "30257": "র্ক", "80135": "র্খ", "91760": "র্গ", "23419": "র্ঘ",
+  "84319": "র্ঘ্য", "17603": "র্ঙ", "50396": "র্চ", "68039": "র্ছ", "29564": "র্জ",
+  "91473": "র্জ্জ", "75812": "র্জ্ঞ", "04682": "র্ঝ", "16734": "র্ট", "63091": "র্ড",
+  "18430": "র্ঢ", "90167": "র্ণ", "32049": "র্ত", "58602": "র্ত্ব", "94285": "ত্রু",
+  "60381": "র্থ", "71890": "র্দ", "09432": "র্দ্ব", "53781": "র্দ্র", "04618": "র্দ্ধ",
+  "09368": "র্ন", "80413": "র্প", "28147": "র্ফ", "30526": "র্ব", "47825": "র্ভ",
+  "69184": "র্ম", "53094": "র্য", "87320": "র্ল", "69204": "র্শ", "12089": "র্ষ",
+  "36729": "র্স", "91670": "র্হ", "20587": "হ্ম", "83162": "হ্ন", "57019": "হ্ল",
+  "64801": "হ্ব",
 
-      // Numbers
-      '0': '00129', '1': '00130', '2': '00131', '3': '00132', '4': '00133', '5': '00134', '6': '00135', '7': '00136', '8': '00137', '9': '00138',
+//ইংলিশ Capital 
+  "76293": "A", "48907": "B", "13098": "C", "60431": "D", "98713": "E",
+  "20836": "F", "15904": "G", "27018": "H", "30497": "I", "80196": "J",
+  "19083": "K", "35029": "L", "79012": "M", "48305": "N", "68140": "O",
+  "23471": "P", "91783": "Q", "03519": "R", "12876": "S", "90428": "T",
+  "60317": "U", "58049": "V", "14762": "W", "89073": "X", "20861": "Y", "60137": "Z",
 
-      // Symbols
-      '!': '00139', '@': '00140', '#': '00141', '$': '00142', '%': '00143', '^': '00144', '&': '00145', '*': '00146', '(': '00147', ')': '00148',
-      '-': '00149', '_': '00150', '=': '00151', '+': '00152', '[': '00153', ']': '00154', '{': '00155', '}': '00156', '|': '00157', '\\': '00158',
-      ':': '00159', ';': '00160', '"': '00161', "'": '00162', '<': '00163', '>': '00164', ',': '00165', '.': '00166', '/': '00167', '?': '00168',
-      '`': '00169', '~': '00170',
+//ইংলিশ Small
+  "89314": "a", "27059": "b", "37418": "c", "40293": "d", "89146": "e", "01743": "f",
+  "14062": "g", "73690": "h", "90341": "i", "29486": "j", "76083": "k", "31059": "l",
+  "97025": "m", "05493": "n", "82031": "o", "64095": "p", "38519": "q", "71960": "r",
+  "24906": "s", "09587": "t", "60384": "u", "31850": "v", "29406": "w", "18064": "x",
+  "90561": "y", "80347": "z",
 
-      // Logical special
-      ' ': '00171', '\n': '00172'
-    };
+//নাম্বার 
+  "46920": "0", "20964": "1", "81750": "2", "03861": "3", "49078": "4",
+  "76508": "5", "12389": "6", "68243": "7", "97086": "8", "30417": "9",
 
-    const mapBtoA = Object.fromEntries(
-      Object.entries(mapAtoB).map(([key, value]) => [value, key])
-    );
+//সিম্বল 
+  "09814": "!", "27860": "@", "90368": "#", "16437": "$", "08639": "%",
+  "40267": "^", "19370": "&", "52104": "*", "98031": "(", "70341": ")",
+  "01496": "-", "80714": "_", "18493": "=", "06249": "+", "39825": "[",
+  "18073": "]", "93602": "{", "57084": "}", "10376": "|", "29384": "\\",
+  "07641": ":", "87403": ";", "19507": "\"", "90347": "'", "78103": "<",
+  "60892": ">", "05397": ",", "91827": ".", "27068": "/", "38460": "?",
+  "02396": "`", "16408": "~",
 
-    function autoDetect(text) {
-      const bnCount = [...text].filter(c => Object.values(mapAtoB).includes(c)).length;
-      const enCount = [...text].filter(c => Object.keys(mapAtoB).includes(c)).length;
-      return enCount >= bnCount ? 'AtoB' : 'BtoA';
+//স্পেস লজিক
+  "00010": " ", "00011": "\n"
+};
+
+const reverseMap = Object.fromEntries(Object.entries(map).map(([k, v]) => [v, k]));
+
+    function encode(text) {
+      let result = '';
+      for (let char of text) {
+        if (!map[char]) {
+          showAlert();
+          return '';
+        }
+        result += map[char] + ' ';
+      }
+      return result.trim();
     }
 
-    function convert(text, direction) {
-      const map = direction === 'AtoB' ? mapAtoB : mapBtoA;
-      let invalid = false;
-      const result = [...text].map(char => {
-        if (!map[char]) invalid = true;
-        return map[char] || '[X]';
-      }).join('');
-      if (invalid) showWarning();
+    function decode(text) {
+      let result = '';
+      const codes = text.split(' ');
+      for (let code of codes) {
+        if (!reverseMap[code]) {
+          showAlert();
+          return '';
+        }
+        result += reverseMap[code];
+      }
       return result;
     }
 
-    function showWarning() {
-      const output = document.getElementById("outputText");
-      output.style.border = "2px solid red";
-      output.placeholder = "Wrong Character";
-      setTimeout(() => {
-        output.style.border = "none";
-        output.placeholder = "ফলাফল এখানে দেখাবে...";
-      }, 1000);
+    function showAlert() {
+      const alert = document.createElement('div');
+      alert.className = 'alert-box';
+      alert.textContent = 'Wrong Character';
+      document.body.appendChild(alert);
+      setTimeout(() => alert.remove(), 2000);
     }
 
-    function processText() {
-      const input = document.getElementById("inputText").value;
-      const direction = autoDetect(input);
-      const result = convert(input, direction);
-      document.getElementById("outputText").value = result;
-    }
+    document.getElementById('runBtn').addEventListener('click', () => {
+      const input = document.getElementById('inputText').value.trim();
+      const isEncoded = /^[0-9 ]+$/.test(input);
+      const result = isEncoded ? decode(input) : encode(input);
+      document.getElementById('outputText').value = result;
+    });
 
-    function copyText(type) {
-      const output = document.getElementById("outputText");
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = document.getElementById('outputText');
+      if (!output.value) return;
       output.select();
-      document.execCommand("copy");
-      alert(type + " কপি হয়েছে!");
-    }
-  </script></body>
+      document.execCommand('copy');
+      const copied = document.createElement('div');
+      copied.className = 'copied';
+      copied.textContent = 'Copied!';
+      document.body.appendChild(copied);
+      setTimeout(() => copied.remove(), 1500);
+    });
+  </script>
+</body>
 </html>
