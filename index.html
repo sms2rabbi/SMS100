@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!--Google Fonts-->
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300&display=swap" rel="stylesheet">
   <title>গোপন সংকেত রূপান্তর (MSMS)</title>  
     
   <style>
+  
+  
     * {
       box-sizing: border-box;
       margin: 0;
@@ -41,34 +44,34 @@
 }
   
   
-  
-    h1 {
+  h1 {
   font-family: 'Hind Siliguri', sans-serif;
   font-size: 2.2rem;
-  font-weight: 800;
+  font-weight: 300;
+  font-style: normal;
   text-align: center;
   margin: 30px 0;
   letter-spacing: 1.2px;
+
   background: linear-gradient(270deg,
-    #3a0ca3, #4361ee, #4cc9f0, #3f37c9,
-    #7209b7, #560bad, #480ca8, #3a0ca3
+    #7e0c0c, #b91c1c, #e11d48, #dc2626, #7e0c0c
   );
-  background-size: 400% 400%;
+  background-size: 500% 500%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientWave 60s linear infinite;
-  text-shadow: none;
-  transform: none;
-  transition: none;
+  color: transparent;
+
+  animation: redWave 15s ease-in-out infinite;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes gradientWave {
+@keyframes redWave {
   0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
-  
-  
-  
+    
+
   
     }
     .container {
@@ -122,28 +125,31 @@
   
   
   h1 {
-  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Kalpurush', sans-serif;
+  font-family: 'Hind Siliguri', sans-serif;
   font-size: 2.2rem;
-  font-weight: 800;
+  font-weight: 300; /* পাতলা */
+  font-style: normal; /* সোজা */
   text-align: center;
   margin: 30px 0;
   letter-spacing: 1.2px;
+
   background: linear-gradient(270deg,
-    #3a0ca3, #4361ee, #4cc9f0, #3f37c9,
-    #7209b7, #560bad, #480ca8, #3a0ca3
+    #0f0c29, #302b63, #1e1e2f, #3b3b98, #0f0f3d, #151515
   );
-  background-size: 400% 400%;
+  background-size: 600% 600%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientWave 60s linear infinite;
-  text-shadow: none; /* মুছে দিলাম যাতে টেক্সট ভেঙে না যায় */
-  transform: none; /* সরানো বা ঘোরানো বন্ধ */
+
+  animation: gradientWave 10s ease-in-out infinite;
+  text-shadow: none;
+  transform: none;
   transition: none;
 }
 
 @keyframes gradientWave {
   0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
   
   
