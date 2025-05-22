@@ -1,197 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MSMS Signal 7</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-    textarea {
-      width: 90%;
-      max-width: 500px;
-      height: 150px;
-      margin: 10px 0;
-      padding: 10px;
-      background-color: #1e1e1e;
-      color: #ffffff;
-      border: 1px solid #444;
-      border-radius: 10px;
-      resize: none;
-      font-size: 16px;
-    }
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      background-color: #333;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #555;
-    }
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>গোপন সংকেত রূপান্তর (MSMS)</title>
 </head>
-<body>
-  <h2>MSMS Signal (7)</h2>
+<body style="background:#111; color:#eee; font-family:Arial; padding:20px;">
 
-  <textarea id="inputText" placeholder="Enter A or B"></textarea>
-  <textarea id="outputText" placeholder="Output" readonly></textarea>
+  <h2>গোপন সংকেত রূপান্তর</h2>
 
-  <div class="button-group">
-    <button onclick="process()">Smart</button>
-    <button onclick="copyOutput('A')">Copy A</button>
-    <button onclick="copyOutput('B')">Copy B</button>
-    <button onclick="clearText()">Clear Tex</button>
+  <textarea id="inputText" rows="4" style="width:100%; margin-bottom:10px;" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
+  
+  <div style="margin-bottom:10px;">
+    <button id="runBtn">রূপান্তর</button>
+    <button id="smartBtn">স্মার্ট</button>
+    <button id="clearBtn">Clear</button>
+    <button id="copyB">B</button>
   </div>
 
+  <textarea id="outputText" rows="4" style="width:100%; margin-bottom:10px;" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
+
+  <div id="errorBox" style="color:crimson;"></div>
+
   <script>
-const mapAtoB = {
-      "17111": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
-      "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ", "67384": "।",
-      "79064": "া", "01478": "ি", "52168": "ী", "90234": "ক্ত", "09164": "ক্স", "21359": "গ্গ", "48963": "গ্ধ",
-      "60892": ">", "05397": ",", "91827": ".", "27068": "/", "38460": "?",
-      "02396": "`", "16408": "~", "00010": " ", "00011": "\n",
-      "47396": "ক্ক", "82694": "ক্ত", "09164": "ক্স", "21359": "গ্গ", "48963": "গ্ধ",
-      "86720": "ঙ্ক", "13087": "ঙ্ক্ষ", "60718": "ঙ্ঘ", "90263": "চ্চ", "53170": "চ্ছ",
-      "47803": "জ্জ", "34219": "জ্জ্ব", "51026": "জ্ঝ", "76892": "ঞ্ছ", "10942": "ঞ্ঝ",
-      "34690": "ণ্ট", "29475": "ণ্ট্ব", "60753": "ড্ড", "14538": "ত্ত", "07361": "ত্ত্ব",
-      "91804": "ত্র", "15079": "থ্ব", "82064": "দ্দ", "03567": "দ্দ্ব", "67013": "দ্ব",
-      "78902": "দ্ধ", "29016": "ন্ন", "60739": "ন্ত", "18492": "ন্ত্ব", "96413": "ন্ত্র",
-      "04293": "ন্থ", "36718": "ন্দ", "85206": "ন্দ্ব", "47091": "ন্ধ", "63048": "প্ট",
-      "23784": "প্প", "87196": "প্স", "12073": "ব্জ", "61089": "ব্দ", "93067": "ব্ধ",
-      "74862": "ভ্র", "08961": "ম্ন", "21368": "ম্প", "08746": "ম্ব", "97014": "ম্ভ",
-      "10486": "য্য", "30257": "র্ক", "80135": "র্খ", "91760": "র্গ", "23419": "র্ঘ",
-      "84319": "র্ঘ্য", "17603": "র্ঙ", "50396": "র্চ", "68039": "র্ছ", "29564": "র্জ",
-      "91473": "র্জ্জ", "75812": "র্জ্ঞ", "04682": "র্ঝ", "16734": "র্ট", "63091": "র্ড",
-      "18430": "র্ঢ", "90167": "র্ণ", "32049": "র্ত", "58602": "র্ত্ব", "94285": "ত্রু",
-      "60381": "র্থ", "71890": "র্দ", "09432": "র্দ্ব", "53781": "র্দ্র", "04618": "র্দ্ধ",
-      "09368": "র্ন", "80413": "র্প", "28147": "র্ফ", "30526": "র্ব", "47825": "র্ভ",
-      "69184": "র্ম", "53094": "র্য", "87320": "র্ল", "69204": "র্শ", "12089": "র্ষ",
-      "36729": "র্স", "91670": "র্হ", "20587": "হ্ম", "83162": "হ্ন", "57019": "হ্ল",
-      "64801": "হ্ব", "88441": "্য", "11213": "ল্ল",
- 
-      "07971": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
-      "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ",
-
-       "79064": "া", "01478": "ি", "52168": "ী", "90234": "ু", "37415": "ূ",
-       "68920": "ৃ", "43706": "ে", "81245": "ৈ", "16983": "ো", "05429": "ৌ",
-
-         "39048": "ক", "26187": "খ", "58971": "গ", "71680": "ঘ", "12096": "ঙ",
-  "98453": "চ", "04518": "ছ", "87941": "জ", "61375": "ঝ", "34821": "ঞ",
-  "76139": "ট", "20358": "ঠ", "48679": "ড", "19730": "ঢ", "89420": "ণ",
-  "68103": "ত", "43295": "থ", "90716": "দ", "15234": "ধ", "32598": "ন",
-  "21086": "প", "70894": "ফ", "04392": "ব", "19304": "ভ", "62470": "ম",
-  "47861": "য", "98263": "র", "14097": "ল", "01564": "শ", "28930": "ষ", "90476": "স",
-  "68024": "হ", "76805": "ড়", "50913": "ঢ়", "37261": "য়", "60428": "ং",
-  "89307": "ঃ", "31970": "ঁ",
-
-  "76293": "A", "48907": "B", "13098": "C", "60431": "D", "98713": "E",
-  "20836": "F", "15904": "G", "27018": "H", "30497": "I", "80196": "J",
-  "19083": "K", "35029": "L", "79012": "M", "48305": "N", "68140": "O",
-  "23471": "P", "91783": "Q", "03519": "R", "12876": "S", "90428": "T",
-  "60317": "U", "58049": "V", "14762": "W", "89073": "X", "20861": "Y", "60137": "Z",
-
-  "89314": "a", "27059": "b", "37418": "c", "40293": "d", "89146": "e", "01743": "f",
-  "14062": "g", "73690": "h", "90341": "i", "29486": "j", "76083": "k", "31059": "l",
-  "97025": "m", "05493": "n", "82031": "o", "64095": "p", "38519": "q", "71960": "r",
-  "24906": "s", "09587": "t", "60384": "u", "31850": "v", "29406": "w", "18064": "x",
-  "90561": "y", "80347": "z",
-
-  "46920": "0", "20964": "1", "81750": "2", "03861": "3", "49078": "4",
-  "76508": "5", "12389": "6", "68243": "7", "97086": "8", "30417": "9",
-
-  "09814": "!", "27860": "@", "90368": "#", "16437": "$", "08639": "%",
-  "40267": "^", "19370": "&", "52104": "*", "98031": "(", "70341": ")",
-  "01496": "-", "80714": "_", "18493": "=", "06249": "+", "39825": "[",
-  "18073": "]", "93602": "{", "57084": "}", "10376": "|", "29384": "\\",
-  "07641": ":", "87403": ";", "19507": "\"", "90347": "'", "78103": "<",
-  "60892": ">", "05397": ",", "91827": ".", "27068": "/", "38460": "?",
-  "02396": "`", "16408": "~",
-      
-  "00010": " ", "00011": "\n",
+    const mapAtoB = {
+      'অ': '00001', 'আ': '00002', 'ই': '00003', 'ঈ': '00004',
+      'উ': '00005', 'ঊ': '00006', 'ঋ': '00007', 'এ': '00008', 'ঐ': '00009',
+      'ও': '00010', 'ঔ': '00011', 'ক': '00012', 'খ': '00013', 'গ': '00014',
+      'ঘ': '00015', 'ঙ': '00016', 'চ': '00017', 'ছ': '00018', 'জ': '00019',
+      'ঝ': '00020', 'ঞ': '00021', 'ট': '00022', 'ঠ': '00023', 'ড': '00024',
+      'ঢ': '00025', 'ণ': '00026', 'ত': '00027', 'থ': '00028', 'দ': '00029',
+      'ধ': '00030', 'ন': '00031', 'প': '00032', 'ফ': '00033', 'ব': '00034',
+      'ভ': '00035', 'ম': '00036', 'য': '00037', 'র': '00038', 'ল': '00039',
+      'শ': '00040', 'ষ': '00041', 'স': '00042', 'হ': '00043', 'ড়': '00044',
+      'ঢ়': '00045', 'য়': '00046', 'ৎ': '00047', 'ঁ': '00048', 'ং': '00049',
+      'ঃ': '00050', '৺': '00051', '।': '00052', ',': '00053', '!': '00054',
+      '?': '00055', '০': '00056', '১': '00057', '২': '00058', '৩': '00059',
+      '৪': '00060', '৫': '00061', '৬': '00062', '৭': '00063', '৮': '00064',
+      '৯': '00065', 'জ্ব': '00066', 'ক্র': '00067', 'স্ট': '00068',
+      'গ্র': '00069', 'প্র': '00070', 'ব্র': '00071', 'স্ক': '00072',
+      'স্ট্র': '00073', 'স্ম': '00074', 'ঙ্গ': '00075', 'হ্ম': '00076'
     };
-  
-const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
 
-function encodeAtoB(text) {
-  let output = '';
-  let i = 0;
-  while (i < text.length) {
-    let found = false;
-    // সর্বোচ্চ 4 অক্ষর পর্যন্ত মিলায়
-    for (let len = 4; len > 0; len--) {
-      const slice = text.substr(i, len);
-      if (mapAtoB[slice]) {
-        output += mapAtoB[slice];
-        i += len;
-        found = true;
-        break;
+    const mapBtoA = Object.fromEntries(
+      Object.entries(mapAtoB).map(([k, v]) => [v, k])
+    );
+
+    const inputText = document.getElementById('inputText');
+    const outputText = document.getElementById('outputText');
+    const errorBox = document.getElementById('errorBox');
+
+    function encode(text) {
+      let result = '';
+      let errors = [];
+
+      for (let char of text) {
+        if (mapAtoB[char]) {
+          result += mapAtoB[char];
+        } else {
+          result += '?????';
+          errors.push(char);
+        }
       }
-    }
-    if (!found) {
-      output += text[i];
-      i++;
-    }
-  }
-  return output;
-}
 
-function decodeBtoA(text) {
-  let output = '';
-  let token = '';
-  for (let char of text) {
-    token += char;
-    if (mapBtoA[token]) {
-      output += mapBtoA[token];
-      token = '';
-    }
-  }
-  if (token !== '') output += token; // বাকি থাকলে
-  return output;
-}
-
-function process() {
-  const input = document.getElementById('inputText').value;
-  let countB = 0, countA = 0;
-
-  for (let token in mapBtoA) {
-    if (input.includes(token)) countB++;
-  }
-  for (let token in mapAtoB) {
-    if (input.includes(token)) countA++;
-  }
-
-  const output = (countB >= countA) ? decodeBtoA(input) : encodeAtoB(input);
-  document.getElementById('outputText').value = output;
-}
-
-    function copyOutput(type) {
-      const output = document.getElementById('outputText');
-      output.select();
-      document.execCommand('copy');
-      alert(`${type} copied`);
+      errorBox.textContent = errors.length
+        ? `Error: ${[...new Set(errors)].join(', ')} ম্যাপে নেই`
+        : '';
+      return result;
     }
 
-    function clearText() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('outputText').value = '';
+    function decode(code) {
+      let result = '';
+      let errors = [];
+
+      for (let i = 0; i < code.length; i += 5) {
+        const chunk = code.slice(i, i + 5);
+        if (mapBtoA[chunk]) {
+          result += mapBtoA[chunk];
+        } else {
+          result += '�';
+          errors.push(chunk);
+        }
+      }
+
+      errorBox.textContent = errors.length
+        ? `Error: ${[...new Set(errors)].join(', ')} সংকেত অজানা`
+        : '';
+      return result;
     }
+
+    function isEncoded(text) {
+      return /^[0-9]{5,}$/.test(text.trim());
+    }
+
+    function flashButton(btn, text = null) {
+      const original = btn.textContent;
+      btn.style.background = '#0f0';
+      btn.textContent = text || original;
+      setTimeout(() => {
+        btn.style.background = '';
+        btn.textContent = original;
+      }, 1000);
+    }
+
+    function activateHoverEffect(btn) {
+      btn.addEventListener('mouseover', () => btn.style.background = '#333');
+      btn.addEventListener('mouseout', () => btn.style.background = '');
+      btn.addEventListener('mousedown', () => btn.style.background = '#666');
+      btn.addEventListener('mouseup', () => btn.style.background = '#333');
+    }
+
+    document.querySelectorAll('button').forEach(activateHoverEffect);
+
+    document.getElementById('runBtn').addEventListener('click', () => {
+      const input = inputText.value.trim();
+      outputText.value = isEncoded(input) ? decode(input) : encode(input);
+      flashButton(runBtn);
+    });
+
+    document.getElementById('smartBtn').addEventListener('click', () => {
+      const input = inputText.value.trim();
+      outputText.value = isEncoded(input) ? decode(input) : encode(input);
+      flashButton(smartBtn);
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      inputText.value = '';
+      outputText.value = '';
+      errorBox.textContent = '';
+      flashButton(clearBtn);
+    });
+
+    document.getElementById('copyB').addEventListener('click', () => {
+      navigator.clipboard.writeText(outputText.value);
+      flashButton(copyB, 'Copied!');
+    });
   </script>
 </body>
 </html>
