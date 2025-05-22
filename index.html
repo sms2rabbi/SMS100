@@ -8,85 +8,87 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-    }body {
-  background: #111;
-  color: #eee;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
+    }
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: normal;
-}
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: normal;
+    }
 
-.container {
-  max-width: 700px;
-  margin: auto;
-}
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }
 
-textarea {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: none;
-  resize: vertical;
-  background: #1e1e1e;
-  color: #fff;
-  margin-bottom: 10px;
-}
+    textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      resize: vertical;
+      background: #1e1e1e;
+      color: #fff;
+      margin-bottom: 10px;
+      min-height: 120px;
+    }
 
-textarea:focus {
-  background: #222;
-  outline: none;
-  transform: scale(1.01);
-  transition: 0.3s ease;
-}
+    textarea:focus {
+      background: #222;
+      outline: none;
+      transform: scale(1.01);
+      transition: 0.3s ease;
+    }
 
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 15px 0;
-  justify-content: center;
-}
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+      justify-content: center;
+    }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background: #333;
-  color: #eee;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #333;
+      color: #eee;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
 
-button:hover {
-  background: #444;
-}
+    button:hover {
+      background: #444;
+    }
 
-button:active {
-  background: #666;
-  transform: scale(0.97);
-}
+    button:active {
+      background: #666;
+      transform: scale(0.97);
+    }
 
-#errorBox {
-  color: crimson;
-  text-align: center;
-  margin-top: 10px;
-  min-height: 20px;
-  transition: opacity 0.4s;
-}
+    #errorBox {
+      color: crimson;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 20px;
+      transition: opacity 0.4s;
+      font-size: 15px;
+    }
 
-@media (max-width: 600px) {
-  button {
-    flex: 1 1 100%;
-  }
-}
-
+    @media (max-width: 600px) {
+      button {
+        flex: 1 1 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -94,13 +96,15 @@ button:active {
   <div class="container">
     <textarea id="inputText" rows="4" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
     <div id="errorBox"></div>
-    <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea><div class="button-group">
-  <button id="runBtn">রূপান্তর</button>
-  <button id="copyB">B</button>
-  <button id="clearBtn">Clear</button>
-</div>
+    <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..." readonly></textarea>
+    <div class="button-group">
+      <button id="runBtn">রূপান্তর</button>
+      <button id="copyB">B</button>
+      <button id="clearBtn">Clear</button>
+    </div>
+  </div>
 
-  </div>  <script>
+  <script>
     const mapAtoB = {
       'জ্ব': '00066', 'ক্র': '00067', 'স্ট': '00068',
       'গ্র': '00069', 'প্র': '00070', 'ব্র': '00071', 'স্ক': '00072',
@@ -128,6 +132,9 @@ button:active {
     const inputText = document.getElementById('inputText');
     const outputText = document.getElementById('outputText');
     const errorBox = document.getElementById('errorBox');
+    const runBtn = document.getElementById('runBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copyB = document.getElementById('copyB');
 
     function encode(text) {
       let result = '';
@@ -187,31 +194,24 @@ button:active {
       }, 1000);
     }
 
-    function activateHoverEffect(btn) {
-      btn.addEventListener('mouseover', () => btn.style.background = '#444');
-      btn.addEventListener('mouseout', () => btn.style.background = '#333');
-      btn.addEventListener('mousedown', () => btn.style.background = '#666');
-      btn.addEventListener('mouseup', () => btn.style.background = '#444');
-    }
-
-    document.querySelectorAll('button').forEach(activateHoverEffect);
-
-    document.getElementById('runBtn').addEventListener('click', () => {
+    runBtn.addEventListener('click', () => {
       const input = inputText.value.trim();
-      outputText.value = isEncoded(input) ? decode(input) : encode(input);
+      const output = isEncoded(input) ? decode(input) : encode(input);
+      outputText.value = output;
       flashButton(runBtn);
     });
 
-    document.getElementById('clearBtn').addEventListener('click', () => {
+    clearBtn.addEventListener('click', () => {
       inputText.value = '';
       outputText.value = '';
       errorBox.textContent = '';
       flashButton(clearBtn);
     });
 
-    document.getElementById('copyB').addEventListener('click', () => {
+    copyB.addEventListener('click', () => {
       navigator.clipboard.writeText(outputText.value);
       flashButton(copyB, 'Copied!');
     });
-  </script></body>
+  </script>
+</body>
 </html>
