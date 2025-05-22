@@ -1,213 +1,131 @@
 <!DOCTYPE html><html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>গোপন সংকেত রূপান্তর (MSMS)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
     body {
       background: #111;
       color: #eee;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       padding: 20px;
-      overflow-x: hidden;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: normal;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
     }
     textarea {
       width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: none;
-      resize: vertical;
-      background: #1e1e1e;
-      color: #fff;
-      margin-bottom: 10px;
-      min-height: 120px;
-    }
-    textarea:focus {
+      height: 100px;
       background: #222;
-      outline: none;
-      transform: scale(1.01);
-      transition: 0.3s ease;
-    }
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 15px 0;
-      justify-content: center;
+      color: #eee;
+      border: 1px solid #444;
+      padding: 10px;
+      resize: vertical;
     }
     button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #333;
-      color: #eee;
+      margin: 5px 5px 5px 0;
+      padding: 10px;
       border: none;
-      border-radius: 8px;
+      border-radius: 5px;
+      background: #444;
+      color: #eee;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
     }
     button:hover {
-      background: #444;
-    }
-    button:active {
       background: #666;
-      transform: scale(0.97);
     }
-    #errorBox {
-      color: crimson;
-      text-align: center;
+    #error {
+      color: red;
       margin-top: 10px;
-      min-height: 20px;
-      transition: opacity 0.4s;
-      font-size: 15px;
-    }
-    @media (max-width: 600px) {
-      button {
-        flex: 1 1 100%;
-      }
     }
   </style>
 </head>
 <body>
-  <h2>গোপন সংকেত রূপান্তর</h2>
-  <div class="container">
-    <textarea id="inputText" rows="4" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
-    <div id="errorBox"></div>
-    <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..." readonly></textarea>
-    <div class="button-group">
-      <button id="runBtn">রূপান্তর</button>
-      <button id="copyB">B</button>
-      <button id="clearBtn">Clear</button>
-    </div>
-  </div>
-
+  <h1>5</h1>
+  <textarea id="inputText" placeholder="লিখুন..."></textarea>
+  <br />
+  <button id="ncode">Ncode</button>
+  <button id="dcode">Dcode</button>
+  <button id="clear">Clear</button>
+  <br />
+  <textarea id="outputText" placeholder="ফলাফল..."></textarea>
+  <br />
+  <button id="copyB" title="ফলাফল কপি করুন">B</button>
+  <div id="error"></div>
   <script>
-    const mapAtoB = {
-      'জ্ব': '00066', 'ক্র': '00067', 'স্ট': '00068',
-      'গ্র': '00069', 'প্র': '00070', 'ব্র': '00071', 'স্ক': '00072',
-      'স্ট্র': '00073', 'স্ম': '00074', 'ঙ্গ': '00075', 'হ্ম': '00076',
-      'অ': '00001', 'আ': '00002', 'ই': '00003', 'ঈ': '00004',
-      'উ': '00005', 'ঊ': '00006', 'ঋ': '00007', 'এ': '00008', 'ঐ': '00009',
-      'ও': '00010', 'ঔ': '00011', 'ক': '00012', 'খ': '00013', 'গ': '00014',
-      'ঘ': '00015', 'ঙ': '00016', 'চ': '00017', 'ছ': '00018', 'জ': '00019',
-      'ঝ': '00020', 'ঞ': '00021', 'ট': '00022', 'ঠ': '00023', 'ড': '00024',
-      'ঢ': '00025', 'ণ': '00026', 'ত': '00027', 'থ': '00028', 'দ': '00029',
-      'ধ': '00030', 'ন': '00031', 'প': '00032', 'ফ': '00033', 'ব': '00034',
-      'ভ': '00035', 'ম': '00036', 'য': '00037', 'র': '00038', 'ল': '00039',
-      'শ': '00040', 'ষ': '00041', 'স': '00042', 'হ': '00043', 'ড়': '00044',
-      'ঢ়': '00045', 'য়': '00046', 'ৎ': '00047', 'ঁ': '00048', 'ং': '00049',
-      'ঃ': '00050', '৺': '00051', '।': '00052', ',': '00053', '!': '00054',
-      '?': '00055', '০': '00056', '১': '00057', '২': '00058', '৩': '00059',
-      '৪': '00060', '৫': '00061', '৬': '00062', '৭': '00063', '৮': '00064',
-      '৯': '00065'
-    };
+    const map = {
+      'অ': '00001', 'আ': '00002', 'ই': '00003', 'ঈ': '00004', 'উ': '00005',
+      'ঊ': '00006', 'ঋ': '00007', 'এ': '00008', 'ঐ': '00009', 'ও': '00010',
+      'ঔ': '00011', 'ক': '00012', 'খ': '00013', 'গ': '00014', 'ঘ': '00015',
+      'ঙ': '00016', 'চ': '00017', 'ছ': '00018', 'জ': '00019', 'ঝ': '00020',
+      'ঞ': '00021', 'ট': '00022', 'ঠ': '00023', 'ড': '00024', 'ঢ': '00025',
+      'ণ': '00026', 'ত': '00027', 'থ': '00028', 'দ': '00029', 'ধ': '00030',
+      'ন': '00031', 'প': '00032', 'ফ': '00033', 'ব': '00034', 'ভ': '00035',
+      'ম': '00036', 'য': '00037', 'র': '00038', 'ল': '00039', 'শ': '00040',
+      'ষ': '00041', 'স': '00042', 'হ': '00043', 'ড়': '00044', 'ঢ়': '00045',
+      'য়': '00046', 'ৎ': '00047', 'ং': '00048', 'ঃ': '00049', 'ঁ': '00050'
+    };const reverseMap = Object.fromEntries(Object.entries(map).map(([k, v]) => [v, k]));
 
-    const mapBtoA = Object.fromEntries(
-      Object.entries(mapAtoB).map(([k, v]) => [v, k])
-    );
+function sanitizeInput(str) {
+  return str.replace(/[\u200C\u200D]/g, '').replace(/[\s\n\r\t]+/g, '');
+}
 
-    const inputText = document.getElementById('inputText');
-    const outputText = document.getElementById('outputText');
-    const errorBox = document.getElementById('errorBox');
-    const runBtn = document.getElementById('runBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const copyB = document.getElementById('copyB');
+function encode(text) {
+  return [...sanitizeInput(text)].map(char => map[char] || '00000').join('');
+}
 
-    function sanitizeInput(str) {
-      return str.replace(/[\u200C\u200D]/g, '').replace(/\s+/g, '');
-    }
+function decode(code) {
+  const result = [];
+  const errors = [];
+  if (code.length % 5 !== 0) {
+    errors.push('দৈর্ঘ্য ৫-এর গুণিতক নয়');
+  }
+  for (let i = 0; i < code.length; i += 5) {
+    const chunk = code.substr(i, 5);
+    result.push(reverseMap[chunk] || '�');
+  }
+  return [result.join(''), errors];
+}
 
-    function encode(text) {
-      let result = '';
-      let errors = [];
-      text = sanitizeInput(text);
-      const sortedKeys = Object.keys(mapAtoB).sort((a, b) => b.length - a.length);
-      while (text.length > 0) {
-        let matched = false;
-        for (let key of sortedKeys) {
-          if (text.startsWith(key)) {
-            result += mapAtoB[key];
-            text = text.slice(key.length);
-            matched = true;
-            break;
-          }
-        }
-        if (!matched) {
-          result += '00000';
-          errors.push(text[0]);
-          text = text.slice(1);
-        }
-      }
-      errorBox.innerHTML = errors.length
-        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`
-        : '';
-      return result;
-    }
+const inputText = document.getElementById('inputText');
+const outputText = document.getElementById('outputText');
+const copyB = document.getElementById('copyB');
+const errorBox = document.getElementById('error');
 
-    function decode(code) {
-      let result = '';
-      let errors = [];
-      for (let i = 0; i < code.length; i += 5) {
-        const chunk = code.slice(i, i + 5);
-        if (mapBtoA[chunk]) {
-          result += mapBtoA[chunk];
-        } else {
-          result += '�';
-          errors.push(chunk);
-        }
-      }
-      errorBox.innerHTML = errors.length
-        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`
-        : '';
-      return result;
-    }
+document.getElementById('ncode').addEventListener('click', () => {
+  const input = inputText.value;
+  const output = encode(input);
+  outputText.value = output;
+  errorBox.textContent = '';
+});
 
-    function isEncoded(text) {
-      return /^[0-9]{5,}$/.test(text.trim());
-    }
+document.getElementById('dcode').addEventListener('click', () => {
+  const [output, errors] = decode(inputText.value);
+  outputText.value = output;
+  errorBox.textContent = errors.join(', ');
+});
 
-    function flashButton(btn, text = null) {
-      const original = btn.textContent;
-      btn.style.background = '#0f0';
-      btn.textContent = text || original;
-      setTimeout(() => {
-        btn.style.background = '';
-        btn.textContent = original;
-      }, 1000);
-    }
+document.getElementById('clear').addEventListener('click', () => {
+  inputText.value = '';
+  outputText.value = '';
+  errorBox.textContent = '';
+  inputText.focus();
+});
 
-    runBtn.addEventListener('click', () => {
-      const input = inputText.value.trim();
-      const output = isEncoded(input) ? decode(input) : encode(input);
-      outputText.value = output;
-      flashButton(runBtn);
-    });
+copyB.addEventListener('click', () => {
+  if (outputText.value.trim() === '') {
+    errorBox.textContent = 'কিছু নেই কপি করার মতো';
+    return;
+  }
+  navigator.clipboard.writeText(outputText.value);
+  flashButton(copyB, 'Copied!');
+});
 
-    clearBtn.addEventListener('click', () => {
-      inputText.value = '';
-      outputText.value = '';
-      errorBox.textContent = '';
-      flashButton(clearBtn);
-    });
+function flashButton(button, message) {
+  const original = button.textContent;
+  button.textContent = message;
+  setTimeout(() => {
+    button.textContent = original;
+  }, 1000);
+}
 
-    copyB.addEventListener('click', () => {
-      navigator.clipboard.writeText(outputText.value);
-      flashButton(copyB, 'Copied!');
-    });
   </script>
 </body>
 </html>
