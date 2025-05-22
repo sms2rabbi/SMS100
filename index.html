@@ -14,19 +14,17 @@
       color: #eee;
       font-family: Arial, sans-serif;
       padding: 20px;
+      overflow-x: hidden;
     }
-
     h2 {
       text-align: center;
       margin-bottom: 20px;
       font-weight: normal;
     }
-
     .container {
       max-width: 700px;
       margin: auto;
     }
-
     textarea {
       width: 100%;
       padding: 12px;
@@ -39,14 +37,12 @@
       margin-bottom: 10px;
       min-height: 120px;
     }
-
     textarea:focus {
       background: #222;
       outline: none;
       transform: scale(1.01);
       transition: 0.3s ease;
     }
-
     .button-group {
       display: flex;
       flex-wrap: wrap;
@@ -54,7 +50,6 @@
       margin: 15px 0;
       justify-content: center;
     }
-
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -65,16 +60,13 @@
       cursor: pointer;
       transition: background 0.3s, transform 0.2s;
     }
-
     button:hover {
       background: #444;
     }
-
     button:active {
       background: #666;
       transform: scale(0.97);
     }
-
     #errorBox {
       color: crimson;
       text-align: center;
@@ -83,7 +75,6 @@
       transition: opacity 0.4s;
       font-size: 15px;
     }
-
     @media (max-width: 600px) {
       button {
         flex: 1 1 100%;
@@ -136,9 +127,14 @@
     const clearBtn = document.getElementById('clearBtn');
     const copyB = document.getElementById('copyB');
 
+    function sanitizeInput(str) {
+      return str.replace(/[\u200C\u200D]/g, '').replace(/\s+/g, '');
+    }
+
     function encode(text) {
       let result = '';
       let errors = [];
+      text = sanitizeInput(text);
       const sortedKeys = Object.keys(mapAtoB).sort((a, b) => b.length - a.length);
       while (text.length > 0) {
         let matched = false;
