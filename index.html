@@ -135,8 +135,8 @@
           errors.push(char);
         }
       }
-      errorBox.textContent = errors.length
-        ? `Error: ${[...new Set(errors)].join(', ')} ম্যাপে নেই`
+      errorBox.innerHTML = errors.length
+        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`
         : '';
       return result;
     }
@@ -153,8 +153,8 @@
           errors.push(chunk);
         }
       }
-      errorBox.textContent = errors.length
-        ? `Error: ${[...new Set(errors)].join(', ')} সংকেত অজানা`
+      errorBox.innerHTML = errors.length
+        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`
         : '';
       return result;
     }
