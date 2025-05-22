@@ -149,8 +149,7 @@
         if (mapBtoA[chunk]) {
           result += mapBtoA[chunk];
         } else {
-          result += '�';
-          errors.push(chunk);
+          errors.push(chunk); // শুধু error list-এ রাখবো
         }
       }
       errorBox.textContent = errors.length
