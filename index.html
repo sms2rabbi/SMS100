@@ -37,23 +37,16 @@
       transform: scale(1.01);
     }
 
-    #errorBox {
-      color: lime;
-      text-align: center;
-      margin: 10px 0;
-      min-height: 20px;
-      transition: opacity 0.4s;
-    }
-
     .button-group {
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
-      margin-top: 15px;
+      margin: 15px 0;
+      justify-content: center;
     }
 
-    .button-group button {
-      flex: 1;
-      padding: 10px 0;
+    button {
+      padding: 10px 20px;
       font-size: 16px;
       background: #333;
       color: #eee;
@@ -63,18 +56,26 @@
       transition: background 0.3s, transform 0.2s;
     }
 
-    .button-group button:hover {
+    button:hover {
       background: #444;
     }
 
-    .button-group button:active {
+    button:active {
       background: #666;
       transform: scale(0.97);
     }
 
+    #errorBox {
+      color: crimson;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 20px;
+      transition: opacity 0.4s;
+    }
+
     @media (max-width: 600px) {
-      .button-group {
-        flex-direction: column;
+      button {
+        flex: 1 1 100%;
       }
     }
   </style>
@@ -85,15 +86,15 @@
 
   <textarea id="inputText" rows="4" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
 
-  <div id="errorBox"></div>
-
-  <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
-
   <div class="button-group">
     <button id="runBtn">রূপান্তর</button>
     <button id="copyB">B</button>
     <button id="clearBtn">Clear</button>
   </div>
+
+  <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
+
+  <div id="errorBox"></div>
 
   <script>
     const mapAtoB = {
