@@ -44,32 +44,7 @@
 }
   
   
-  h1 {
-  font-family: 'Hind Siliguri', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 300;
-  font-style: normal;
-  text-align: center;
-  margin: 30px 0;
-  letter-spacing: 1.2px;
-
-  background: linear-gradient(270deg,
-    #7e0c0c, #b91c1c, #e11d48, #dc2626, #7e0c0c
-  );
-  background-size: 500% 500%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-
-  animation: redWave 15s ease-in-out infinite;
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
-}
-
-@keyframes redWave {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+  
     
 
   
@@ -124,34 +99,35 @@
     }
   
   
-  h1 {
+ h1 {
   font-family: 'Hind Siliguri', sans-serif;
   font-size: 2.2rem;
-  font-weight: 300; /* পাতলা */
-  font-style: normal; /* সোজা */
+  font-weight: 300;
   text-align: center;
   margin: 30px 0;
   letter-spacing: 1.2px;
 
-  background: linear-gradient(270deg,
-    #0f0c29, #302b63, #1e1e2f, #3b3b98, #0f0f3d, #151515
+  background: linear-gradient(
+    90deg,
+    rgba(240, 248, 255, 0.25),   /* ফ্যাকাসে AliceBlue */
+    rgba(224, 255, 255, 0.28),   /* হালকা Cyan */
+    rgba(210, 255, 250, 0.24),   /* Soft Aqua */
+    rgba(230, 255, 250, 0.22)    /* কাঁচের Mint */
   );
-  background-size: 600% 600%;
+  background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
-  animation: gradientWave 10s ease-in-out infinite;
-  text-shadow: none;
-  transform: none;
-  transition: none;
+  animation: softGlassWave 30s ease-in-out infinite;
+
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.08); /* আরও হালকা আভা */
 }
 
-@keyframes gradientWave {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+@keyframes softGlassWave {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-  
   
   /*
     #errorBox {
