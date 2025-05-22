@@ -1,1 +1,32 @@
 
+@font-face {
+  font-family: 'Suparna';
+  src: url('fonts/Suparna.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1 {
+  font-family: 'Suparna', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-align: center;
+  margin: 30px 0;
+  letter-spacing: 1.2px;
+  background: linear-gradient(270deg,
+    #3a0ca3, #4361ee, #4cc9f0, #3f37c9,
+    #7209b7, #560bad, #480ca8, #3a0ca3
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientWave 60s linear infinite;
+  text-shadow: none;
+  transform: none;
+  transition: none;
+}
+
+@keyframes gradientWave {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
