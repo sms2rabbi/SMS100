@@ -1,122 +1,143 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MSMS Encoder</title>
+  <title>MSMS Signal 7</title>
   <style>
     body {
       background-color: #121212;
       color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
     textarea {
-      width: 100%;
-      height: 120px;
+      width: 90%;
+      max-width: 500px;
+      height: 150px;
       margin: 10px 0;
       padding: 10px;
-      font-size: 16px;
       background-color: #1e1e1e;
       color: #ffffff;
-      border: 1px solid #333;
-      border-radius: 8px;
-      resize: vertical;
+      border: 1px solid #444;
+      border-radius: 10px;
+      resize: none;
+      font-size: 16px;
     }
     button {
-      margin-right: 10px;
-      margin-top: 5px;
+      margin: 5px;
       padding: 10px 20px;
       background-color: #333;
-      color: #fff;
+      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
     }
     button:hover {
-      background-color: #444;
+      background-color: #555;
     }
     .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>MSMS Encoder</h1>
+  <h2>MSMS Signal (7)</h2>
 
-  <label for="inputText">Input</label>
-  <textarea id="inputText" placeholder="এখানে টেক্সট লিখুন..."></textarea>
+  <textarea id="inputText" placeholder="Enter A or B"></textarea>
+  <textarea id="outputText" placeholder="Output" readonly></textarea>
 
   <div class="button-group">
-    <button onclick="run()">Run</button>
-    <button onclick="copyResult('A')">Copy A</button>
-    <button onclick="copyResult('B')">Copy B</button>
-    <button onclick="clean()">Clean</button>
+    <button onclick="process()">Smart</button>
+    <button onclick="copyOutput('A')">Copy A</button>
+    <button onclick="copyOutput('B')">Copy B</button>
+    <button onclick="clearText()">Clear Tex</button>
   </div>
-
-  <label for="outputText">Output</label>
-  <textarea id="outputText" readonly placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
 
   <script>
     const mapAtoB = {
-      "অ": "১", "আ": "২", "ই": "৩", "ঈ": "৪", "উ": "৫", "ঊ": "৬",
-      "ঋ": "৭", "এ": "৮", "ঐ": "৯", "ও": "০", "ঔ": "!", "ক": "@",
-      "খ": "#", "গ": "$", "ঘ": "%", "ঙ": "^", "চ": "&", "ছ": "*",
-      "জ": "(", "ঝ": ")", "ঞ": "-", "ট": "+", "ঠ": "=", "ড": "{",
-      "ঢ": "}", "ণ": "[", "ত": "]", "থ": ";", "দ": ":", "ধ": ",",
-      "ন": ".", "প": "<", "ফ": ">", "ব": "?", "ভ": "/", "ম": "|",
-      "য": "~", "র": "`", "ল": "৳", "শ": "¢", "ষ": "£", "স": "¥",
-      "হ": "§", "ড়": "¤", "ঢ়": "●", "য়": "□", "ৎ": "■", "ং": "◘",
-      "ঃ": "◙", "ঁ": "○", "া": "◦", "ি": "☼", "ী": "►", "ু": "◄",
-      "ূ": "↕", "ৃ": "‼", "ে": "¶", "ৈ": "§", "ো": "▬", "ৌ": "↨",
-      "০": "a", "১": "b", "২": "c", "৩": "d", "৪": "e",
-      "৫": "f", "৬": "g", "৭": "h", "৮": "i", "৯": "j",
-      " ": " ", "\n": "\n"
+     
+//ম্যাপ অংশ
+
+"07971": "অ", "86821": "আ", "24078": "ই", "68162": "ঈ", "94864": "উ",
+      "32087": "ঊ", "62341": "ঋ", "33187": "এ", "18554": "ঐ", "04821": "ও", "09762": "ঔ", "67384": "।",
+      "79064": "া", "01478": "ি", "52168": "ী", "90234":  "ক্ত", "09164": "ক্স", "21359": "গ্গ", "48963": "গ্ধ",
+   
+      "60892": ">", "05397": ",", "91827": ".", "27068": "/", "38460": "?",
+      "02396": "`", "16408": "~",
+      "00010": " ", "00011": "\n"
     };
 
-    const mapBtoA = Object.fromEntries(
-      Object.entries(mapAtoB).map(([a, b]) => [b, a])
-    );
+const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
 
-    function isAtoB(input) {
-      const last5 = input.slice(-5);
-      return [...input.slice(0, -5)].some(ch => mapAtoB[ch]);
-    }
-
-    function run() {
-      const input = document.getElementById("inputText").value.trim();
-      if (!input) return;
-
-      let output = "";
-      let signal = Math.floor(10000 + Math.random() * 89999).toString();
-
-      if (isAtoB(input)) {
-        for (let char of input) {
-          output += mapAtoB[char] || char;
-        }
-        output += signal;
-      } else {
-        const core = input.slice(0, -5); // remove signal
-        for (let char of core) {
-          output += mapBtoA[char] || char;
-        }
+function encodeAtoB(text) {
+  let output = '';
+  let i = 0;
+  while (i < text.length) {
+    let found = false;
+    // সর্বোচ্চ 4 অক্ষর পর্যন্ত মিলায়
+    for (let len = 4; len > 0; len--) {
+      const slice = text.substr(i, len);
+      if (mapAtoB[slice]) {
+        output += mapAtoB[slice];
+        i += len;
+        found = true;
+        break;
       }
+    }
+    if (!found) {
+      output += text[i];
+      i++;
+    }
+  }
+  return output;
+}
 
-      document.getElementById("outputText").value = output;
+function decodeBtoA(text) {
+  let output = '';
+  let token = '';
+  for (let char of text) {
+    token += char;
+    if (mapBtoA[token]) {
+      output += mapBtoA[token];
+      token = '';
+    }
+  }
+  if (token !== '') output += token; // বাকি থাকলে
+  return output;
+}
+
+function process() {
+  const input = document.getElementById('inputText').value;
+  let countB = 0, countA = 0;
+
+  for (let token in mapBtoA) {
+    if (input.includes(token)) countB++;
+  }
+  for (let token in mapAtoB) {
+    if (input.includes(token)) countA++;
+  }
+
+  const output = (countB >= countA) ? decodeBtoA(input) : encodeAtoB(input);
+  document.getElementById('outputText').value = output;
+}
+
+    function copyOutput(type) {
+      const output = document.getElementById('outputText');
+      output.select();
+      document.execCommand('copy');
+      alert(`${type} copied`);
     }
 
-    function copyResult(type) {
-      const output = document.getElementById("outputText").value;
-      if (!output) return;
-      navigator.clipboard.writeText(output).then(() => {
-        alert("Copied to clipboard as " + type);
-      });
-    }
-
-    function clean() {
-      document.getElementById("inputText").value = "";
-      document.getElementById("outputText").value = "";
+    function clearText() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('outputText').value = '';
     }
   </script>
 </body>
