@@ -85,6 +85,9 @@
   <h2>গোপন সংকেত রূপান্তর</h2>
 
   <textarea id="inputText" rows="4" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
+  
+  <div id="errorBox"></div>
+  <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
 
   <div class="button-group">
     <button id="runBtn">রূপান্তর</button>
@@ -92,10 +95,7 @@
     <button id="clearBtn">Clear</button>
   </div>
 
-  <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
-
-  <div id="errorBox"></div>
-
+  
   <script>
     const mapAtoB = {
       'অ': '00001', 'আ': '00002', 'ই': '00003', 'ঈ': '00004',
