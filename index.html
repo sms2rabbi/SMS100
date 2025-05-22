@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="bn">
-<head>
+<!DOCTYPE html><html lang="bn"><head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>গোপন সংকেত রূপান্তর (MSMS)</title>
@@ -105,102 +104,101 @@
       'ভ': '00035', 'ম': '00036', 'য': '00037', 'র': '00038', 'ল': '00039',
       'শ': '00040', 'ষ': '00041', 'স': '00042', 'হ': '00043', 'ড়': '00044',
       'ঢ়': '00045', 'য়': '00046', 'ৎ': '00047', 'ঁ': '00048', 'ং': '00049',
-      'ঃ': '00050', '৺': '00051', '।': '00052', ',': '00053', '!': '00054',
+      'ঃ': '00050', '৺': '00051', 'া': '00052', ',': '00053', '!': '00054',
       '?': '00055', '০': '00056', '১': '00057', '২': '00058', '৩': '00059',
       '৪': '00060', '৫': '00061', '৬': '00062', '৭': '00063', '৮': '00064',
       '৯': '00065', ' ': '99999'
-    };
+    };const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([k, v]) => [v, k]));
 
-    const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([k, v]) => [v, k]));
+const inputText = document.getElementById('inputText');
+const outputText = document.getElementById('outputText');
+const errorBox = document.getElementById('errorBox');
 
-    const inputText = document.getElementById('inputText');
-    const outputText = document.getElementById('outputText');
-    const errorBox = document.getElementById('errorBox');
-
-    function encode(text) {
-      let result = '';
-      let errors = [];
-      const sortedKeys = Object.keys(mapAtoB).sort((a, b) => b.length - a.length);
-      while (text.length > 0) {
-        let matched = false;
-        for (let key of sortedKeys) {
-          if (text.startsWith(key)) {
-            result += mapAtoB[key];
-            text = text.slice(key.length);
-            matched = true;
-            break;
-          }
-        }
-        if (!matched) {
-          result += '00000';
-          errors.push(text[0]);
-          text = text.slice(1);
-        }
+function encode(text) {
+  let result = '';
+  let errors = [];
+  const sortedKeys = Object.keys(mapAtoB).sort((a, b) => b.length - a.length);
+  while (text.length > 0) {
+    let matched = false;
+    for (let key of sortedKeys) {
+      if (text.startsWith(key)) {
+        result += mapAtoB[key];
+        text = text.slice(key.length);
+        matched = true;
+        break;
       }
-      errorBox.innerHTML = errors.length
-        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`
-        : '';
-      return result;
     }
-
-    function decode(code) {
-      let result = '';
-      let errors = [];
-      for (let i = 0; i < code.length; i += 5) {
-        const chunk = code.slice(i, i + 5);
-        if (mapBtoA[chunk]) {
-          result += mapBtoA[chunk];
-        } else {
-          result += '�';
-          errors.push(chunk);
-        }
-      }
-      errorBox.innerHTML = errors.length
-        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`
-        : '';
-      return result;
+    if (!matched) {
+      result += '00000';
+      errors.push(text[0]);
+      text = text.slice(1);
     }
+  }
+  errorBox.innerHTML = errors.length
+    ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`
+    : '';
+  return result;
+}
 
-    function isEncoded(text) {
-      return /^[0-9]{5,}$/.test(text.trim());
+function decode(code) {
+  let result = '';
+  let errors = [];
+  for (let i = 0; i < code.length; i += 5) {
+    const chunk = code.slice(i, i + 5);
+    if (mapBtoA[chunk]) {
+      result += mapBtoA[chunk];
+    } else {
+      result += '�';
+      errors.push(chunk);
     }
+  }
+  errorBox.innerHTML = errors.length
+    ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`
+    : '';
+  return result;
+}
 
-    function flashButton(btn, text = null) {
-      const original = btn.textContent;
-      btn.style.background = '#0f0';
-      btn.textContent = text || original;
-      setTimeout(() => {
-        btn.style.background = '';
-        btn.textContent = original;
-      }, 1000);
-    }
+function isEncoded(text) {
+  return /^[0-9]{5,}$/.test(text.trim());
+}
 
-    function activateHoverEffect(btn) {
-      btn.addEventListener('mouseover', () => btn.style.background = '#444');
-      btn.addEventListener('mouseout', () => btn.style.background = '#333');
-      btn.addEventListener('mousedown', () => btn.style.background = '#666');
-      btn.addEventListener('mouseup', () => btn.style.background = '#444');
-    }
+function flashButton(btn, text = null) {
+  const original = btn.textContent;
+  btn.style.background = '#0f0';
+  btn.textContent = text || original;
+  setTimeout(() => {
+    btn.style.background = '';
+    btn.textContent = original;
+  }, 1000);
+}
 
-    document.querySelectorAll('button').forEach(activateHoverEffect);
+function activateHoverEffect(btn) {
+  btn.addEventListener('mouseover', () => btn.style.background = '#444');
+  btn.addEventListener('mouseout', () => btn.style.background = '#333');
+  btn.addEventListener('mousedown', () => btn.style.background = '#666');
+  btn.addEventListener('mouseup', () => btn.style.background = '#444');
+}
 
-    document.getElementById('runBtn').addEventListener('click', () => {
-      const input = inputText.value.trim();
-      outputText.value = isEncoded(input) ? decode(input) : encode(input);
-      flashButton(runBtn);
-    });
+document.querySelectorAll('button').forEach(activateHoverEffect);
 
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      inputText.value = '';
-      outputText.value = '';
-      errorBox.textContent = '';
-      flashButton(clearBtn);
-    });
+document.getElementById('runBtn').addEventListener('click', () => {
+  const input = inputText.value.trim();
+  outputText.value = isEncoded(input) ? decode(input) : encode(input);
+  flashButton(runBtn);
+});
 
-    document.getElementById('copyB').addEventListener('click', () => {
-      navigator.clipboard.writeText(outputText.value);
-      flashButton(copyB, 'Copied!');
-    });
+document.getElementById('clearBtn').addEventListener('click', () => {
+  inputText.value = '';
+  outputText.value = '';
+  errorBox.textContent = '';
+  flashButton(clearBtn);
+});
+
+document.getElementById('copyB').addEventListener('click', () => {
+  navigator.clipboard.writeText(outputText.value);
+  flashButton(copyB, 'Copied!');
+});
+
   </script>
 </body>
 </html>
