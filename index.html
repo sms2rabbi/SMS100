@@ -115,6 +115,7 @@
       <button id="clearBtn">Clear</button>
     </div>
   </div>
+
   <script>
     const mapAtoB = {
       'জ্ব': '00066', 'ক্র': '00067', 'স্ট': '00068', 'গ্র': '00069', 'প্র': '00070',
@@ -134,6 +135,7 @@
       '৪': '00060', '৫': '00061', '৬': '00062', '৭': '00063', '৮': '00064',
       '৯': '00065', ' ': '99999'
     };
+
     const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([k, v]) => [v, k]));
 
     const inputText = document.getElementById('inputText');
