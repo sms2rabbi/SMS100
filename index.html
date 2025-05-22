@@ -1,101 +1,110 @@
 <!DOCTYPE html><html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>গোপন সংকেত রূপান্তর (MSMS)</title>
- 
   <style>
-    
     * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }body {
+  background: #111;
+  color: #eee;
+  font-family: Arial, sans-serif;
+  padding: 20px;
 }
-  
-    
-    body {
-      background: #111;
-      color: #eee;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      transition: background 0.3s, color 0.3s;
-    }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: normal;
-    }
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: normal;
+}
 
-    textarea {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: none;
-      resize: vertical;
-      background: #1e1e1e;
-      color: #fff;
-      transition: background 0.4s ease, transform 0.3s ease;
-    }
+.container {
+  max-width: 700px;
+  margin: auto;
+}
 
-    textarea:focus {
-      background: #222;
-      outline: none;
-      transform: scale(1.01);
-    }
+textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  resize: vertical;
+  background: #1e1e1e;
+  color: #fff;
+  margin-bottom: 10px;
+}
 
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 15px 0;
-      justify-content: center;
-    }
+textarea:focus {
+  background: #222;
+  outline: none;
+  transform: scale(1.01);
+  transition: 0.3s ease;
+}
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #333;
-      color: #eee;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+  justify-content: center;
+}
 
-    button:hover {
-      background: #444;
-    }
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #333;
+  color: #eee;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
 
-    button:active {
-      background: #666;
-      transform: scale(0.97);
-    }
+button:hover {
+  background: #444;
+}
 
-    #errorBox {
-      color: crimson;
-      text-align: center;
-      margin-top: 10px;
-      min-height: 20px;
-      transition: opacity 0.4s;
-    }
+button:active {
+  background: #666;
+  transform: scale(0.97);
+}
 
-    @media (max-width: 600px) {
-      button {
-        flex: 1 1 100%;
-      }
-    }
-    
+#errorBox {
+  color: crimson;
+  text-align: center;
+  margin-top: 10px;
+  min-height: 20px;
+  transition: opacity 0.4s;
+}
+
+@media (max-width: 600px) {
+  button {
+    flex: 1 1 100%;
+  }
+}
+
   </style>
 </head>
-<body>  <h2>গোপন সংকেত রূপান্তর</h2>  <textarea id="inputText" rows="4" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>  <div id="errorBox"></div>
-  <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>  <div class="button-group">
-    <button id="runBtn">রূপান্তর</button>
-    <button id="copyB">B</button>
-    <button id="clearBtn">Clear</button>
+<body>
+  <h2>গোপন সংকেত রূপান্তর</h2>
+  <div class="container">
+    <textarea id="inputText" rows="4" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
+    <div id="errorBox"></div>
+    <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea><div class="button-group">
+  <button id="runBtn">রূপান্তর</button>
+  <button id="copyB">B</button>
+  <button id="clearBtn">Clear</button>
+</div>
+
   </div>  <script>
     const mapAtoB = {
+      'জ্ব': '00066', 'ক্র': '00067', 'স্ট': '00068',
+      'গ্র': '00069', 'প্র': '00070', 'ব্র': '00071', 'স্ক': '00072',
+      'স্ট্র': '00073', 'স্ম': '00074', 'ঙ্গ': '00075', 'হ্ম': '00076',
       'অ': '00001', 'আ': '00002', 'ই': '00003', 'ঈ': '00004',
       'উ': '00005', 'ঊ': '00006', 'ঋ': '00007', 'এ': '00008', 'ঐ': '00009',
       'ও': '00010', 'ঔ': '00011', 'ক': '00012', 'খ': '00013', 'গ': '00014',
@@ -109,9 +118,7 @@
       'ঃ': '00050', '৺': '00051', '।': '00052', ',': '00053', '!': '00054',
       '?': '00055', '০': '00056', '১': '00057', '২': '00058', '৩': '00059',
       '৪': '00060', '৫': '00061', '৬': '00062', '৭': '00063', '৮': '00064',
-      '৯': '00065', 'জ্ব': '00066', 'ক্র': '00067', 'স্ট': '00068',
-      'গ্র': '00069', 'প্র': '00070', 'ব্র': '00071', 'স্ক': '00072',
-      'স্ট্র': '00073', 'স্ম': '00074', 'ঙ্গ': '00075', 'হ্ম': '00076'
+      '৯': '00065'
     };
 
     const mapBtoA = Object.fromEntries(
@@ -125,12 +132,21 @@
     function encode(text) {
       let result = '';
       let errors = [];
-      for (let char of text) {
-        if (mapAtoB[char]) {
-          result += mapAtoB[char];
-        } else {
+      const sortedKeys = Object.keys(mapAtoB).sort((a, b) => b.length - a.length);
+      while (text.length > 0) {
+        let matched = false;
+        for (let key of sortedKeys) {
+          if (text.startsWith(key)) {
+            result += mapAtoB[key];
+            text = text.slice(key.length);
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
           result += '00000';
-          errors.push(char);
+          errors.push(text[0]);
+          text = text.slice(1);
         }
       }
       errorBox.innerHTML = errors.length
