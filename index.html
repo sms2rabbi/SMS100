@@ -10,17 +10,77 @@
       margin: 0;
       padding: 0;
     }
-    body {
-      background: #111;
-      color: #eee;
-      font-family: Arial, sans-serif;
-      padding: 0;
-      margin : 0;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-weight: normal;
+    
+  
+  body {
+  background-color: #111; /* মূল কালো ব্যাকগ্রাউন্ড */
+  color: #eee;
+  font-family: Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden; /* স্ক্রল বন্ধ */
+
+  background-image: 
+    radial-gradient(circle at top left, rgba(147, 51, 234, 0.06), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.08), transparent 60%),
+    radial-gradient(circle at 40% 60%, rgba(124, 58, 237, 0.05), transparent 70%);
+  
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  animation: bodyFlow 30s ease-in-out infinite;
+}
+
+@keyframes bodyFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+  
+  
+  
+    
+  
+  h1 {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 20px 0;
+  letter-spacing: 1.2px;
+  background: linear-gradient(270deg,
+    #7e22ce, #9333ea, #a855f7, #c084fc, #e879f9,
+    #8b5cf6, #6d28d9, #5b21b6, #7e22ce);
+  background-size: 2000% 2000%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: grapesWave 75s ease-in-out infinite;
+  text-shadow:
+    0 0 6px rgba(170, 0, 255, 0.2),
+    0 0 12px rgba(140, 0, 200, 0.15),
+    0 0 16px rgba(100, 0, 160, 0.1);
+  transition: transform 0.4s ease;
+  animation-timing-function: ease-in-out;
+}
+
+h1:hover {
+  transform: scale(1.06) rotate(-1deg);
+}
+
+@keyframes grapesWave {
+  0% { background-position: 0% 50%; }
+  12% { background-position: 15% 50%; }
+  25% { background-position: 30% 50%; }
+  37% { background-position: 45% 50%; }
+  50% { background-position: 60% 50%; }
+  62% { background-position: 75% 50%; }
+  75% { background-position: 90% 50%; }
+  87% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+} 
+  
+  
+  
     }
     .container {
       max-width: 900px;
@@ -35,24 +95,11 @@
       
     }
   
-  /*
-    textarea {
-      width: 100%;
-      padding: 5px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: none;
-      resize: vertical;
-      background: #1e1e1e;
-      color: #fff;
-      margin: 0px;
-    } */
-  
   
   textarea {
   padding: 10px;
   font-size: 16px;
-  border-radius: 15px ;
+  /*border-radius: 15px ; */
   border: none;
   resize: vertical;
   background: #1e1e1e;
@@ -61,7 +108,7 @@
   width: calc(100% - 30px) ;
 }
   
-  /* 
+  
   .top-radius {
   border-radius: 10px 10px 0 0;
 }
@@ -69,7 +116,7 @@
 .bottom-radius {
   border-radius: 0 0 10px 10px;
 } 
-  */
+  
   
 
     .box {
@@ -147,9 +194,10 @@
     }
   </style>
  </head>
- <body>
+ <body class="body">
 
-   <h2>গোপন সংকেত রূপান্তর</h2>
+   <h1 class="h1">গোপন সংকেত রূপান্তর</h1>
+   
 <div class="container">
   <div class="row-box">
     <div class="box">
@@ -163,8 +211,8 @@
     </div>
   </div>
   <div class="button-group">
-    <button id="runBtn">রূপান্তর</button>
-    <button id="copyB">B</button>
+    <button id="runBtn">Run</button>
+    <button id="copyB">Copy</button>
     <button id="clearBtn">Clear</button>
   </div>
 </div>
