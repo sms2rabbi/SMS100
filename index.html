@@ -20,8 +20,14 @@
       font-weight: normal;
     }
     .container {
-      max-width: 700px;
+      max-width: 900px;
       margin: auto;
+    }
+    .row-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
     }
     textarea {
       width: 100%;
@@ -34,11 +40,24 @@
       color: #fff;
       margin-bottom: 10px;
     }
+    .box {
+      flex: 1 1 48%;
+      display: flex;
+      flex-direction: column;
+    }
     textarea:focus {
       background: #222;
       outline: none;
       transform: scale(1.01);
       transition: 0.3s ease;
+    }
+    #errorBox {
+      color: crimson;
+      text-align: center;
+      margin: 10px 0;
+      min-height: 20px;
+      font-size: 14px;
+      line-height: 1.4;
     }
     .button-group {
       display: flex;
@@ -64,16 +83,11 @@
       background: #666;
       transform: scale(0.97);
     }
-    #errorBox {
-      color: crimson;
-      text-align: center;
-      margin-top: 8px;
-      min-height: 0;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-    @media (max-width: 600px) {
-      button {
+    @media (max-width: 768px) {
+      .row-box {
+        flex-direction: column;
+      }
+      .box {
         flex: 1 1 100%;
       }
     }
@@ -82,9 +96,15 @@
 <body>
   <h2>গোপন সংকেত রূপান্তর</h2>
   <div class="container">
-    <textarea id="inputText" rows="4" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
+    <div class="row-box">
+      <div class="box">
+        <textarea id="inputText" rows="8" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
+      </div>
+      <div class="box">
+        <textarea id="outputText" rows="8" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
+      </div>
+    </div>
     <div id="errorBox"></div>
-    <textarea id="outputText" rows="4" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
     <div class="button-group">
       <button id="runBtn">রূপান্তর</button>
       <button id="copyB">B</button>
