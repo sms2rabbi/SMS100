@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="bn"><head>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>গোপন সংকেত রূপান্তর (MSMS)</title>
@@ -100,11 +102,13 @@
       <div class="box">
         <textarea id="inputText" rows="8" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
       </div>
-      <div class="box">
-        <textarea id="outputText" rows="8" placeholder="ফলাফল এখানে দেখা যাবে..."></textarea>
-      </div>
     </div>
     <div id="errorBox"></div>
+    <div class="row-box">
+      <div class="box">
+        <textarea id="outputText" rows="8" placeholder="ফলাফল এখানে দেখা যাবে..." readonly></textarea>
+      </div>
+    </div>
     <div class="button-group">
       <button id="runBtn">রূপান্তর</button>
       <button id="copyB">B</button>
@@ -156,9 +160,13 @@
           text = text.slice(1);
         }
       }
-      errorBox.innerHTML = errors.length
-        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`
-        : '';
+      if (errors.length) {
+        inputText.value = '';
+        outputText.value = '';
+        errorBox.innerHTML = `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`;
+      } else {
+        errorBox.innerHTML = '';
+      }
       return result;
     }
 
@@ -174,9 +182,13 @@
           errors.push(chunk);
         }
       }
-      errorBox.innerHTML = errors.length
-        ? `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`
-        : '';
+      if (errors.length) {
+        inputText.value = '';
+        outputText.value = '';
+        errorBox.innerHTML = `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`;
+      } else {
+        errorBox.innerHTML = '';
+      }
       return result;
     }
 
