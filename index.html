@@ -6,208 +6,214 @@
   <!--Google Fonts-->
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300&display=swap" rel="stylesheet">
-  <title>গোপন সংকেত রূপান্তর (MSMS)</title>  
-    
-  <style>
+  <title>100SMS</title>  
   
   
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-  
+<style>
+  /*=========== ↓ CSS ↓ ===========*/
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
-  background-color: #111; /* মূল কালো ব্যাকগ্রাউন্ড */
-  color: #eee;
-  font-family: Arial, sans-serif;
-  padding: 0;
-  margin: 0;
-  overflow-x: hidden; /* স্ক্রল বন্ধ */
+    background-color: #111;
+    color: #eee;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
 
-  background-image: 
-    radial-gradient(circle at top left, rgba(147, 51, 234, 0.06), transparent 60%),
-    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.08), transparent 60%),
-    radial-gradient(circle at 40% 60%, rgba(124, 58, 237, 0.05), transparent 70%);
-  
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  animation: bodyFlow 30s ease-in-out infinite;
-}
-
-@keyframes bodyFlow {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-  
-  
-  
-    
-
-  
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-    }
-    .row-box {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap:10px; 
-  margin: 0;   
+    background-image:
+      radial-gradient(circle at top left, rgba(147, 51, 234, 0.06), transparent 60%),
+      radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.08), transparent 60%),
+      radial-gradient(circle at 40% 60%, rgba(124, 58, 237, 0.05), transparent 70%);
       
-    }
-  
-  
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    animation: bodyFlow 30s ease-in-out infinite;
+  }
+
+  @keyframes bodyFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /*====== Container ======*/
+  .container {
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .row-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .box {
+    flex: 1 1 48%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* =========== h1 ============ */
+  h1 {
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    text-align: center;
+    margin: 30px 0;
+    letter-spacing: 1.2px;
+
+    background: linear-gradient(
+      90deg,
+      rgba(240, 248, 255, 0.25),
+      rgba(224, 255, 255, 0.28),
+      rgba(210, 255, 250, 0.24),
+      rgba(230, 255, 250, 0.22)
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.08);
+    animation: softGlassWave 30s ease-in-out infinite;
+  }
+
+  @keyframes softGlassWave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /*========= Textarea ===========*/
   textarea {
-  padding: 10px;
-  font-size: 16px;
-  /*border-radius: 15px ; */
-  border: none;
-  resize: vertical;
-  background: #1e1e1e;
-  color: #fff;
-  margin: 0px 15px 0px 15px;
-  width: calc(100% - 30px) ;
-}
-  
-  
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    resize: vertical;
+    background: #1e1e1e;
+    color: #fff;
+    margin: 0 15px;
+    width: calc(100% - 30px);
+  }
+
   .top-radius {
-  border-radius: 10px 10px 0 0;
-}
+    border-radius: 10px 10px 0 0;
+  }
 
-.bottom-radius {
-  border-radius: 0 0 10px 10px;
-} 
-  
-  
+  .bottom-radius {
+    border-radius: 0 0 10px 10px;
+  }
 
-    .box {
-      flex: 1 1 48%;
-      display: flex;
+  textarea:focus {
+    background: #222;
+    outline: none;
+    transform: scale(1.01);
+    transition: 0.3s ease;
+  }
+
+  /*====== Textarea Box ======*/
+  #inputText {
+    margin-bottom: 5px;
+  }
+
+  #outputText {
+    margin-top: 5px;
+  }
+
+  /*========= Error Box ==========*/
+  #errorBox {
+    background: red;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px auto;
+    text-align: center;
+    width: 90%;
+    display: none;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 20px;
+    z-index: 10;
+    position: relative;
+    transition: opacity 0.5s ease;
+  }
+
+  #errorBox.show {
+    display: block;
+    opacity: 1;
+  }
+
+  /* === Button Group === */
+  .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+    justify-content: center;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #333;
+    color: #eee;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  button:hover {
+    background: #444;
+  }
+
+  button:active {
+    background: #666;
+    transform: scale(0.97);
+  }
+
+  @media (max-width: 768px) {
+    .row-box {
       flex-direction: column;
     }
-    textarea:focus {
-      background: #222;
-      outline: none;
-      transform: scale(1.01);
-      transition: 0.3s ease;
-    }
-  
-  
- h1 {
-  font-family: 'Hind Siliguri', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 300;
-  text-align: center;
-  margin: 30px 0;
-  letter-spacing: 1.2px;
 
-  background: linear-gradient(
-    90deg,
-    rgba(240, 248, 255, 0.25),   /* ফ্যাকাসে AliceBlue */
-    rgba(224, 255, 255, 0.28),   /* হালকা Cyan */
-    rgba(210, 255, 250, 0.24),   /* Soft Aqua */
-    rgba(230, 255, 250, 0.22)    /* কাঁচের Mint */
-  );
-  background-size: 400% 400%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    .box {
+      flex: 1 1 100%;
+    }
+  }
 
-  animation: softGlassWave 30s ease-in-out infinite;
-
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.08); /* আরও হালকা আভা */
-}
-
-@keyframes softGlassWave {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-  
-  /*
-    #errorBox {
-      color: crimson;
-      text-align: center;
-      margin: 10px 0;
-      min-height: 20px;
-      font-size: 14px;
-              
-      } */
-  
-  
-  #errorBox {
-  margin: 3px;
-  min-height: 0;
-  line-height: 1.4;
-  height: 0;
-  overflow: hidden;
-  text-align: center;
-  color: crimson;
-  font-size: 14px;
-} 
-
-#errorBox.show {
-  height: auto;
-  margin: 5px 0;
-  min-height: 20px;
-}
-  
-  
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 15px 0;
-      justify-content: center;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #333;
-      color: #eee;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-    button:hover {
-      background: #444;
-    }
-    button:active {
-      background: #666;
-      transform: scale(0.97);
-    }
-    @media (max-width: 768px) {
-      .row-box {
-        flex-direction: column;
-      }
-      .box {
-        flex: 1 1 100%;
-      }
-    }
   </style>
  </head>
  <body class="body">
 
-   <h1 class="h1">গোপন সংকেত রূপান্তর</h1>
+     <h1 class="h1">সাংকেতিক বার্তা</h1>
    
+   
+<div id="errorBox"></div>
+ 
 <div class="container">
   <div class="row-box">
     <div class="box">
-      <textarea id="inputText" class="top-radius" rows="8" placeholder="বার্তা লিখুন বা সংকেত পেস্ট করুন..."></textarea>
+      <textarea id="inputText" class="top-radius" rows="8" placeholder="এখানে বার্তা লিখুন..."></textarea>
     </div>
   </div>
-  <div id="errorBox"></div>
+  
+  
+  
   <div class="row-box">
     <div class="box">
-      <textarea id="outputText" class="bottom-radius" rows="8" placeholder="ফলাফল এখানে দেখা যাবে..." readonly></textarea>
+      <textarea id="outputText" class="bottom-radius" rows="8" placeholder="ফলাফল এখানেই..." readonly></textarea>
     </div>
   </div>
+  
+  
   <div class="button-group">
     <button id="runBtn">Run</button>
     <button id="copyB">Copy</button>
@@ -217,29 +223,68 @@
 
   <script>
     const mapAtoB = {
-      'জ্ব': '00066', 'ক্র': '00067', 'স্ট': '00068', 'গ্র': '00069', 'প্র': '00070',
-      'ব্র': '00071', 'স্ক': '00072', 'স্ট্র': '00073', 'স্ম': '00074', 'ঙ্গ': '00075',
-      'হ্ম': '00076', 'অ': '00001', 'আ': '00002', 'ই': '00003', 'ঈ': '00004',
-      'উ': '00005', 'ঊ': '00006', 'ঋ': '00007', 'এ': '00008', 'ঐ': '00009',
-      'ও': '00010', 'ঔ': '00011', 'ক': '00012', 'খ': '00013', 'গ': '00014',
-      'ঘ': '00015', 'ঙ': '00016', 'চ': '00017', 'ছ': '00018', 'জ': '00019',
-      'ঝ': '00020', 'ঞ': '00021', 'ট': '00022', 'ঠ': '00023', 'ড': '00024',
-      'ঢ': '00025', 'ণ': '00026', 'ত': '00027', 'থ': '00028', 'দ': '00029',
-      'ধ': '00030', 'ন': '00031', 'প': '00032', 'ফ': '00033', 'ব': '00034',
-      'ভ': '00035', 'ম': '00036', 'য': '00037', 'র': '00038', 'ল': '00039',
-      'শ': '00040', 'ষ': '00041', 'স': '00042', 'হ': '00043', 'ড়': '00044',
-      'ঢ়': '00045', 'য়': '00046', 'ৎ': '00047', 'ঁ': '00048', 'ং': '00049',
-      'ঃ': '00050', '৺': '00051', 'া': '00052', ',': '00053', '!': '00054',
-      '?': '00055', '০': '00056', '১': '00057', '২': '00058', '৩': '00059',
-      '৪': '00060', '৫': '00061', '৬': '00062', '৭': '00063', '৮': '00064',
-      '৯': '00065', ' ': '99999'
-    };
+        
+      
+  "অ": "10001", "আ": "10002", "ই": "10003", "ঈ": "10004", "উ": "10005", "ঊ": "10006", "ঋ": "10007", "এ": "10008", "ঐ": "10009", "ও": "10010", "ঔ": "10011", 
+  "ক": "10012", "খ": "10013", "গ": "10014", "ঘ": "10015", "ঙ": "10016",
+  "চ": "10017", "ছ": "10018", "জ": "10019", "ঝ": "10020", "ঞ": "10021",
+  "ট": "10022", "ঠ": "10023", "ড": "10024", "ঢ": "10025", "ণ": "10026",
+  "ত": "10027", "থ": "10028", "দ": "10029", "ধ": "10030", "ন": "10031",
+  "প": "10032", "ফ": "10033", "ব": "10034", "ভ": "10035", "ম": "10036",
+  "য": "10037", "র": "10038", "ল": "10039", "শ": "10040", "ষ": "10041", "স": "10042", "হ": "10043",
+  "ড়": "10044", "ঢ়": "10045", "য়": "10046", "ৎ": "10047", "ং": "10048", "ঃ": "10049", "ঁ": "10050", "্": "10051", "‍": "10052", // ZWNJ
+  "া": "10053", "ি": "10054", "ী": "10055", "ু": "10056", "ূ": "10057", "ৃ": "10058", "ে": "10059", "ৈ": "10060", "ো": "10061", "ৌ": "10062",
+  "ৗ": "10063", "ৠ": "10064", "ৡ": "10065", "ৢ": "10066", "ৣ": "10067", "৤": "10068", "০": "10069", "১": "10070", "২": "10071", "৩": "10072",
+  "৪": "10073", "৫": "10074", "৬": "10075", "৭": "10076", "৮": "10077", "৯": "10078",
 
-    const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([k, v]) => [v, k]));
+  // যুক্তাক্ষর (দেয়া অনুযায়ী)
+  "ক্ক": "59763", "ক্ত": "57091", "ক্ম": "56023", "ক্স": "57462", "ক্ষ": "59929", "খ্ন": "56201", "খ্ম": "56497",
+  "গ্গ": "53821", "গ্ধ": "49306", "গ্ন": "58327", "গ্ম": "50734", "গ্র": "58865", "গ্ল": "49710", "ঘ্ন": "55309",
+  "ঙ্ক": "57325", "ঙ্খ": "59017", "ঙগ": "53269", "ঙঘ": "57820", "ঙ্ম": "55216", "চ্চ": "55378", "চ্ছ": "47019",
+  "জ্জ": "58113", "জ্ঝ": "49142", "জ্ঞ": "58245", "ঝ্ন": "48791", "ঞ্চ": "48966", "ঞ্ছ": "59562", "ঞ্ঝ": "54827",
+  "ট্ট": "56307", "ট্ঠ": "55346", "ড্ড": "55345", "ড্ঢ": "59973", "ড্ব": "57092", "ঢ্ড": "50346", "ঢ্ঢ": "54033",
+  "ণ্ট": "55234", "ণ্ঠ": "57961", "ণ্ড": "49642", "ণ্ঢ": "58399", "ত্ত": "57013", "ত্থ": "55357", "ত্ন": "58812",
+  "ত্ম": "57613", "ৎস": "54328", "থ্ব": "53087", "দ্গ": "59237", "দ্ঘ": "53416", "দ্দ": "59332", "দ্ধ": "57838",
+  "দ্ন": "57946", "দ্ম": "57302", "দ্র": "55117", "দ্ল": "49964", "ধ্ন": "46083", "ধ্ম": "53914", "ন্ত": "59012",
+  "ন্থ": "56311", "ন্দ": "53579", "ন্ধ": "59692", "ন্ন": "56772", "ন্ম": "47067", "প্ত": "57479", "প্ন": "53267",
+  "প্প": "58991", "প্স": "59123", "ফ্ল": "50021", "ব্জ": "46485", "ব্ধ": "52508", "বল": "55462", "ব্ব": "49181",
+  "ভ্ল": "53898", "ভ্র": "49228", "ম্ন": "49047", "ম্প": "59110", "ম্ফ": "59109", "ম্ম": "59600", "য্য": "59431",
+  "র্ক": "50285", "র্খ": "49834", "র্গ": "59367", "র্ঘ": "54976", "র্চ": "55626", "র্ঝ": "54673", "র্ট": "53685",
+  "র্ড": "52806", "র্ঢ": "55743", "র্ন": "49832", "র্প": "47297", "র্ফ": "58972", "র্ব": "56602", "র্ভ": "53162",
+  "র্ম": "59355", "র্য": "53642", "ল্ক": "59125", "ল্গ": "49967", "ল্ট": "59722", "ল্ড": "59310", "ল্প": "54123",
+  "ল্ভ": "49208", "ল্ম": "58638", "ল্য": "53452", "শ্চ": "47222", "শ্ছ": "49895", "শ্ন": "58162", "শ্ম": "59078",
+  "শ্র": "52077", "ষ্ট": "46928", "ষ্ঠ": "58762", "ষ্ণ": "54735", "স্ক": "46267", "স্ক্র": "59908", "স্খ": "59546",
+  "স্ত": "49502", "স্থ": "58261", "স্ন": "57234", "স্ম": "59707", "স্ল": "58681", "স্য": "56155", "হ্ন": "49309",
+  "হ্ম": "58624", "হ্ল": "58145", "্য": "46899",
+      
+      
+    "A": "26340", "B": "27112", "C": "29830", "D": "28764", "E": "27691", "F": "33301", "G": "34215", "H": "33087", "I": "34473", "J": "30109", "K": "30682", "L": "29531", "M": "27390", "N": "34106", "O": "32725", "P": "30447", "Q": "26078", "R": "28317", "S": "32509", "T": "31280", "U": "28941", "V": "32366", "W": "31047", "X": "26624", "Y": "33987", "Z": "33390", "a": "27459", "b": "34752", "c": "26894", "d": "26513", "e": "30378", "f": "29187", "g": "29861", "h": "30533", "i": "33571", "j": "32095", "k": "33246", "l": "34840", "m": "26197", "n": "29670", "o": "32635", "p": "29302", "q": "26788", "r": "32881", "s": "31135", "t": "31909", "u": "30074", "v": "34408", "w": "33630", "x": "27042", "y": "34912", "z": "27900", " ": "00010", "\n": "00011", "0": "39642", "1": "36891", "2": "37356", "3": "39987", "4": "36178", "5": "38504", "6": "37770", "7": "39215", "8": "36990", "9": "38630", "০": "39841", "১": "37209", "২": "39007", "৩": "36432", "৪": "39901", "৫": "37088", "৬": "38746", "৭": "37490", "৮": "39323", "৯": "36670", "!": "42781", "@": "43922", "#": "42659", "$": "43212", "%": "43308", "^": "43514", "&": "43196", "*": "42920", "(": "42409", ")": "42875", "-": "42441", "_": "43915", "=": "42915", "+": "43840", "[": "43164", "]": "41426", "{": "41518", "}": "41607", "\\": "41364", "|": "43157", ";": "41750", ":": "43028", "'": "42939", "\"": "42967", ",": "41832", "<": "41480", ".": "42051", ">": "43526", "/": "43521", "?": "43092", "~": "43952", "`": "42371", "¢": "42216", "£": "41323", "¥": "42338", "€": "42118", "¤": "41531", "©": "42014", "®": "41274", "™": "42590", "§": "41696", "¶": "42387", "•": "41879", "°": "41931", "±": "42289", "×": "41694", "÷": "42543", "µ": "43883", "‰": "42311", "†": "42857", "‡": "42599", "′": "41166", "″": "42035", "‹": "41435", "›": "41038", "«": "43375", "»": "43029", "…": "41268", "‣": "43858", "←": "42222", "↑": "42107", "→": "41259", "↓": "41207", "⇒": "42030", "⇔": "41670", "⟶": "41982", "⟵": "42059", "⟷": "42150", "∞": "42843", "≠": "41983", "≈": "41157" 
+    
+      
+};
+
+
+   
+     
+
+   
+   const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
 
     const inputText = document.getElementById('inputText');
     const outputText = document.getElementById('outputText');
     const errorBox = document.getElementById('errorBox');
+    const copyB = document.getElementById('copyB');
+
+    function showError(message) {
+      errorBox.innerHTML = message;
+      errorBox.classList.add('show');
+      setTimeout(() => {
+        errorBox.classList.remove('show');
+        setTimeout(() => {
+          errorBox.innerHTML = '';
+        }, 400);
+      }, 4000);
+    }
 
     function encode(text) {
       let result = '';
@@ -264,9 +309,7 @@
       if (errors.length) {
         inputText.value = '';
         outputText.value = '';
-        errorBox.innerHTML = `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`;
-      } else {
-        errorBox.innerHTML = '';
+        showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`);
       }
       return result;
     }
@@ -275,20 +318,18 @@
       let result = '';
       let errors = [];
       for (let i = 0; i < code.length; i += 5) {
-        const chunk = code.slice(i, i + 5);
-        if (mapBtoA[chunk]) {
-          result += mapBtoA[chunk];
+        const part = code.slice(i, i + 5);
+        if (mapBtoA[part]) {
+          result += mapBtoA[part];
         } else {
           result += '�';
-          errors.push(chunk);
+          errors.push(part);
         }
       }
       if (errors.length) {
         inputText.value = '';
         outputText.value = '';
-        errorBox.innerHTML = `Error: <span style="color:limegreen">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`;
-      } else {
-        errorBox.innerHTML = '';
+        showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`);
       }
       return result;
     }
@@ -297,42 +338,31 @@
       return /^[0-9]{5,}$/.test(text.trim());
     }
 
-    function flashButton(btn, text = null) {
-      const original = btn.textContent;
-      btn.style.background = '#0f0';
-      btn.textContent = text || original;
-      setTimeout(() => {
-        btn.style.background = '';
-        btn.textContent = original;
-      }, 1000);
-    }
-
-    function activateHoverEffect(btn) {
-      btn.addEventListener('mouseover', () => btn.style.background = '#444');
-      btn.addEventListener('mouseout', () => btn.style.background = '#333');
-      btn.addEventListener('mousedown', () => btn.style.background = '#666');
-      btn.addEventListener('mouseup', () => btn.style.background = '#444');
-    }
-
-    document.querySelectorAll('button').forEach(activateHoverEffect);
-
     document.getElementById('runBtn').addEventListener('click', () => {
       const input = inputText.value.trim();
       outputText.value = isEncoded(input) ? decode(input) : encode(input);
-      flashButton(runBtn);
     });
 
     document.getElementById('clearBtn').addEventListener('click', () => {
       inputText.value = '';
       outputText.value = '';
-      errorBox.textContent = '';
-      flashButton(clearBtn);
+      errorBox.innerHTML = '';
+      errorBox.classList.remove('show');
     });
 
-    document.getElementById('copyB').addEventListener('click', () => {
+    copyB.addEventListener('click', () => {
       navigator.clipboard.writeText(outputText.value);
-      flashButton(copyB, 'Copied!');
+      const original = copyB.textContent;
+      copyB.textContent = 'Copied!';
+      setTimeout(() => copyB.textContent = original, 1000);
     });
+   
+   
+   
   </script>
 </body>
-</html> 
+</html>
+   
+  </script>
+</body>
+</html>
