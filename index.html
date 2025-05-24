@@ -131,27 +131,54 @@
   }
 
   /*========= Error Box ==========*/
-  #errorBox {
-    background: red;
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 5px auto;
-    text-align: center;
-    width: 90%;
-    display: none;
-    font-size: 14px;
-    line-height: 1.5;
-    min-height: 20px;
-    z-index: 10;
-    position: relative;
-    transition: opacity 0.5s ease;
-  }
 
-  #errorBox.show {
-    display: block;
-    opacity: 1;
-  }
+  .container {
+  position: relative;
+}
+
+#errorBox {
+  position: absolute;
+  top: -20px; /* টেক্সট এরিয়ার গা ঘেঁষে উপরে */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(34, 34, 34, 0.2);
+  color: red;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: "Segoe UI", sans-serif;
+  line-height: 1.4;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* দেখানোর সময় */
+#errorBox.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* অজানা অক্ষর */
+#errorBox .unknown-char {
+  color: lime;
+  font-weight: bold;
+}
+
+/* Error শব্দ */
+#errorBox .error-label {
+  color: red;
+  font-weight: 800;
+  font-size: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+  
+  
+ 
 
   /* === Button Group === */
   .button-group {
@@ -196,34 +223,31 @@
  </head>
  <body class="body">
 
-     <h1 class="h1">সাংকেতিক বার্তা</h1>
    
-   
-<div id="errorBox"></div>
- 
+<h1 class="h1">সাংকেতিক বার্তা</h1>
+
 <div class="container">
+  <!-- এখন container এর ভেতরে রাখছি errorBox কে -->
+  <div id="errorBox"></div>
+
   <div class="row-box">
     <div class="box">
       <textarea id="inputText" class="top-radius" rows="8" placeholder="এখানে বার্তা লিখুন..."></textarea>
     </div>
   </div>
-  
-  
-  
+
   <div class="row-box">
     <div class="box">
       <textarea id="outputText" class="bottom-radius" rows="8" placeholder="ফলাফল এখানেই..." readonly></textarea>
     </div>
   </div>
-  
-  
+
   <div class="button-group">
     <button id="runBtn">Run</button>
     <button id="copyB">Copy</button>
     <button id="clearBtn">Clear</button>
   </div>
 </div>
-
   
    
    <script>
@@ -250,6 +274,11 @@
     }, 4000);
   }
 
+  function getErrorLabel(errors) {
+    const unique = [...new Set(errors)];
+    return unique.length > 1 ? 'এগুলো' : 'এটি';
+  }
+
   function encode(text) {
     text = text.normalize('NFC')
                .replace(/য়/g, 'য়')
@@ -258,17 +287,18 @@
     let result = '';
     let errors = [];
 
-    for (let char of text) {
+    for (let char of [...text]) {
       if (mapAtoB[char]) {
         result += mapAtoB[char];
       } else {
-        result += '§' + char;  // অজানা অক্ষর আলাদা মার্কার দিয়ে
+        result += char;
         errors.push(char);
       }
     }
 
     if (errors.length) {
-      showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`);
+      const label = getErrorLabel(errors);
+      showError(`<span class="error-label">Error:</span> <span class="unknown-char">${[...new Set(errors)].join(', ')}</span> ${label} ম্যাপে নেই`);
     }
 
     return result;
@@ -281,37 +311,32 @@
 
     let result = '';
     let errors = [];
+    let i = 0;
 
-    for (let i = 0; i < code.length;) {
-      if (code[i] === '§') {
-        result += code[i + 1];  // হুবহু রেখে দাও
-        i += 2;
+    while (i < code.length) {
+      const part = code.slice(i, i + 5);
+      if (/^\d{5}$/.test(part) && mapBtoA[part]) {
+        result += mapBtoA[part];
+        i += 5;
       } else {
-        const part = code.slice(i, i + 5);
-        if (/^\d{5}$/.test(part)) {
-          if (mapBtoA[part]) {
-            result += mapBtoA[part];
-          } else {
-            result += part;
-            errors.push(part);
-          }
-          i += 5;
-        } else {
-          result += code[i];
-          i++;
-        }
+        const char = code.codePointAt(i);
+        const charStr = String.fromCodePoint(char);
+        result += charStr;
+        errors.push(charStr);
+        i += charStr.length;
       }
     }
 
     if (errors.length) {
-      showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`);
+      const label = getErrorLabel(errors);
+      showError(`<span class="error-label">Error:</span> <span class="unknown-char">${[...new Set(errors)].join(', ')}</span> ${label} ম্যাপে নেই`);
     }
 
     return result;
   }
 
   function isEncoded(text) {
-    return /^[0-9§]{5,}/.test(text.trim());
+    return /^[0-9]{5,}/.test(text.trim());
   }
 
   document.getElementById('runBtn').addEventListener('click', () => {
@@ -332,13 +357,8 @@
     copyB.textContent = 'Copied!';
     setTimeout(() => copyB.textContent = original, 1000);
   });
+   
+   
 </script>
-   
-   
-   
-   
-   
-   
-   
 </body>
 </html>
