@@ -6,6 +6,9 @@
   <!--Google Fonts-->
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/grapheme-splitter@1.0.4/build/grapheme-splitter.min.js"></script>
+  
   <title>100SMS</title>  
   
   
@@ -296,12 +299,13 @@ function showError(message) {
   }, 4000);
 }
 
+   
+   
 function encode(text) {
   // নিচের লাইনটি ইউনিকোড সমস্যা সমাধানে দরকারি, যেমন: য় → য়, ড় → র-ড
   text = text.normalize('NFC')
              .replace(/য়/g, 'য়')
              .replace(/ড়/g, 'ড়');
-             
 
   let result = '';
   let errors = [];
@@ -323,8 +327,6 @@ function encode(text) {
     }
   }
   if (errors.length) {
-    inputText.value = '';
-    outputText.value = '';
     showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`);
   }
   return result;
@@ -335,24 +337,30 @@ function decode(code) {
   code = code.normalize('NFC')
              .replace(/য়/g, 'য়')
              .replace(/ড়/g, 'ড়');
-             
 
   let result = '';
   let errors = [];
-  for (let i = 0; i < code.length; i += 5) {
+
+  for (let i = 0; i < code.length;) {
     const part = code.slice(i, i + 5);
-    if (mapBtoA[part]) {
-      result += mapBtoA[part];
+    if (/^\d{5}$/.test(part)) {
+      if (mapBtoA[part]) {
+        result += mapBtoA[part];
+      } else {
+        result += part;
+        errors.push(part);
+      }
+      i += 5;
     } else {
-      result += '�';
-      errors.push(part);
+      result += code[i];
+      i++;
     }
   }
+
   if (errors.length) {
-    inputText.value = '';
-    outputText.value = '';
     showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`);
   }
+
   return result;
 }
 
