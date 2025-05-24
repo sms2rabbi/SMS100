@@ -1,3 +1,258 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!--Google Fonts-->
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/grapheme-splitter@1.0.4/build/grapheme-splitter.min.js"></script>
+  
+  <title>100SMS</title>  
+  
+  
+<style>
+  /*=========== ↓ CSS ↓ ===========*/
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #111;
+    color: #eee;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+
+    background-image:
+      radial-gradient(circle at top left, rgba(147, 51, 234, 0.06), transparent 60%),
+      radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.08), transparent 60%),
+      radial-gradient(circle at 40% 60%, rgba(124, 58, 237, 0.05), transparent 70%);
+      
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    animation: bodyFlow 30s ease-in-out infinite;
+  }
+
+  @keyframes bodyFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /*====== Container ======*/
+  .container {
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .row-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .box {
+    flex: 1 1 48%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* =========== h1 ============ */
+  h1 {
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    text-align: center;
+    margin: 30px 0;
+    letter-spacing: 1.2px;
+
+    background: linear-gradient(
+      90deg,
+      rgba(240, 248, 255, 0.25),
+      rgba(224, 255, 255, 0.28),
+      rgba(210, 255, 250, 0.24),
+      rgba(230, 255, 250, 0.22)
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.08);
+    animation: softGlassWave 30s ease-in-out infinite;
+  }
+
+  @keyframes softGlassWave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /*========= Textarea ===========*/
+  textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    resize: vertical;
+    background: #1e1e1e;
+    color: #fff;
+    margin: 0 15px;
+    width: calc(100% - 30px);
+  }
+
+  .top-radius {
+    border-radius: 10px 10px 0 0;
+  }
+
+  .bottom-radius {
+    border-radius: 0 0 10px 10px;
+  }
+
+  textarea:focus {
+    background: #222;
+    outline: none;
+    transform: scale(1.01);
+    transition: 0.3s ease;
+  }
+
+  /*====== Textarea Box ======*/
+  #inputText {
+    margin-bottom: 5px;
+  }
+
+  #outputText {
+    margin-top: 5px;
+  }
+
+  /*========= Error Box ==========*/
+
+  .container {
+  position: relative;
+}
+
+#errorBox {
+  position: absolute;
+  top: -20px; /* টেক্সট এরিয়ার গা ঘেঁষে উপরে */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(34, 34, 34, 0.2);
+  color: red;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: "Segoe UI", sans-serif;
+  line-height: 1.4;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* দেখানোর সময় */
+#errorBox.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* অজানা অক্ষর */
+#errorBox .unknown-char {
+  color: lime;
+  font-weight: bold;
+}
+
+/* Error শব্দ */
+#errorBox .error-label {
+  color: red;
+  font-weight: 800;
+  font-size: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+  
+  
+ 
+
+  /* === Button Group === */
+  .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+    justify-content: center;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #333;
+    color: #eee;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  button:hover {
+    background: #444;
+  }
+
+  button:active {
+    background: #666;
+    transform: scale(0.97);
+  }
+
+  @media (max-width: 768px) {
+    .row-box {
+      flex-direction: column;
+    }
+
+    .box {
+      flex: 1 1 100%;
+    }
+  }
+
+  </style>
+ </head>
+ <body class="body">
+
+   
+<h1 class="h1">সাংকেতিক বার্তা</h1>
+
+<div class="container">
+  <!-- এখন container এর ভেতরে রাখছি errorBox কে -->
+  <div id="errorBox"></div>
+
+  <div class="row-box">
+    <div class="box">
+      <textarea id="inputText" class="top-radius" rows="8" placeholder="এখানে বার্তা লিখুন..."></textarea>
+    </div>
+  </div>
+
+  <div class="row-box">
+    <div class="box">
+      <textarea id="outputText" class="bottom-radius" rows="8" placeholder="ফলাফল এখানেই..." readonly></textarea>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button id="runBtn">Run</button>
+    <button id="copyB">Copy</button>
+    <button id="clearBtn">Clear</button>
+  </div>
+</div>
+  
+   
+   <script>
+  const mapAtoB = {
+    
 "10001": "অ", "10023": "আ", "10117": "ই", "10205": "ঈ", "10289": "উ", "10341": "ঊ", "10427": "ঋ", "10506": "এ", "10589": "ঐ", "10634": "ও", "10711": "ঔ", "10802": "া", "10897": "ি", "10953": "ী", "11038": "ু", "11114": "ূ", "11206": "ৃ", "11320": "ে", "11405": "ৈ", "11478": "ো", "11562": "ৌ", 
 
   "14523": "ক", "16390": "খ", "18102": "গ", "15674": "ঘ", "14931": "ঙ",
@@ -60,3 +315,111 @@
   "49893": "ত্রু", "59259": "র্দ্ব", "49990": "র্দ্র", "58738": "র্দ্ধ", "54997": "র্ল", "56348": "র্শ",
   "49488": "র্ষ", "57874": "র্স", "47591": "র্হ", "46899": "্য"
 };
+ 
+
+  const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
+
+  const inputText = document.getElementById('inputText');
+  const outputText = document.getElementById('outputText');
+  const errorBox = document.getElementById('errorBox');
+  const copyB = document.getElementById('copyB');
+
+  function showError(message) {
+    errorBox.innerHTML = message;
+    errorBox.classList.add('show');
+    setTimeout(() => {
+      errorBox.classList.remove('show');
+      setTimeout(() => {
+        errorBox.innerHTML = '';
+      }, 400);
+    }, 4000);
+  }
+
+  function getErrorLabel(errors) {
+    const unique = [...new Set(errors)];
+    return unique.length > 1 ? 'এগুলো' : 'এটি';
+  }
+
+  function encode(text) {
+    text = text.normalize('NFC')
+               .replace(/য়/g, 'য়')
+               .replace(/ড়/g, 'ড়');
+
+    let result = '';
+    let errors = [];
+
+    for (let char of [...text]) {
+      if (mapAtoB[char]) {
+        result += mapAtoB[char];
+      } else {
+        result += char;
+        errors.push(char);
+      }
+    }
+
+    if (errors.length) {
+      const label = getErrorLabel(errors);
+      showError(`<span class="error-label">Error:</span> <span class="unknown-char">${[...new Set(errors)].join(', ')}</span> ${label} ম্যাপে নেই`);
+    }
+
+    return result;
+  }
+
+  function decode(code) {
+    code = code.normalize('NFC')
+               .replace(/য়/g, 'য়')
+               .replace(/ড়/g, 'ড়');
+
+    let result = '';
+    let errors = [];
+    let i = 0;
+
+    while (i < code.length) {
+      const part = code.slice(i, i + 5);
+      if (/^\d{5}$/.test(part) && mapBtoA[part]) {
+        result += mapBtoA[part];
+        i += 5;
+      } else {
+        const char = code.codePointAt(i);
+        const charStr = String.fromCodePoint(char);
+        result += charStr;
+        errors.push(charStr);
+        i += charStr.length;
+      }
+    }
+
+    if (errors.length) {
+      const label = getErrorLabel(errors);
+      showError(`<span class="error-label">Error:</span> <span class="unknown-char">${[...new Set(errors)].join(', ')}</span> ${label} ম্যাপে নেই`);
+    }
+
+    return result;
+  }
+
+  function isEncoded(text) {
+    return /^[0-9]{5,}/.test(text.trim());
+  }
+
+  document.getElementById('runBtn').addEventListener('click', () => {
+    const input = inputText.value.trim();
+    outputText.value = isEncoded(input) ? decode(input) : encode(input);
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    inputText.value = '';
+    outputText.value = '';
+    errorBox.innerHTML = '';
+    errorBox.classList.remove('show');
+  });
+
+  copyB.addEventListener('click', () => {
+    navigator.clipboard.writeText(outputText.value);
+    const original = copyB.textContent;
+    copyB.textContent = 'Copied!';
+    setTimeout(() => copyB.textContent = original, 1000);
+  });
+   
+   
+</script>
+</body>
+</html>
