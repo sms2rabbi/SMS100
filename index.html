@@ -224,171 +224,121 @@
   </div>
 </div>
 
-  <script>
-    const mapAtoB = {
-   
-  "০": "77068", "১": "76804", "২": "75713", "৩": "75957", "৪": "76093",
-  "৫": "79761", "৬": "76526", "৭": "77481", "৮": "76163", "৯": "76277",
-
-  "অ": "73492", "আ": "73081", "ই": "73394", "ঈ": "72318", "উ": "71963",
-  "ঊ": "71740", "ঋ": "73300", "এ": "73059", "ঐ": "73783", "ও": "71596", "ঔ": "73167",
-
-  "া": "72147", "ি": "71776", "ী": "73591", "ু": "73800", "ূ": "71384",
-  "ৃ": "72035", "ে": "73341", "ৈ": "73178", "ো": "73992", "ৌ": "71408", "ৗ": "73416",
-
-  "ক": "79464", "খ": "78794", "গ": "76076", "ঘ": "79135", "ঙ": "77577",
-  "চ": "79139", "ছ": "77924", "জ": "76840", "ঝ": "75405", "ঞ": "79412",
-  "ট": "79635", "ঠ": "77105", "ড": "79130", "ঢ": "75517", "ণ": "78259",
-  "ত": "78639", "থ": "79948", "দ": "79411", "ধ": "76099", "ন": "79553",
-
-  "প": "75856", "ফ": "77923", "ব": "78495", "ভ": "77234", "ম": "76336",
-  "য": "78474", "র": "76228", "ল": "76463", "শ": "78302", "ষ": "78161",
-  "স": "76021", "হ": "79084", "ড়": "77407", "ঢ়": "78115", "য়": "76024",
-  "ৎ": "75734", "ং": "79579", "ঃ": "77338", "ঁ": "75146", "্": "77410", "।": "75365",
   
-
-  // যুক্তাক্ষর (দেয়া অনুযায়ী)
-  "ক্ক": "59763", "ক্ত": "57091", "ক্ম": "56023", "ক্স": "57462", "ক্ষ": "59929", "খ্ন": "56201", "খ্ম": "56497",
-  "গ্গ": "53821", "গ্ধ": "49306", "গ্ন": "58327", "গ্ম": "50734", "গ্র": "58865", "গ্ল": "49710", "ঘ্ন": "55309",
-  "ঙ্ক": "57325", "ঙ্খ": "59017", "ঙগ": "53269", "ঙঘ": "57820", "ঙ্ম": "55216", "চ্চ": "55378", "চ্ছ": "47019",
-  "জ্জ": "58113", "জ্ঝ": "49142", "জ্ঞ": "58245", "ঝ্ন": "48791", "ঞ্চ": "48966", "ঞ্ছ": "59562", "ঞ্ঝ": "54827",
-  "ট্ট": "56307", "ট্ঠ": "55346", "ড্ড": "55345", "ড্ঢ": "59973", "ড্ব": "57092", "ঢ্ড": "50346", "ঢ্ঢ": "54033",
-  "ণ্ট": "55234", "ণ্ঠ": "57961", "ণ্ড": "49642", "ণ্ঢ": "58399", "ত্ত": "57013", "ত্থ": "55357", "ত্ন": "58812",
-  "ত্ম": "57613", "ৎস": "54328", "থ্ব": "53087", "দ্গ": "59237", "দ্ঘ": "53416", "দ্দ": "59332", "দ্ধ": "57838",
-  "দ্ন": "57946", "দ্ম": "57302", "দ্র": "55117", "দ্ল": "49964", "ধ্ন": "46083", "ধ্ম": "53914", "ন্ত": "59012",
-  "ন্থ": "56311", "ন্দ": "53579", "ন্ধ": "59692", "ন্ন": "56772", "ন্ম": "47067", "প্ত": "57479", "প্ন": "53267",
-  "প্প": "58991", "প্স": "59123", "ফ্ল": "50021", "ব্জ": "46485", "ব্ধ": "52508", "বল": "55462", "ব্ব": "49181",
-  "ভ্ল": "53898", "ভ্র": "49228", "ম্ন": "49047", "ম্প": "59110", "ম্ফ": "59109", "ম্ম": "59600", "য্য": "59431",
-  "র্ক": "50285", "র্খ": "49834", "র্গ": "59367", "র্ঘ": "54976", "র্চ": "55626", "র্ঝ": "54673", "র্ট": "53685",
-  "র্ড": "52806", "র্ঢ": "55743", "র্ন": "49832", "র্প": "47297", "র্ফ": "58972", "র্ব": "56602", "র্ভ": "53162",
-  "র্ম": "59355", "র্য": "53642", "ল্ক": "59125", "ল্গ": "49967", "ল্ট": "59722", "ল্ড": "59310", "ল্প": "54123",
-  "ল্ভ": "49208", "ল্ম": "58638", "ল্য": "53452", "শ্চ": "47222", "শ্ছ": "49895", "শ্ন": "58162", "শ্ম": "59078",
-  "শ্র": "52077", "ষ্ট": "46928", "ষ্ঠ": "58762", "ষ্ণ": "54735", "স্ক": "46267", "স্ক্র": "59908", "স্খ": "59546",
-  "স্ত": "49502", "স্থ": "58261", "স্ন": "57234", "স্ম": "59707", "স্ল": "58681", "স্য": "56155", "হ্ন": "49309",
-  "হ্ম": "58624", "হ্ল": "58145", "্য": "46899",
-      
-      
-  "A": "26340", "B": "27112", "C": "29830", "D": "28764", "E": "27691", "F": "33301", "G": "34215", "H": "33087", "I": "34473", "J": "30109", "K": "30682", "L": "29531", "M": "27390", "N": "34106", "O": "32725", "P": "30447", "Q": "26078", "R": "28317", "S": "32509", "T": "31280", "U": "28941", "V": "32366", "W": "31047", "X": "26624", "Y": "33987", "Z": "33390", "a": "27459", "b": "34752", "c": "26894", "d": "26513", "e": "30378", "f": "29187", "g": "29861", "h": "30533", "i": "33571", "j": "32095", "k": "33246", "l": "34840", "m": "26197", "n": "29670", "o": "32635", "p": "29302", "q": "26788", "r": "32881", "s": "31135", "t": "31909", "u": "30074", "v": "34408", "w": "33630", "x": "27042", "y": "34912", "z": "27900", 
-  
-  " ": "10101", "\n": "01010", 
-
-  "0": "39642", "1": "36891", "2": "37356", "3": "39987", "4": "36178", "5": "38504", "6": "37770", "7": "39215", "8": "36990", "9": "38630", 
-
-  "!": "42781", "@": "43922", "#": "42659", "$": "43212", "%": "43308", "^": "43514", "&": "43196", "*": "42920", "(": "42409", ")": "42875", "-": "42441", "_": "43915", "=": "42915", "+": "43840", "[": "43164", "]": "41426", "{": "41518", "}": "41607", "\\": "41364", "|": "43157", ";": "41750", ":": "43028", "'": "42939", "\"": "42967", ",": "41832", "<": "41480", ".": "42051", ">": "43526", "/": "43521", "?": "43092", "~": "43952", "`": "42371", "¢": "42216", "£": "41323", "¥": "42338", "€": "42118", "¤": "41531", "©": "42014", "®": "41274", "™": "42590", "§": "41696", "¶": "42387", "•": "41879", "°": "41931", "±": "42289", "×": "41694", "÷": "42543", "µ": "43883", "‰": "42311", "†": "42857", "‡": "42599", "′": "41166", "″": "42035", "‹": "41435", "›": "41038", "«": "43375", "»": "43029", "…": "41268", "∞": "42843", "≠": "41983", "≈": "41157"     
-      
-   };
-
-
    
-     
-const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
+   <script>
+  const mapAtoB = {
+    "০": "77068", "১": "76804", "২": "75713", "৩": "75957", "৪": "76093",
+    "৫": "79761", "৬": "76526", "৭": "77481", "৮": "76163", "৯": "76277"
+  };
 
-const inputText = document.getElementById('inputText');
-const outputText = document.getElementById('outputText');
-const errorBox = document.getElementById('errorBox');
-const copyB = document.getElementById('copyB');
+  const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
 
-function showError(message) {
-  errorBox.innerHTML = message;
-  errorBox.classList.add('show');
-  setTimeout(() => {
-    errorBox.classList.remove('show');
+  const inputText = document.getElementById('inputText');
+  const outputText = document.getElementById('outputText');
+  const errorBox = document.getElementById('errorBox');
+  const copyB = document.getElementById('copyB');
+
+  function showError(message) {
+    errorBox.innerHTML = message;
+    errorBox.classList.add('show');
     setTimeout(() => {
-      errorBox.innerHTML = '';
-    }, 400);
-  }, 4000);
-}
-
-   
-   
-function encode(text) {
-  // নিচের লাইনটি ইউনিকোড সমস্যা সমাধানে দরকারি, যেমন: য় → য়, ড় → র-ড
-  text = text.normalize('NFC')
-             .replace(/য়/g, 'য়')
-             .replace(/ড়/g, 'ড়');
-
-  let result = '';
-  let errors = [];
-  const sortedKeys = Object.keys(mapAtoB).sort((a, b) => b.length - a.length);
-  while (text.length > 0) {
-    let matched = false;
-    for (let key of sortedKeys) {
-      if (text.startsWith(key)) {
-        result += mapAtoB[key];
-        text = text.slice(key.length);
-        matched = true;
-        break;
-      }
-    }
-    if (!matched) {
-      result += '00000';
-      errors.push(text[0]);
-      text = text.slice(1);
-    }
+      errorBox.classList.remove('show');
+      setTimeout(() => {
+        errorBox.innerHTML = '';
+      }, 400);
+    }, 4000);
   }
-  if (errors.length) {
-    showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`);
-  }
-  return result;
-}
 
-function decode(code) {
-  // নিচের লাইনটি ইউনিকোড সমস্যা সমাধানে দরকারি, ডিকোডের সময়ও যাতে ভুল না হয়
-  code = code.normalize('NFC')
-             .replace(/য়/g, 'য়')
-             .replace(/ড়/g, 'ড়');
+  function encode(text) {
+    text = text.normalize('NFC')
+               .replace(/য়/g, 'য়')
+               .replace(/ড়/g, 'ড়');
 
-  let result = '';
-  let errors = [];
+    let result = '';
+    let errors = [];
 
-  for (let i = 0; i < code.length;) {
-    const part = code.slice(i, i + 5);
-    if (/^\d{5}$/.test(part)) {
-      if (mapBtoA[part]) {
-        result += mapBtoA[part];
+    for (let char of text) {
+      if (mapAtoB[char]) {
+        result += mapAtoB[char];
       } else {
-        result += part;
-        errors.push(part);
+        result += '§' + char;  // অজানা অক্ষর আলাদা মার্কার দিয়ে
+        errors.push(char);
       }
-      i += 5;
-    } else {
-      result += code[i];
-      i++;
     }
+
+    if (errors.length) {
+      showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> ম্যাপে নেই`);
+    }
+
+    return result;
   }
 
-  if (errors.length) {
-    showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`);
+  function decode(code) {
+    code = code.normalize('NFC')
+               .replace(/য়/g, 'য়')
+               .replace(/ড়/g, 'ড়');
+
+    let result = '';
+    let errors = [];
+
+    for (let i = 0; i < code.length;) {
+      if (code[i] === '§') {
+        result += code[i + 1];  // হুবহু রেখে দাও
+        i += 2;
+      } else {
+        const part = code.slice(i, i + 5);
+        if (/^\d{5}$/.test(part)) {
+          if (mapBtoA[part]) {
+            result += mapBtoA[part];
+          } else {
+            result += part;
+            errors.push(part);
+          }
+          i += 5;
+        } else {
+          result += code[i];
+          i++;
+        }
+      }
+    }
+
+    if (errors.length) {
+      showError(`Error: <span style="color:lime">${[...new Set(errors)].join(', ')}</span> সংকেত অজানা`);
+    }
+
+    return result;
   }
 
-  return result;
-}
+  function isEncoded(text) {
+    return /^[0-9§]{5,}/.test(text.trim());
+  }
 
-function isEncoded(text) {
-  return /^[0-9]{5,}$/.test(text.trim());
-}
+  document.getElementById('runBtn').addEventListener('click', () => {
+    const input = inputText.value.trim();
+    outputText.value = isEncoded(input) ? decode(input) : encode(input);
+  });
 
-document.getElementById('runBtn').addEventListener('click', () => {
-  const input = inputText.value.trim();
-  outputText.value = isEncoded(input) ? decode(input) : encode(input);
-});
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    inputText.value = '';
+    outputText.value = '';
+    errorBox.innerHTML = '';
+    errorBox.classList.remove('show');
+  });
 
-document.getElementById('clearBtn').addEventListener('click', () => {
-  inputText.value = '';
-  outputText.value = '';
-  errorBox.innerHTML = '';
-  errorBox.classList.remove('show');
-});
-
-copyB.addEventListener('click', () => {
-  navigator.clipboard.writeText(outputText.value);
-  const original = copyB.textContent;
-  copyB.textContent = 'Copied!';
-  setTimeout(() => copyB.textContent = original, 1000);
-});
-      
-      
-   
+  copyB.addEventListener('click', () => {
+    navigator.clipboard.writeText(outputText.value);
+    const original = copyB.textContent;
+    copyB.textContent = 'Copied!';
+    setTimeout(() => copyB.textContent = original, 1000);
+  });
 </script>
+   
+   
+   
+   
+   
+   
+   
 </body>
 </html>
