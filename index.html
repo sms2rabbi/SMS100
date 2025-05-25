@@ -306,68 +306,56 @@
 
 
 
-const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
+  const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
 
   const inputText = document.getElementById('inputText');
   const outputText = document.getElementById('outputText');
-  
-  
-  function handleUnknownErrors(errors) {
   const errorBox = document.getElementById('errorBox');
-  if (!errors.length) {
-    errorBox.classList.remove('show');
-    return;
+  const copyB = document.getElementById('copyB');
+
+  function showError(message) {
+    errorBox.innerHTML = message;
+    errorBox.classList.add('show');
+    setTimeout(() => {
+      errorBox.classList.remove('show');
+      setTimeout(() => {
+        errorBox.innerHTML = '';
+      }, 400);
+    }, 4000);
   }
 
-  const label = errors.length === 1 ? 'এটি' : 'এগুলো';
-  const uniqueErrors = [...new Set(errors)];
 
-  const isHighlightable = c => /^[\u0980-\u09FF\u0000-\u007F\s.,!@#$%^&*()\-_=+{}<>\/\\|:;"'?~`₹€£৳•—–…]+$/.test(c);
+function getErrorLabel(errors) {
+    const unique = [...new Set(errors)];
+    return unique.length > 1 ? 'এগুলো' : 'এটি';
+  }
 
-  const unknowns = uniqueErrors.map(c =>
-    isHighlightable(c)
-      ? `<span class="unknown-char" style="color:green">${c}</span>`
-      : `<span>${c}</span>`
-  ).join(errors.length === 1 ? '' : ' ');  // একটির জন্য কমা বাদ, একাধিকের জন্য স্পেস
+  function encode(text) {
+    text = text.normalize('NFC')
+               .replace(/য়/g, 'য়')
+               .replace(/ড়/g, 'ড়');
 
-  errorBox.innerHTML = `<span class="error-label">Error:</span> ${unknowns} ${label} ম্যাপে নেই`;
-  errorBox.classList.add('show');
+    let result = '';
+    let errors = [];
 
-  setTimeout(() => {
-    errorBox.classList.remove('show');
-  }, 4000);
-}
-
-function encode(text) {
-  text = text.normalize('NFC')
-             .replace(/য়/g, 'য়')
-             .replace(/ড়/g, 'ড়');
-
-  const chars = Array.from(text);
-  let result = '';
-  let errors = [];
-
-  for (let i = 0; i < chars.length;) {
-    let found = false;
-    for (let len = 3; len >= 1; len--) {
-      const token = chars.slice(i, i + len).join('');
-      if (mapAtoB[token]) {
-        result += mapAtoB[token];
-        i += len;
-        found = true;
-        break;
+    for (let char of [...text]) {
+      if (mapAtoB[char]) {
+        result += mapAtoB[char];
+      } else {
+        result += char;
+        errors.push(char);
       }
     }
-    if (!found) {
-      result += chars[i];
-      errors.push(chars[i]);
-      i++;
+
+    if (errors.length) {
+      const label = getErrorLabel(errors);
+      showError(`<span class="error-label">Error:</span> <span class="unknown-char">${[...new Set(errors)].join('')}</span> ${label} ম্যাপে নেই`);
     }
+
+    return result;
   }
 
-  handleUnknownErrors(errors);
-  return result;
-}
+  
 
   
   function decode(code) {
@@ -452,9 +440,6 @@ document.getElementById('clearBtn').addEventListener('click', () => {
     copyB.textContent = 'Copied!';
     setTimeout(() => copyB.textContent = original, 1000);
   });
-</script>
-
-
-   
+</script>  
 </body>
 </html>
