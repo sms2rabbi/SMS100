@@ -11,7 +11,7 @@
   
   <title>100SMS</title>  
   
-  
+
 <style>
   /*=========== ↓ CSS ↓ ===========*/
 
@@ -94,7 +94,8 @@
     100% { background-position: 0% 50%; }
   }
 
-  /*========= Textarea ===========*/
+
+/*========= Textarea ===========*/
   textarea {
     padding: 10px;
     font-size: 16px;
@@ -130,15 +131,16 @@
     margin-top: 5px;
   }
 
-  /*========= Error Box ==========*/
 
-  .container {
+/*========= Error Box ==========*/
+
+ .container {
   position: relative;
 }
 
 #errorBox {
   position: absolute;
-  top: -20px; /* টেক্সট এরিয়ার গা ঘেঁষে উপরে */
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(34, 34, 34, 0.2);
@@ -153,7 +155,14 @@
   opacity: 0;
   transition: opacity 0.4s ease, transform 0.4s ease;
   pointer-events: none;
+
+  /* সীমাবদ্ধতা ও ফোর্সড কাটছাঁট */
+  width: 80vw;
+  max-width: 500px;
+  overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 /* দেখানোর সময় */
@@ -164,7 +173,7 @@
 
 /* অজানা অক্ষর */
 #errorBox .unknown-char {
-  color: lime;
+  color: #00ff00;
   font-weight: bold;
 }
 
@@ -176,11 +185,9 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-  
-  
  
 
-  /* === Button Group === */
+/* === Button Group === */
   .button-group {
     display: flex;
     flex-wrap: wrap;
@@ -221,7 +228,10 @@
 
   </style>
  </head>
- <body class="body">
+
+
+
+<body class="body">
 
    
 <h1 class="h1">সাংকেতিক বার্তা</h1>
@@ -248,164 +258,131 @@
     <button id="clearBtn">Clear</button>
   </div>
 </div>
-  
-   
-   <script>
+
+
+
+<script>
   const mapAtoB = {
     
-"10001": "অ", "10023": "আ", "10117": "ই", "10205": "ঈ", "10289": "উ", "10341": "ঊ", "10427": "ঋ", "10506": "এ", "10589": "ঐ", "10634": "ও", "10711": "ঔ", "10802": "া", "10897": "ি", "10953": "ী", "11038": "ু", "11114": "ূ", "11206": "ৃ", "11320": "ে", "11405": "ৈ", "11478": "ো", "11562": "ৌ", 
+    
+     "A": "23633", "B": "23519", "a": "23405",  "b": "23063", "c": "22949", "d": "22835", "f": "22721", "g": "22607", "h": "22493",
 
-  "14523": "ক", "16390": "খ", "18102": "গ", "15674": "ঘ", "14931": "ঙ",
-  "17006": "চ", "18245": "ছ", "16689": "জ", "15833": "ঝ", "17611": "ঞ",
-  "18905": "ট", "15492": "ঠ", "16501": "ড", "17234": "ঢ", "14788": "ণ",
-  "17963": "ত", "15240": "থ", "18627": "দ", "15700": "ধ", "16185": "ন",
-  "18374": "প", "16902": "ফ", "17410": "ব", "15360": "ভ", "18591": "ম",
-  "16218": "য", "17844": "র", "15999": "ল", "17655": "শ", "18723": "ষ",
-  "16077": "স", "14999": "হ", "17150": "ড়", "17771": "ঢ়", "16610": "য়",
-  "18888": "ৎ", "17321": "ং", "15015": "ঃ", "18030": "ঁ",
-
-  "26340": "A", "27112": "B", "29830": "C", "28764": "D", "27691": "E",
-  "33301": "F", "34215": "G", "33087": "H", "34473": "I", "30109": "J",
-  "30682": "K", "29531": "L", "27390": "M", "34106": "N", "32725": "O",
-  "30447": "P", "26078": "Q", "28317": "R", "32509": "S", "31280": "T",
-  "28941": "U", "32366": "V", "31047": "W", "26624": "X", "33987": "Y", "33390": "Z",
-
-  "27459": "a", "34752": "b", "26894": "c", "26513": "d", "30378": "e",
-  "29187": "f", "29861": "g", "30533": "h", "33571": "i", "32095": "j",
-  "33246": "k", "34840": "l", "26197": "m", "29670": "n", "32635": "o",
-  "29302": "p", "26788": "q", "32881": "r", "31135": "s", "31909": "t",
-  "30074": "u", "34408": "v", "33630": "w", "27042": "x", "34912": "y", "27900": "z",
-
-"00010": " ", "00011": "\n",
-
-"0": 39642, "1": 36891, "2": 37356, "3": 39987, "4": 36178, "5": 38504, "6": 37770, "7": 39215, "8": 36990, "9": 38630, "০": 39841, "১": 37209, "২": 39007, "৩": 36432, "৪": 39901, "৫": 37088, "৬": 38746, "৭": 37490, "৮": 39323, "৯": 36670,  
-
-"42781":"!", "43922":"@", "42659":"#", "43212":"$", "43308":"%", "43514":"^", "43196":"&", "42920":"*", "42409":"(", "42875":")", "42441":"-", "43915":"_", "42915":"=", "43840":"+", "43164":"[", "41426":"]", "41518":"{", "41607":"}", "41364":"\ "43157":"|", "41750":";", "43028":":", "42939":"'", "42967":"\"", "41832":",", "41480":"<", "42051":".", "43526":">", "43521":"/", "43092":"?", "43952":"~", "42371":"`", "42216":"¢", "41323":"£", "42338":"¥", "42118":"€", "41531":"¤", "42014":"©", "41274":"®", "42590":"™", "41696":"§", "42387":"¶", "41879":"•", "41931":"°", "42289":"±", "41694":"×", "42543":"÷", "43883":"µ", "42311":"‰", "42857":"†", "42599":"‡", "41166":"′", "42035":"″", "41435":"‹", "41038":"›", "43375":"«", "43029":"»", "41268":"…", "43858":"‣", "42222":"←", "42107":"↑", "41259":"→", "41207":"↓", "42110":"↔", "43884":"↕", "42030":"⇒", "41670":"⇔", "41982":"⟶", "42059":"⟵", "42150":"⟷", "42843":"∞", "41983":"≠", "41157":"≈", 
+    
+  };
 
 
-"59763": "ক্ক", "57091": "ক্ত", "56023": "ক্ম", "57462": "ক্স", "59929": "ক্ষ", "56201": "খ্ন", "56497": "খ্ম",
-  "53821": "গ্গ", "49306": "গ্ধ", "58327": "গ্ন", "50734": "গ্ম", "58865": "গ্র", "49710": "গ্ল", "55309": "ঘ্ন",
-  "57325": "ঙ্ক", "59017": "ঙ্খ", "53269": "ঙগ", "57820": "ঙঘ", "55216": "ঙ্ম", "55378": "চ্চ", "47019": "চ্ছ",
-  "58113": "জ্জ", "49142": "জ্ঝ", "58245": "জ্ঞ", "48791": "ঝ্ন", "48966": "ঞ্চ", "59562": "ঞ্ছ", "54827": "ঞ্ঝ",
-  "56307": "ট্ট", "55346": "ট্ঠ", "55345": "ড্ড", "59973": "ড্ঢ", "57092": "ড্ব", "50346": "ঢ্ড", "54033": "ঢ্ঢ",
-  "55234": "ণ্ট", "57961": "ণ্ঠ", "49642": "ণ্ড", "58399": "ণ্ঢ", "57013": "ত্ত", "55357": "ত্থ", "58812": "ত্ন",
-  "57613": "ত্ম", "54328": "ৎস", "53087": "থ্ব", "59237": "দ্গ", "53416": "দ্ঘ", "59332": "দ্দ", "57838": "দ্ধ",
-  "57946": "দ্ন", "57302": "দ্ম", "55117": "দ্র", "49964": "দ্ল", "46083": "ধ্ন", "53914": "ধ্ম", "59012": "ন্ত",
-  "56311": "ন্থ", "53579": "ন্দ", "59692": "ন্ধ", "56772": "ন্ন", "47067": "ন্ম", "57479": "প্ত", "53267": "প্ন",
-  "58991": "প্প", "59123": "প্স", "50021": "ফ্ল", "46485": "ব্জ", "52508": "ব্ধ", "55462": "বল", "49181": "ব্ব",
-  "53898": "ভ্ল", "49228": "ভ্র", "49047": "ম্ন", "59110": "ম্প", "59109": "ম্ফ", "59600": "ম্ম", "59431": "য্য",
-  "50285": "র্ক", "49834": "র্খ", "59367": "র্গ", "54976": "র্ঘ", "55626": "র্চ", "54673": "র্ঝ", "53685": "র্ট",
-  "52806": "র্ড", "55743": "র্ঢ", "49832": "র্ন", "47297": "র্প", "58972": "র্ফ", "56602": "র্ব", "53162": "র্ভ",
-  "59355": "র্ম", "53642": "র্য", "59125": "ল্ক", "49967": "ল্গ", "59722": "ল্ট", "59310": "ল্ড", "54123": "ল্প",
-  "49208": "ল্ভ", "58638": "ল্ম", "53452": "ল্য", "47222": "শ্চ", "49895": "শ্ছ", "58162": "শ্ন", "59078": "শ্ম",
-  "52077": "শ্র", "46928": "ষ্ট", "58762": "ষ্ঠ", "54735": "ষ্ণ", "46267": "স্ক", "59908": "স্ক্র", "59546": "স্খ",
-  "49502": "স্ত", "58261": "স্থ", "57234": "স্ন", "59707": "স্ম", "58681": "স্ল", "56155": "স্য", "49309": "হ্ন",
-  "58624": "হ্ম", "58145": "হ্ল", "52123": "দ্শ", "59509": "দ্য", "49129": "ত্ম্য", "56785": "ক্ত্র", "55092": "ত্র",
-  "53299": "ন্দ্র", "54824": "শ্ল", "49884": "ক্ল", "49713": "প্ল", "56649": "গ্র্য", "55973": "প্র", "48313": "ট্র",
-  "58293": "দ্র্য", "57671": "ভ্র্য", "56601": "স্থ্য", "59751": "ম্প্য", "58725": "ন্দ্য", "59146": "ব্জ্য",
-  "59594": "ন্দ্র্য", "58532": "শ্র্য", "55721": "স্ব", "59729": "খ্ব", "57490": "গ্ব", "57017": "ঘ্ব", "55379": "ঙ্ব",
-  "55088": "চ্ব", "56844": "ছ্ব", "59304": "জ্ব", "59442": "ঝ্ব", "55823": "ঞ্ব", "54189": "ট্ব", "47210": "ঠ্ব",
-  "54403": "ঢ্ব", "51226": "ণ্ব", "59193": "ত্ব", "46553": "দ্ব", "59914": "ধ্ব", "55409": "ন্য", "58197": "প্ব",
-  "46871": "ফ্ব", "46989": "ভ্ব", "54764": "ম্ভ", "59086": "ল্ব", "59796": "শ্ব", "46542": "ষ্ব", "57765": "হ্ব",
-  "55296": "ব্ৰ", "57902": "ক্ৰ", "56416": "গ্ৰ", "55925": "দ্ৰ", "58129": "ভ্ৰ", "59456": "ম্ৰ", "54873": "ন্ৰ",
-  "59287": "প্ৰ", "58665": "ত্ৰ", "48801": "ন্ঘ", "57584": "ম্ঘ", "59067": "র্ভ্র", "58854": "ল্ল", "59988": "ক্র",
-  "55101": "হৃ", "54691": "শৃ", "54620": "ঙ্ক্ষ", "56299": "ঙ্ঘ", "55699": "জ্জ্ব", "59112": "ণ্ট্ব", "56177": "ত্ত্ব",
-  "54788": "দ্দ্ব", "49601": "ন্ত্ব", "59391": "ন্ত্র", "57628": "ন্দ্ব", "46433": "ব্দ", "54748": "র্ঘ্য",
-  "54674": "র্ঙ", "58687": "র্ছ", "58312": "র্জ", "53728": "র্জ্জ", "53788": "র্জ্ঞ", "58393": "র্ত্ব",
-  "49893": "ত্রু", "59259": "র্দ্ব", "49990": "র্দ্র", "58738": "র্দ্ধ", "54997": "র্ল", "56348": "র্শ",
-  "49488": "র্ষ", "57874": "র্স", "47591": "র্হ", "46899": "্য"
-};
- 
 
-  const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
+const mapBtoA = Object.fromEntries(Object.entries(mapAtoB).map(([a, b]) => [b, a]));
 
   const inputText = document.getElementById('inputText');
   const outputText = document.getElementById('outputText');
+  
+  
+  function handleUnknownErrors(errors) {
   const errorBox = document.getElementById('errorBox');
-  const copyB = document.getElementById('copyB');
-
-  function showError(message) {
-    errorBox.innerHTML = message;
-    errorBox.classList.add('show');
-    setTimeout(() => {
-      errorBox.classList.remove('show');
-      setTimeout(() => {
-        errorBox.innerHTML = '';
-      }, 400);
-    }, 4000);
+  if (!errors.length) {
+    errorBox.classList.remove('show');
+    return;
   }
 
-  function getErrorLabel(errors) {
-    const unique = [...new Set(errors)];
-    return unique.length > 1 ? 'এগুলো' : 'এটি';
-  }
+  const label = errors.length === 1 ? 'এটি' : 'এগুলো';
+  const uniqueErrors = [...new Set(errors)];
 
-  function encode(text) {
-    text = text.normalize('NFC')
-               .replace(/য়/g, 'য়')
-               .replace(/ড়/g, 'ড়');
+  const isHighlightable = c => /^[\u0980-\u09FF\u0000-\u007F\s.,!@#$%^&*()\-_=+{}<>\/\\|:;"'?~`₹€£৳•—–…]+$/.test(c);
 
-    let result = '';
-    let errors = [];
+  const unknowns = uniqueErrors.map(c =>
+    isHighlightable(c)
+      ? `<span class="unknown-char" style="color:green">${c}</span>`
+      : `<span>${c}</span>`
+  ).join(errors.length === 1 ? '' : ' ');  // একটির জন্য কমা বাদ, একাধিকের জন্য স্পেস
 
-    for (let char of [...text]) {
-      if (mapAtoB[char]) {
-        result += mapAtoB[char];
-      } else {
-        result += char;
-        errors.push(char);
+  errorBox.innerHTML = `<span class="error-label">Error:</span> ${unknowns} ${label} ম্যাপে নেই`;
+  errorBox.classList.add('show');
+
+  setTimeout(() => {
+    errorBox.classList.remove('show');
+  }, 4000);
+}
+
+function encode(text) {
+  text = text.normalize('NFC')
+             .replace(/য়/g, 'য়')
+             .replace(/ড়/g, 'ড়');
+
+  const chars = Array.from(text);
+  let result = '';
+  let errors = [];
+
+  for (let i = 0; i < chars.length;) {
+    let found = false;
+    for (let len = 3; len >= 1; len--) {
+      const token = chars.slice(i, i + len).join('');
+      if (mapAtoB[token]) {
+        result += mapAtoB[token];
+        i += len;
+        found = true;
+        break;
       }
     }
-
-    if (errors.length) {
-      const label = getErrorLabel(errors);
-      showError(`<span class="error-label">Error:</span> <span class="unknown-char">${[...new Set(errors)].join(', ')}</span> ${label} ম্যাপে নেই`);
+    if (!found) {
+      result += chars[i];
+      errors.push(chars[i]);
+      i++;
     }
-
-    return result;
   }
 
+  handleUnknownErrors(errors);
+  return result;
+}
+
+  
   function decode(code) {
-    code = code.normalize('NFC')
-               .replace(/য়/g, 'য়')
-               .replace(/ড়/g, 'ড়');
+  code = code.normalize('NFC')
+             .replace(/য়/g, 'য়')
+             .replace(/ড়/g, 'ড়');
 
-    let result = '';
-    let errors = [];
-    let i = 0;
+  const chars = Array.from(code); // Unicode-safe splitting
+  const sortedKeys = Object.keys(mapBtoA).sort((a, b) => b.length - a.length);
 
-    while (i < code.length) {
-      const part = code.slice(i, i + 5);
-      if (/^\d{5}$/.test(part) && mapBtoA[part]) {
-        result += mapBtoA[part];
-        i += 5;
-      } else {
-        const char = code.codePointAt(i);
-        const charStr = String.fromCodePoint(char);
-        result += charStr;
-        errors.push(charStr);
-        i += charStr.length;
+  let result = '';
+  let errors = [];
+
+  for (let i = 0; i < chars.length;) {
+    let found = false;
+    for (let key of sortedKeys) {
+      const keyChars = Array.from(key);
+      const token = chars.slice(i, i + keyChars.length).join('');
+      if (token === key) {
+        result += mapBtoA[key];
+        i += keyChars.length;
+        found = true;
+        break;
       }
     }
-
-    if (errors.length) {
-      const label = getErrorLabel(errors);
-      showError(`<span class="error-label">Error:</span> <span class="unknown-char">${[...new Set(errors)].join(', ')}</span> ${label} ম্যাপে নেই`);
+    if (!found) {
+      result += chars[i];
+      errors.push(chars[i]);
+      i++;
     }
-
-    return result;
   }
+
+  handleUnknownErrors(errors);
+  return result;
+}
+
+
 
   function isEncoded(text) {
     return /^[0-9]{5,}/.test(text.trim());
   }
 
-  document.getElementById('runBtn').addEventListener('click', () => {
+document.getElementById('runBtn').addEventListener('click', () => {
     const input = inputText.value.trim();
     outputText.value = isEncoded(input) ? decode(input) : encode(input);
   });
 
-  document.getElementById('clearBtn').addEventListener('click', () => {
+
+document.getElementById('clearBtn').addEventListener('click', () => {
     inputText.value = '';
     outputText.value = '';
     errorBox.innerHTML = '';
@@ -418,8 +395,9 @@
     copyB.textContent = 'Copied!';
     setTimeout(() => copyB.textContent = original, 1000);
   });
-   
-   
 </script>
+
+
+   
 </body>
 </html>
