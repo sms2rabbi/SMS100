@@ -404,12 +404,35 @@ function encode(text) {
   return result;
 }
 
+function isEncoded(text) {
+  const trimmed = text.trim();
 
+  // যদি সম্পূর্ণ সংখ্যা হয়:
+  if (/^[0-9]+$/.test(trimmed)) {
+    // প্রতি ডিজিট বা গ্রুপ mapBtoA তে আছে কিনা চেক করব
+    const keys = Object.keys(mapBtoA);
+    const sortedKeys = keys.sort((a, b) => b.length - a.length);
 
-  function isEncoded(text) {
-    return /^[0-9]{5,}/.test(text.trim());
+    const chars = Array.from(trimmed);
+    for (let i = 0; i < chars.length;) {
+      let matched = false;
+      for (let key of sortedKeys) {
+        const slice = chars.slice(i, i + key.length).join('');
+        if (slice === key) {
+          matched = true;
+          i += key.length;
+          break;
+        }
+      }
+      if (!matched) return false;
+    }
+    return true;
   }
 
+  return false;
+}
+
+  
 document.getElementById('runBtn').addEventListener('click', () => {
     const input = inputText.value.trim();
     outputText.value = isEncoded(input) ? decode(input) : encode(input);
