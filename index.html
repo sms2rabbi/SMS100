@@ -400,7 +400,19 @@ body {
   .button-row {
     flex-direction: column;
   }
-  
+
+.button-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* বড় স্ক্রিনের জন্য */
+  ...
+}
+
+@media screen and (max-width: 768px) {
+  .button-row {
+    grid-template-columns: repeat(2, 1fr); /* ছোট স্ক্রিনে */
+  }
+}
+         
   </style>
 </head>
 
