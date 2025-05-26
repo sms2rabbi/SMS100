@@ -400,19 +400,7 @@ body {
   .button-row {
     flex-direction: column;
   }
-
-.button-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* বড় স্ক্রিনের জন্য */
-  ...
-}
-
-@media screen and (max-width: 768px) {
-  .button-row {
-    grid-template-columns: repeat(2, 1fr); /* ছোট স্ক্রিনে */
-  }
-}
-         
+  
   </style>
 </head>
 
@@ -497,9 +485,8 @@ body {
 </footer>
   
       
-    
-<script>
-  const charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+   <script>
+  const charSet = "অআইঈউঊঋএঐওঔািীুূৃেৈোৌকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহড়ঢ়য়ৎংঃঁৎ্ক্ত্গ্দ্ধ্ন্ব্ল্ম্য্র্স্শষ্হabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789০১২৩৪৫৬৭৮৯!@#$%^&*()_+-=[]{}`~;:'\"<>,.?/\\|₹৳•●✓×–—“”‘’©®™¤§※ \n";
 
   function getBaseCode(char) {
     const index = charSet.indexOf(char);
@@ -518,7 +505,7 @@ body {
     const now = new Date();
     const hour = now.getHours();
     const sec = now.getSeconds();
-    return (parseInt(pin || "0") + hour + sec) % 100;
+    return (parseInt(pin || "0") + hour + sec) % 1000;
   }
 
   function generateSeed() {
@@ -528,7 +515,7 @@ body {
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const seconds = now.getSeconds().toString().padStart(2, '0');
     const timeStr = `${hour}:${minutes}:${seconds}`;
-    const seed = (parseInt(pin || "0") + hour + now.getSeconds()) % 100;
+    const seed = (parseInt(pin || "0") + hour + now.getSeconds()) % 1000;
 
     document.getElementById('currentTime').textContent = timeStr;
     document.getElementById('generatedSeed').textContent = seed.toString();
@@ -537,26 +524,35 @@ body {
 
   function encode(text) {
     const shift = getSeedShift();
-    return text.split('').map(char => {
+    const encoded = text.split('').map(char => {
       const base = getBaseCode(char);
       if (base === null) return char;
-      const shifted = (base + shift) % 100;
-      return shifted.toString().padStart(2, '0');
+      const shifted = (base + shift) % 1000;
+      return shifted.toString().padStart(3, '0');
     }).join(' ');
+    return encoded + ` @${shift}`;
   }
 
   function decode(text) {
-    const shift = getSeedShift();
-    return text.trim().split(' ').map(code => {
-      if (!/^\d{2}$/.test(code)) return code;
-      const unshifted = (parseInt(code) - shift + 100) % 100;
+    const parts = text.trim().split(' ');
+    let seed = getSeedShift();
+
+    const lastPart = parts[parts.length - 1];
+    if (/^@\d{1,3}$/.test(lastPart)) {
+      seed = parseInt(lastPart.slice(1));
+      parts.pop();
+    }
+
+    return parts.map(code => {
+      if (!/^\d{3}$/.test(code)) return code;
+      const unshifted = (parseInt(code) - seed + 1000) % 1000;
       const char = getCharFromBaseCode(unshifted);
       return char || code;
     }).join('');
   }
 
   function isEncoded(text) {
-    return /^\d{2}( \d{2})*$/.test(text.trim());
+    return /^\d{3}( \d{3})*( @\d{1,3})?$/.test(text.trim());
   }
 
   function runEncodeDecode() {
@@ -564,11 +560,16 @@ body {
     if (!input) return;
     const output = isEncoded(input) ? decode(input) : encode(input);
     document.getElementById('outputBox').textContent = output;
+    if (seedInterval) clearInterval(seedInterval);
+    seedInterval = null;
   }
 
   function copyText() {
     const output = document.getElementById('outputBox').textContent;
     navigator.clipboard.writeText(output);
+    if (!seedInterval) {
+      seedInterval = setInterval(updateSeedLive, 1000);
+    }
   }
 
   function pasteText() {
@@ -584,26 +585,22 @@ body {
     document.getElementById('currentTime').textContent = '--:--';
   }
 
-  // Master realtime interval
-  setInterval(() => {
-    // Always update seed/time (live view)
+  function updateSeedLive() {
     generateSeed();
-
-    // Only update encoding if input exists
     const input = document.getElementById('inputBox').value.trim();
-    if (input) {
-      runEncodeDecode();
+    if (input && !isEncoded(input)) {
+      const output = encode(input);
+      document.getElementById('outputBox').textContent = output;
     }
-  }, 1000);
+  }
 
-  // Input focus effects on output box
+  let seedInterval = setInterval(updateSeedLive, 1000);
+
   const inputBox = document.getElementById('inputBox');
   const outputBox = document.getElementById('outputBox');
-
   inputBox.addEventListener('focus', () => {
     outputBox.classList.add('focused');
   });
-
   inputBox.addEventListener('blur', () => {
     outputBox.classList.remove('focused');
   });
