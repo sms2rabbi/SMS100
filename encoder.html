@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MSMS - Dynamic Encoder/Decoder</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  rel="stylesheet"
+/>
+  <link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  rel="stylesheet"
+/>
+  
+  <style>
+   /* General Reset */
+
+ /* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Body Layout */
+body {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  padding-top: 80px;         /* Header fixed থাকলে */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main Wrapper */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2px 15px 0 15px;
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #1e1e1ecc;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #333;
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+}
+
+.menu-icon {
+  position: absolute;
+  right: 15px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.header-text {
+  text-align: center;
+  line-height: 1.2;
+}
+
+.header-text h1 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.header-text p {
+  font-size: 12px;
+  color: #ccc;
+  margin: 0;
+}
+
+/* Topbar Box */
+  
+  
+  
+.topbar {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 1px;
+  background-color: #2c2c2c;
+  padding: 10px 10px 4px 10px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.seed-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seed-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative; /* added for icon positioning */
+}
+
+.seed-row input {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3a3a3a;
+  color: #fff;
+  outline: none;
+  padding-left: 32px; /* to leave space for icon */
+}
+
+.seed-row button {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #10a37f;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.seed-row button:hover {
+  background-color: #0e866b;
+}
+
+/* Icon style for the key inside the input */
+.seed-row i.fas.fa-key {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none;
+  font-size: 14px;
+  z-index: 1;
+}
+
+
+  /* Seed Info Row Styling with Animated Transparent Background */
+.seed-info-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 40px;
+  align-items: center;
+  white-space: nowrap;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+
+  /* Animated Glass-like Background */
+  background: linear-gradient(
+    120deg,
+    rgba(0, 123, 255, 0.08),
+    rgba(0, 200, 255, 0.06),
+    rgba(255, 255, 255, 0.04)
+  );
+  background-size: 200% 200%;
+  animation: subtleWave 6s ease-in-out infinite;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 10px 20px;
+}
+
+/* Wave Animation Keyframes */
+@keyframes subtleWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.seed-info-row span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.seed-info-row span {
+  color: white;
+}
+  
+
+.seed-info-row span:first-child {
+  color: orange;
+}
+
+.seed-info-row span:last-child {
+  color: limegreen;
+}
+
+.seed-info-row i.fas:hover {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  cursor: default;
+}
+  
+  
+  /*Input+Output*/
+  
+  
+  #inputBox {
+  width: 100%;
+  height: 120px;
+  background-color: #2c2c2c;
+  color: #ffffff;
+  padding: 10px 12px; /* টেক্সট সরবে */
+  font-size: 16px;
+  border: none;
+  border-radius: 0;
+  resize: vertical;
+  outline: none;
+  margin-bottom: 0;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+#inputBox:focus {
+  border: 5px solid #2c2c2c;
+  padding: 10px 12px; /* টেক্সট ঠিক থাকবে */
+  background: rgba(0, 123, 255, 0.05);
+  background-image: linear-gradient(
+    120deg,
+    rgba(0, 123, 255, 0.05),
+    rgba(0, 200, 255, 0.06),
+    rgba(255, 255, 255, 0.03)
+  );
+  background-size: 200% 200%;
+  animation: inputWave 6s ease-in-out infinite;
+  background-clip: border-box; /* এটা বদলালাম */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: none;
+}
+  
+  .output-box {
+  min-height: 120px;
+  background-color: #2c2c2c;
+  padding: 10px 12px;
+  border-radius: 0 0 12px 12px;
+  color: #0ff;
+  font-size: 16px;
+  word-break: break-word;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.output-box.focused {
+  border: 5px solid #2c2c2c;
+  padding: 10px 12px;
+  background: rgba(0, 123, 255, 0.05);
+  background-image: linear-gradient(
+    120deg,
+    rgba(0, 123, 255, 0.05),
+    rgba(0, 200, 255, 0.06),
+    rgba(255, 255, 255, 0.03)
+  );
+  background-size: 200% 200%;
+  animation: inputWave 6s ease-in-out infinite;
+  background-clip: border-box;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: none;
+}
+  
+  /*Button*/
+  
+ .button-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* ৪টি সমান কলাম */
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+  
+  
+.button-row button {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #10a37f;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.button-row button:hover {
+  background-color: #0e866b;
+}
+
+/* Footer (Updated) */
+
+  
+ .footer {
+  height: 100px;
+  background-color: #1e1e1ecc;
+  color: white;
+  border-top: 1px solid #333;
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  box-sizing: border-box;
+  padding-bottom: 0;
+  z-index: 5;
+  position: relative;
+}
+
+.footer span {
+  font-size: 11px;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 0.4px;
+  padding: 4px 8px;
+  border-radius: 10px;
+
+  /* জলমল স্বচ্ছ ব্যাকগ্রাউন্ড */
+  background: linear-gradient(
+    120deg,
+    rgba(0, 123, 255, 0.08),
+    rgba(0, 200, 255, 0.06),
+    rgba(255, 255, 255, 0.04)
+  );
+  background-size: 200% 200%;
+  animation: footerWave 6s ease-in-out infinite;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* ঢেউয়ের মত নড়াচড়ার জন্য এনিমেশন */
+@keyframes footerWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+  
+  
+
+/* Notification Box */
+#notify {
+  background: #444;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 999;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .button-row {
+    flex-direction: column;
+  }
+  
+  </style>
+</head>
+
+
+<body>
+  
+    
+ 
+  <!-- Header -->
+<div class="header">
+  <span class="menu-icon">&#9776;</span>
+  <div class="header-text">
+    <h1>ডায়ানামিক E/D কোডার</h1>
+    <p>Secret Messaging System</p>
+  </div>
+</div>
+  
+     
+
+
+<!-- Main Wrapper -->
+<section class="main-wrapper">
+  
+  
+  
+  <div class="topbar">
+  <div class="seed-section">
+
+    <!-- 1: PIN input -->
+    <div class="seed-row">
+      <i class="fas fa-key"></i>
+      <input type="text" id="pinInput" placeholder="Enter PIN">
+    </div>
+
+    <!-- 2: Generate Seed button -->
+    <div class="seed-row">
+      <button onclick="generateSeed()">Generate Seed</button>
+    </div>
+
+    
+    <div class="seed-info-row">
+  <span style="color: orange;" class="time-box">
+    <i class="fas fa-clock"></i>Time: <span id="currentTime" style="color: white;">--:--:--</span>
+  </span>
+  <span style="margin-left: 20px; color: gold;" class="seed-box">
+    <i class="fas fa-shield-alt" style="font-size: 20px;"></i>Seed: <span id="generatedSeed" style="color: white;">---</span>
+  </span>
+</div>
+  
+    
+  </div>
+</div>
+  
+  
+  
+  
+  
+  <!-- Editor Section -->
+  <div class="editor-section">
+    <textarea id="inputBox" placeholder="Type here..."></textarea>
+    <div class="output-box" id="outputBox"></div>
+  </div>
+
+  <!-- Button Row -->
+  <div class="button-row">
+    <button onclick="runEncodeDecode()">Run</button>
+    <button onclick="copyText()">Copy</button>
+    <button onclick="pasteText()">Paste</button>
+    <button onclick="clearAll()">Clear</button>
+  </div>
+
+  <!-- Notify Box (Duplicate Removed) -->
+  <div id="notify" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:#333; color:#fff; padding:10px 20px; border-radius:8px; font-size:14px; z-index:999;">
+  </div>
+
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p class="footer-text">© 2025 Secret Messaging — All Rights Reserved.</p>
+</footer>
+  
+      
+    
+<script>
+  const charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+  function getBaseCode(char) {
+    const index = charSet.indexOf(char);
+    if (index === -1) return null;
+    return 10 + index;
+  }
+
+  function getCharFromBaseCode(code) {
+    const index = parseInt(code) - 10;
+    if (index < 0 || index >= charSet.length) return null;
+    return charSet[index];
+  }
+
+  function getSeedShift() {
+    const pin = document.getElementById('pinInput').value.trim();
+    const now = new Date();
+    const hour = now.getHours();
+    const sec = now.getSeconds();
+    return (parseInt(pin || "0") + hour + sec) % 100;
+  }
+
+  function generateSeed() {
+    const pin = document.getElementById('pinInput').value.trim();
+    const now = new Date();
+    const hour = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const timeStr = `${hour}:${minutes}:${seconds}`;
+    const seed = (parseInt(pin || "0") + hour + now.getSeconds()) % 100;
+
+    document.getElementById('currentTime').textContent = timeStr;
+    document.getElementById('generatedSeed').textContent = seed.toString();
+    return seed;
+  }
+
+  function encode(text) {
+    const shift = getSeedShift();
+    return text.split('').map(char => {
+      const base = getBaseCode(char);
+      if (base === null) return char;
+      const shifted = (base + shift) % 100;
+      return shifted.toString().padStart(2, '0');
+    }).join(' ');
+  }
+
+  function decode(text) {
+    const shift = getSeedShift();
+    return text.trim().split(' ').map(code => {
+      if (!/^\d{2}$/.test(code)) return code;
+      const unshifted = (parseInt(code) - shift + 100) % 100;
+      const char = getCharFromBaseCode(unshifted);
+      return char || code;
+    }).join('');
+  }
+
+  function isEncoded(text) {
+    return /^\d{2}( \d{2})*$/.test(text.trim());
+  }
+
+  function runEncodeDecode() {
+    const input = document.getElementById('inputBox').value.trim();
+    if (!input) return;
+    const output = isEncoded(input) ? decode(input) : encode(input);
+    document.getElementById('outputBox').textContent = output;
+  }
+
+  function copyText() {
+    const output = document.getElementById('outputBox').textContent;
+    navigator.clipboard.writeText(output);
+  }
+
+  function pasteText() {
+    navigator.clipboard.readText().then(text => {
+      document.getElementById('inputBox').value = text;
+    });
+  }
+
+  function clearAll() {
+    document.getElementById('inputBox').value = '';
+    document.getElementById('outputBox').textContent = '';
+    document.getElementById('generatedSeed').textContent = '--';
+    document.getElementById('currentTime').textContent = '--:--';
+  }
+
+  // Master realtime interval
+  setInterval(() => {
+    // Always update seed/time (live view)
+    generateSeed();
+
+    // Only update encoding if input exists
+    const input = document.getElementById('inputBox').value.trim();
+    if (input) {
+      runEncodeDecode();
+    }
+  }, 1000);
+
+  // Input focus effects on output box
+  const inputBox = document.getElementById('inputBox');
+  const outputBox = document.getElementById('outputBox');
+
+  inputBox.addEventListener('focus', () => {
+    outputBox.classList.add('focused');
+  });
+
+  inputBox.addEventListener('blur', () => {
+    outputBox.classList.remove('focused');
+  });
+</script>
+
+
+      
+</body>
+</html>
