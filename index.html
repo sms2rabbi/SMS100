@@ -1,612 +1,680 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MSMS - Dynamic Encoder/Decoder</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
- <link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  rel="stylesheet"
-/>
-  <link
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  rel="stylesheet"
-/>
-  
-  <style>
-   /* General Reset */
+  <title>Candlestick Live Chart</title>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.0.1/dist/lightweight-charts.standalone.production.js"></script>
 
- /* Reset & Base Styles */
-* {
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  
+<style>
+/* RESET */
+
+  * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html, body {
+body, html {
   height: 100%;
-  overflow-y: auto;
-}
-
-/* Body Layout */
-body {
-  background-color: #1e1e1e;
+  width: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #1c1f2e;
   color: #ffffff;
-  padding-top: 80px;         /* Header fixed থাকলে */
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
-/* Main Wrapper */
-.main-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 2px 15px 0 15px;
-}
+/* ===== Header ===== */
+/* 🌈🌈🌈🌈🌈🌈🌈🌈🌈 */
 
-/* Header */
 .header {
+  background-color: #1C1F2E;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  height: 70px;
-  background-color: #1e1e1ecc;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #333;
-  backdrop-filter: blur(6px);
-  z-index: 9999;
-}
-
-.menu-icon {
-  position: absolute;
-  right: 15px;
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-}
-
-.header-text {
-  text-align: center;
-  line-height: 1.2;
-}
-
-.header-text h1 {
-  font-size: 18px;
-  margin: 0;
-}
-
-.header-text p {
-  font-size: 12px;
-  color: #ccc;
-  margin: 0;
-}
-
-/* Topbar Box */
-  
-  
-  
-.topbar {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 1px;
-  background-color: #2c2c2c;
-  padding: 10px 10px 4px 10px;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-}
-
-.seed-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.seed-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: relative; /* added for icon positioning */
-}
-
-.seed-row input {
-  flex: 1;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: #3a3a3a;
-  color: #fff;
-  outline: none;
-  padding-left: 32px; /* to leave space for icon */
-}
-
-.seed-row button {
-  flex: 1;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #10a37f;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.seed-row button:hover {
-  background-color: #0e866b;
-}
-
-/* Icon style for the key inside the input */
-.seed-row i.fas.fa-key {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #aaa;
-  pointer-events: none;
-  font-size: 14px;
-  z-index: 1;
-}
-
-
-  /* Seed Info Row Styling with Animated Transparent Background */
-.seed-info-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 40px;
-  align-items: center;
-  white-space: nowrap;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;
-
-  /* Animated Glass-like Background */
-  background: linear-gradient(
-    120deg,
-    rgba(0, 123, 255, 0.08),
-    rgba(0, 200, 255, 0.06),
-    rgba(255, 255, 255, 0.04)
-  );
-  background-size: 200% 200%;
-  animation: subtleWave 6s ease-in-out infinite;
-
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 12px;
-  padding: 10px 20px;
-}
-
-/* Wave Animation Keyframes */
-@keyframes subtleWave {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.seed-info-row span {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  user-select: none;
-}
-
-.seed-info-row span {
-  color: white;
-}
-  
-
-.seed-info-row span:first-child {
-  color: orange;
-}
-
-.seed-info-row span:last-child {
-  color: limegreen;
-}
-
-.seed-info-row i.fas:hover {
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-  cursor: default;
-}
-  
-  
-  /*Input+Output*/
-  
-  
-  #inputBox {
   width: 100%;
-  height: 120px;
-  background-color: #2c2c2c;
-  color: #ffffff;
-  padding: 10px 12px; /* টেক্সট সরবে */
-  font-size: 16px;
-  border: none;
-  border-radius: 0;
-  resize: vertical;
-  outline: none;
-  margin-bottom: 0;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
-  position: relative;
-  z-index: 1;
+  height: 50px; /* height ঠিকই থাকবে */
+  padding: 0 12px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 12px;
+  z-index: 100;
   box-sizing: border-box;
+  max-width: 100vw;
+  overflow: visible; /* ✅ dropdown ঠিকভাবে দেখাবে */
 }
 
-#inputBox:focus {
-  border: 5px solid #2c2c2c;
-  padding: 10px 12px; /* টেক্সট ঠিক থাকবে */
-  background: rgba(0, 123, 255, 0.05);
-  background-image: linear-gradient(
-    120deg,
-    rgba(0, 123, 255, 0.05),
-    rgba(0, 200, 255, 0.06),
-    rgba(255, 255, 255, 0.03)
-  );
-  background-size: 200% 200%;
-  animation: inputWave 6s ease-in-out infinite;
-  background-clip: border-box; /* এটা বদলালাম */
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: none;
-}
-  
-  .output-box {
-  min-height: 120px;
-  background-color: #2c2c2c;
-  padding: 10px 12px;
-  border-radius: 0 0 12px 12px;
-  color: #0ff;
-  font-size: 16px;
-  word-break: break-word;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1;
-  box-sizing: border-box;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
-}
-
-.output-box.focused {
-  border: 5px solid #2c2c2c;
-  padding: 10px 12px;
-  background: rgba(0, 123, 255, 0.05);
-  background-image: linear-gradient(
-    120deg,
-    rgba(0, 123, 255, 0.05),
-    rgba(0, 200, 255, 0.06),
-    rgba(255, 255, 255, 0.03)
-  );
-  background-size: 200% 200%;
-  animation: inputWave 6s ease-in-out infinite;
-  background-clip: border-box;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: none;
-}
-  
-  /*Button*/
-  
- .button-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* ৪টি সমান কলাম */
-  gap: 10px;
-  margin-bottom: 20px;
-  margin-top: 10px;
-}
-
-  
-  
-.button-row button {
-  flex: 1;
-  min-width: 80px;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background-color: #10a37f;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.button-row button:hover {
-  background-color: #0e866b;
-}
-
-/* Footer (Updated) */
-
-  
- .footer {
-  height: 100px;
-  background-color: #1e1e1ecc;
-  color: white;
-  border-top: 1px solid #333;
-  backdrop-filter: blur(6px);
+.header-inner {
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  box-sizing: border-box;
-  padding-bottom: 0;
-  z-index: 5;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  transform: translateY(-8px); /* ✅ layout ঠিক রেখে উপরে উঠাবে */
+}
+
+
+/* ===== Left Section: Balance + Notification ===== */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== Balance Dropdown ===== */
+.balance-dropdown {
+  display: flex;
+  align-items: center;
   position: relative;
 }
 
-.footer span {
-  font-size: 11px;
-  font-weight: 400;
-  color: #ffffff;
-  font-family: 'Courier New', Courier, monospace;
-  letter-spacing: 0.4px;
-  padding: 4px 8px;
-  border-radius: 10px;
-
-  /* জলমল স্বচ্ছ ব্যাকগ্রাউন্ড */
-  background: linear-gradient(
-    120deg,
-    rgba(0, 123, 255, 0.08),
-    rgba(0, 200, 255, 0.06),
-    rgba(255, 255, 255, 0.04)
-  );
-  background-size: 200% 200%;
-  animation: footerWave 6s ease-in-out infinite;
-  text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-}
-
-/* ঢেউয়ের মত নড়াচড়ার জন্য এনিমেশন */
-@keyframes footerWave {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-
-  
-  
-
-/* Notification Box */
-#notify {
-  background: #444;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
+.balance-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0;
+  gap: 8px; /* প্লেন আর টেক্সটের মাঝে সামান্য ফাঁকা */
+  background-color: #1C1F2E; 
+  border: 1px solid #3f3f3f;
+  border-radius: 6px;
   font-size: 14px;
-  z-index: 999;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  cursor: pointer;
+  line-height: 1;
+
+  /* ✅ কুয়াশা/ঝাপসা বন্ধ করা */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  opacity: 1;
+}
+  
+  
+
+.balance-button i.fa-paper-plane {
+  color: #42BF1B;
+  font-size: 12px;
+  margin-left: 0;
+  padding-left: 4px; /* প্লেন যেন একদম বাম পাশে গায়ে না লেগে সুন্দরভাবে বসে */
+}
+  
+
+.live-text {
+  color: #0faf59;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-  .button-row {
-    flex-direction: column;
-  }
+.arrow {
+  font-size: 16px;
+  line-height: 1;
+  display: inline-block;
+  margin-top: 8px;   /* নিচে নামিয়ে লাইনে আনবে */
+  padding: 0;
+}
+
+
+  .notification-btn {
+  background: #1C1F2E;
+  border: 1px solid #3f3f3f;
+  border-radius: 6px;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  height: 26px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  position: relative;
+
+  /* ✅ ঝাপসা/কুয়াশা বন্ধ করা */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  opacity: 1;
+}
   
-  </style>
+  
+
+/* বেল-ব্যাজ পাশাপাশি ও গেপ */
+.bell-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* ✅ মাঝে 6px গ্যাপ */
+  position: relative; /* ✅ ডট যাতে বেলের ওপর ঠিকভাবে বসে */
+}
+
+
+  .bell-wrapper i.fas.fa-bell {
+  color: #2A3040;
+  font-size: 10px;
+  line-height: 1;
+  text-shadow:
+    -1px -1px 0 #ffffff,
+     1px -1px 0 #ffffff,
+    -1px  1px 0 #ffffff,
+     1px  1px 0 #ffffff;
+}
+
+.bell-dot {
+  position: absolute;
+  top: 2px;   /* উপরের থেকে */
+  left: 3px;  /* বামের থেকে */
+  width: 3px;
+  height: 3px;
+  background-color: white;
+  border-radius:2px 2px 0 0;
+  z-index: 2;
+}
+
+
+  .notification-badge {
+  background-color:#FF6251;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: static; /* পাশে বসে থাকবে */
+  box-shadow: 0 0 0 1px #2b2b2b;
+}
+  
+ 
+  
+
+/* ===== Balance Dropdown Menu ===== */
+.balance-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #1e1e1e;
+  border: 1px solid #2c2c2c;
+  padding: 10px;
+  border-radius: 6px;
+  z-index: 200;
+  width: 200px;
+}
+
+.balance-item {
+  color: #fff;
+  padding: 6px 0;
+}
+
+.balance-item.deposit-button {
+  text-align: center;
+  background-color: #0faf59;
+  border-radius: 4px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+
+/* ===== Deposit Button ===== */
+.deposit-button {
+  position: relative;
+}
+
+.deposit-button button {
+  background-color: #0faf59;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;        /* ✅ টপ-বটম সিমেট্রিক করা */
+  cursor: pointer;
+  height: 26px;
+  min-width: 65px;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0;            /* ✅ ভারসাম্য আনতে */
+}
+
+.header .deposit-button button {
+  font-size: 13px !important;
+}
+
+/* ===== Deposit Dropdown Menu ===== */
+#depositDropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 9999;
+  min-width: 200px;
+}
+
+.deposit-item {
+  color: #ffffff;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+/* === Header End ===*/
+/*🌈🌈🌈🌈🌈🌈🌈🌈🌈*/
+   
+
+    
+  
+  /*🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳*/
+  /*🔳🔳🔳🔳Body/Chart🔳🔳🔳🔳*/
+
+#chart { 
+  width: 100%;
+  height: 100%;
+  background: #1e293b;
+  border-radius: 5px;
+  /* margin-top: 12px; বাদ দেওয়া হয়েছে */
+}
+    
+
+  
+
+/*===Responsive===*/
+@media (max-width: 600px) {
+  .footer-item label {
+    font-size: 8px;
+  }
+
+  
+  /*=== === === ===*/
+  /*=== === === ===*/
+  /*=== Footer↓ ===*/
+  
+  
+  
+  
+
+</style>
 </head>
-
-
 <body>
   
+    <!-- 🌈🌈🌈🌈🌈🌈🌈🌈🌈🌈🌈 -->
+    <!-- === === === === === === -->
+    <!-- ===⤵️Header Start ⬇️=== -->
     
- 
-  <!-- Header -->
-<div class="header">
-  <span class="menu-icon">&#9776;</span>
-  <div class="header-text">
-    <h1>ডায়ানামিক E/D কোডার</h1>
-    <p>Secret Messaging System</p>
-  </div>
-</div>
-  
-     
+  <div class="header">
+  <div class="header-inner">
 
+    <!-- Left Side: Balance + Notification -->
+    <div class="header-left">
 
-<!-- Main Wrapper -->
-<section class="main-wrapper">
-  
-  
-  
-  <div class="topbar">
-  <div class="seed-section">
+      <!-- Live Balance -->
+      <div class="balance-dropdown">
+        <button onclick="toggleBalanceMenu()" class="balance-button" id="balanceBtn">
+          <i class="fas fa-paper-plane"></i>
+          <span class="live-text">Live</span> $00.00 
+          <span class="arrow">﹀</span>
+        </button>
+        <div class="balance-menu" id="balanceMenu">
+          <div class="balance-item">Main Balance: $<span id="balMain">00.00</span></div>
+          <div class="balance-item">Bonus Balance: $<span id="balBonus">00.00</span></div>
+          <div class="balance-item">Withdrawable: $<span id="balWithdraw">00.00</span></div>
+          <div class="balance-item deposit-button">Demo Balance</div>
+        </div>
+      </div>
 
-    <!-- 1: PIN input -->
-    <div class="seed-row">
-      <i class="fas fa-key"></i>
-      <input type="text" id="pinInput" placeholder="Enter PIN">
-    </div>
-
-    <!-- 2: Generate Seed button -->
-    <div class="seed-row">
-      <button onclick="generateSeed()">Generate Seed</button>
-    </div>
-
-    
-    <div class="seed-info-row">
-  <span style="color: orange;" class="time-box">
-    <i class="fas fa-clock"></i>Time: <span id="currentTime" style="color: white;">--:--:--</span>
-  </span>
-  <span style="margin-left: 20px; color: gold;" class="seed-box">
-    <i class="fas fa-shield-alt" style="font-size: 20px;"></i>Seed: <span id="generatedSeed" style="color: white;">---</span>
-  </span>
-</div>
-  
-    
-  </div>
-</div>
-  
-  
-  
-  
-  
-  <!-- Editor Section -->
-  <div class="editor-section">
-    <textarea id="inputBox" placeholder="Type here..."></textarea>
-    <div class="output-box" id="outputBox"></div>
-  </div>
-
-  <!-- Button Row -->
-  <div class="button-row">
-    <button onclick="runEncodeDecode()">Run</button>
-    <button onclick="copyText()">Copy</button>
-    <button onclick="pasteText()">Paste</button>
-    <button onclick="clearAll()">Clear</button>
-  </div>
-
-  <!-- Notify Box (Duplicate Removed) -->
-  <div id="notify" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-    background:#333; color:#fff; padding:10px 20px; border-radius:8px; font-size:14px; z-index:999;">
-  </div>
-
-</section>
-
-<!-- Footer -->
-<footer class="footer">
-  <p class="footer-text">© 2025 Secret Messaging — All Rights Reserved.</p>
-</footer>
-  
+      <!-- Notification Button -->
       
-   <script>
-  const charSet = "অআইঈউঊঋএঐওঔািীুূৃেৈোৌকখগঘঙচছজঝঞটঠডঢণতথদধনপফবভমযরলশষসহড়ঢ়য়ৎংঃঁৎ্ক্ত্গ্দ্ধ্ন্ব্ল্ম্য্র্স্শষ্হabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789০১২৩৪৫৬৭৮৯!@#$%^&*()_+-=[]{}`~;:'\"<>,.?/\\|₹৳•●✓×–—“”‘’©®™¤§※ \n";
+      <button class="notification-btn">
+  <div class="bell-wrapper">
+    <div class="bell-icon-wrapper">
+      <i class="fas fa-bell"></i>
+      <div class="bell-dot"></div> <!-- ছোট সাদা ডট -->
+    </div>
+    <div class="notification-badge">9+</div>
+  </div>
+</button>
+    </div>
 
-  function getBaseCode(char) {
-    const index = charSet.indexOf(char);
-    if (index === -1) return null;
-    return 10 + index;
+    <!-- Right Side: Deposit Button -->
+    <div class="deposit-button">
+      <button onclick="toggleDepositMenu()">Deposit</button>
+      <div id="depositDropdown">
+        <div class="deposit-item">Binance Pay</div>
+        <div class="deposit-item">USD Tether (TRC-20)</div>
+        <div class="deposit-item">Bitcoin (BTC)</div>
+        <div class="deposit-item">Ethereum (ETH)</div>
+        <div class="deposit-item">Litecoin (LTC)</div>
+        <div class="deposit-item">USD Tether (ERC-20)</div>
+        <div class="deposit-item">USD Tether (Polygon)</div>
+        <div class="deposit-item">USD Coin (ERC-20)</div>
+        <div class="deposit-item">USD Coin (Polygon)</div>
+        <div class="deposit-item">bkash</div>
+        <div class="deposit-item">nagad</div>
+        <div class="deposit-item">Rocket</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+  <!-- Header Section End -->
+  
+  <!-- 🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳 -->
+  <!-- 🔳🔳Body/Chart Start 🔳🔳 -->
+  
+  <!-- Chart container -->
+<div id="chart" style="position: relative; width: 100%; height: 500px;">
+
+  <!-- ➤ Button inside the chart container -->
+  <div id="goLiveBtn" style="
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    background: #ffcc00;
+    color: #000;
+    font-size: 20px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    z-index: 99;
+  ">
+    ➤
+  </div>
+
+</div>
+  
+  
+  <!-- 🔳🔳 Body/Chart End 🔳🔳 -->
+  <!-- 🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳 --> 
+  
+
+ <!--☢️☢️☢️☢️☢️☢️☢️☢️☢️☢️☢️☢️☢️☢️-->
+ <!--☢️☢️☢️☢️Footer START☢️☢️☢️☢️-->
+    
+  
+
+
+
+
+
+<!-- 🟪🟪🟪🟪🟪🟪🟪🟪🟪🟪🟪🟪 -->
+  <!-- 🟪🟪🟪🟪 JS START 🟪🟪🟪 -->
+
+<script>
+
+   const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+  layout: {
+    background: { color: '#1C1F2E' },
+    textColor: '#ffffff',
+  },
+  grid: {
+    vertLines: { color: '#2c2f3a' },
+    horzLines: { color: '#2c2f3a' },
+  },
+  timeScale: {
+    timeVisible: true,
+    secondsVisible: true,
+    rightOffset: 10,
+  },
+  rightPriceScale: {
+    scaleMargins: { top: 0.3, bottom: 0.3 }
   }
+});
 
-  function getCharFromBaseCode(code) {
-    const index = parseInt(code) - 10;
-    if (index < 0 || index >= charSet.length) return null;
-    return charSet[index];
+chart.applyOptions({
+  handleScroll: {
+    horzTouchDrag: true,
+    vertTouchDrag: true,
+    pressedMouseMove: true,
+    mouseWheel: true,
+  },
+  handleScale: {
+    axisPressedMouseMove: true,
+    mouseWheel: true,
+    pinch: true,
   }
+});
 
-  function getSeedShift() {
-    const pin = document.getElementById('pinInput').value.trim();
-    const now = new Date();
-    const hour = now.getHours();
-    const sec = now.getSeconds();
-    return (parseInt(pin || "0") + hour + sec) % 1000;
+const candleSeries = chart.addCandlestickSeries({
+  upColor: '#22b14c',
+  downColor: '#ff3b3b',
+  borderUpColor: '#22b14c',
+  borderDownColor: '#ff3b3b',
+  wickUpColor: '#22b14c',
+  wickDownColor: '#ff3b3b',
+});
+
+const candles = [];
+let lastClose = 100;
+let candleStartTime = Math.floor(Date.now() / 1000 / 60) * 60;
+let currentCandle = null;
+let trades = [];
+let balance = 1000;
+
+for (let i = 0; i < 100; i++) {
+  const open = lastClose;
+  const close = open + (Math.random() * 0.5 - 0.25);
+  const high = Math.max(open, close) + Math.random() * 0.1;
+  const low = Math.min(open, close) - Math.random() * 0.1;
+  const candle = { time: candleStartTime - (100 - i) * 60, open, high, low, close };
+  candles.push(candle);
+  lastClose = close;
+}
+candleSeries.setData(candles);
+
+function log(msg) {
+  console.log(msg);
+}
+
+function updateBalance() {
+  document.getElementById("bal").textContent = balance.toFixed(2);
+  document.getElementById("balMain").textContent = balance.toFixed(2);
+  document.getElementById("balWithdraw").textContent = balance.toFixed(2);
+  document.getElementById("balBonus").textContent = (balance * 0).toFixed(2);
+}
+
+function placeTrade(type) {
+  const entry = lastClose;
+  const expiry = Math.floor(Date.now() / 1000) + 5;
+  const amount = parseFloat(document.getElementById("amount").value || 10);
+  if (amount < 1 || isNaN(amount)) {
+    alert("Minimum trade amount is $1");
+    return;
   }
+  trades.push({ type, entry, expiry, amount });
+  log(`Trade placed: ${type.toUpperCase()} at $${entry.toFixed(4)} | $${amount} | Expires in 5s`);
+  startCountdown(5);
+}
 
-  function generateSeed() {
-    const pin = document.getElementById('pinInput').value.trim();
-    const now = new Date();
-    const hour = now.getHours();
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    const timeStr = `${hour}:${minutes}:${seconds}`;
-    const seed = (parseInt(pin || "0") + hour + now.getSeconds()) % 1000;
-
-    document.getElementById('currentTime').textContent = timeStr;
-    document.getElementById('generatedSeed').textContent = seed.toString();
-    return seed;
-  }
-
-  function encode(text) {
-    const shift = getSeedShift();
-    const encoded = text.split('').map(char => {
-      const base = getBaseCode(char);
-      if (base === null) return char;
-      const shifted = (base + shift) % 1000;
-      return shifted.toString().padStart(3, '0');
-    }).join(' ');
-    return encoded + ` @${shift}`;
-  }
-
-  function decode(text) {
-    const parts = text.trim().split(' ');
-    let seed = getSeedShift();
-
-    const lastPart = parts[parts.length - 1];
-    if (/^@\d{1,3}$/.test(lastPart)) {
-      seed = parseInt(lastPart.slice(1));
-      parts.pop();
+function startCountdown(seconds) {
+  const timeDiv = document.getElementById('liveTime');
+  let counter = seconds;
+  timeDiv.textContent = `Expires in: ${counter}s`;
+  if (window.partialUpdateInterval) clearInterval(window.partialUpdateInterval);
+  window.partialUpdateInterval = setInterval(() => {
+    counter--;
+    if (counter <= 0) {
+      clearInterval(window.partialUpdateInterval);
+      window.partialUpdateInterval = null;
+      timeDiv.textContent = '';
+    } else {
+      timeDiv.textContent = `Expires in: ${counter}s`;
     }
+  }, 1000);
+}
 
-    return parts.map(code => {
-      if (!/^\d{3}$/.test(code)) return code;
-      const unshifted = (parseInt(code) - seed + 1000) % 1000;
-      const char = getCharFromBaseCode(unshifted);
-      return char || code;
-    }).join('');
+setInterval(() => {
+  const now = Math.floor(Date.now() / 1000);
+  const newPrice = lastClose + (Math.random() * 0.4 - 0.2);
+  lastClose = newPrice;
+
+  if (!currentCandle) {
+    currentCandle = {
+      time: candleStartTime,
+      open: newPrice,
+      high: newPrice,
+      low: newPrice,
+      close: newPrice
+    };
+  } else {
+    currentCandle.close = newPrice;
+    currentCandle.high = Math.max(currentCandle.high, newPrice);
+    currentCandle.low = Math.min(currentCandle.low, newPrice);
   }
 
-  function isEncoded(text) {
-    return /^\d{3}( \d{3})*( @\d{1,3})?$/.test(text.trim());
-  }
+  candleSeries.update(currentCandle);
 
-  function runEncodeDecode() {
-    const input = document.getElementById('inputBox').value.trim();
-    if (!input) return;
-    const output = isEncoded(input) ? decode(input) : encode(input);
-    document.getElementById('outputBox').textContent = output;
-    if (seedInterval) clearInterval(seedInterval);
-    seedInterval = null;
-  }
+  if (now >= candleStartTime + 60) {
+    candles.push(currentCandle);
+    if (candles.length > 100) candles.shift();
+    candleSeries.setData(candles);
 
-  function copyText() {
-    const output = document.getElementById('outputBox').textContent;
-    navigator.clipboard.writeText(output);
-    if (!seedInterval) {
-      seedInterval = setInterval(updateSeedLive, 1000);
+    candleStartTime = candleStartTime + 60;
+    currentCandle = null;
+  }
+}, 1000);
+
+function handleTradeResult() {
+  const now = Math.floor(Date.now() / 1000);
+  trades = trades.filter(trade => {
+    if (trade.expiry <= now) {
+      const close = currentCandle ? currentCandle.close : lastClose;
+      const win = (trade.type === 'up' && close > trade.entry) || (trade.type === 'down' && close < trade.entry);
+      const balStatus = document.getElementById("balanceStatus");
+      if (win) {
+        const profit = trade.amount * 0.8;
+        balance += profit;
+        balStatus.textContent = `WIN: +$${profit.toFixed(2)}`;
+        log(`${trade.type.toUpperCase()} WIN! +$${profit.toFixed(2)}`);
+      } else {
+        balance -= trade.amount;
+        balStatus.textContent = `LOSS: -$${trade.amount.toFixed(2)}`;
+        log(`${trade.type.toUpperCase()} LOSS! -$${trade.amount.toFixed(2)}`);
+      }
+      updateBalance();
+      setTimeout(() => {
+        balStatus.textContent = `Balance: $${balance.toFixed(2)}`;
+      }, 3000);
+      return false;
     }
-  }
-
-  function pasteText() {
-    navigator.clipboard.readText().then(text => {
-      document.getElementById('inputBox').value = text;
-    });
-  }
-
-  function clearAll() {
-    document.getElementById('inputBox').value = '';
-    document.getElementById('outputBox').textContent = '';
-    document.getElementById('generatedSeed').textContent = '--';
-    document.getElementById('currentTime').textContent = '--:--';
-  }
-
-  function updateSeedLive() {
-    generateSeed();
-    const input = document.getElementById('inputBox').value.trim();
-    if (input && !isEncoded(input)) {
-      const output = encode(input);
-      document.getElementById('outputBox').textContent = output;
-    }
-  }
-
-  let seedInterval = setInterval(updateSeedLive, 1000);
-
-  const inputBox = document.getElementById('inputBox');
-  const outputBox = document.getElementById('outputBox');
-  inputBox.addEventListener('focus', () => {
-    outputBox.classList.add('focused');
+    return true;
   });
-  inputBox.addEventListener('blur', () => {
-    outputBox.classList.remove('focused');
-  });
+
+  const t = new Date();
+  const hh = String(t.getHours()).padStart(2, '0');
+  const mm = String(t.getMinutes()).padStart(2, '0');
+  document.getElementById('time').textContent = `${hh}:${mm}`;
+}
+
+function toggleTime() {
+  const timeDiv = document.getElementById('liveTime');
+  if (window.partialUpdateInterval) {
+    clearInterval(window.partialUpdateInterval);
+    window.partialUpdateInterval = null;
+    timeDiv.textContent = '';
+  } else {
+    updateTime();
+    window.partialUpdateInterval = setInterval(updateTime, 1000);
+  }
+}
+
+function updateTime() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const ss = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('liveTime').textContent = `Live: ${hh}:${mm}:${ss}`;
+}
+
+function showBalance() {
+  updateBalance();
+  const bal = balance.toFixed(2);
+  document.getElementById("balanceStatus").textContent = `Last checked: $${bal}`;
+}
+
+function toggleBalanceMenu() {
+  const btn = document.getElementById('balanceBtn');
+  const menu = document.getElementById('balanceMenu');
+  const isOpen = menu.style.display === 'block';
+  if (isOpen) {
+    menu.style.display = 'none';
+    btn.classList.remove('open');
+  } else {
+    menu.style.display = 'block';
+    btn.classList.add('open');
+  }
+}
+
+document.addEventListener('click', function(e) {
+  const dropdown = document.querySelector('.balance-dropdown');
+  const btn = document.getElementById('balanceBtn');
+  const menu = document.getElementById('balanceMenu');
+  if (!dropdown.contains(e.target)) {
+    menu.style.display = 'none';
+    btn.classList.remove('open');
+  }
+});
+
+const goLiveBtn = document.createElement('div');
+goLiveBtn.id = 'goLiveBtn';
+goLiveBtn.textContent = '➤';
+Object.assign(goLiveBtn.style, {
+  position: 'absolute',
+  bottom: '40px',
+  right: '20px',
+  fontSize: '28px',
+  cursor: 'pointer',
+  background: '#2c2f3a',
+  color: '#fff',
+  padding: '4px 10px',
+  borderRadius: '50%',
+  display: 'none',
+  zIndex: 10,
+});
+document.body.appendChild(goLiveBtn);
+
+goLiveBtn.onclick = () => {
+  chart.timeScale().scrollToRealTime();
+  goLiveBtn.style.display = 'none';
+};
+
+chart.timeScale().subscribeVisibleTimeRangeChange(() => {
+  const visibleRange = chart.timeScale().getVisibleRange();
+  const latestTime = candles[candles.length - 1].time;
+  if (!visibleRange || latestTime - visibleRange.to > 5) {
+    goLiveBtn.style.display = 'block';
+  } else {
+    goLiveBtn.style.display = 'none';
+  }
+});
 </script>
+    
 
-
-      
-</body>
+ </body>
 </html>
+
+
+
+
+
+
+
+  
