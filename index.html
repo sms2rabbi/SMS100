@@ -462,35 +462,58 @@ const candleSeries = chart.addCandlestickSeries({
   wickDownColor: '#ff3b3b',
 });
 
-// স্মুথ স্কেলিং
-let smoothMin = null;
-let smoothMax = null;
+let animationFrameId = null;
+let currentSpacing = null;
 
-candleSeries.applyOptions({
-  autoscaleInfoProvider: (original) => {
-    const autoscale = original();
-    if (!autoscale || !autoscale.priceRange) return null;
+document.getElementById('chart').addEventListener('wheel', (event) => {
+  if (event.ctrlKey || event.metaKey) return;
+  event.preventDefault();
 
-    const rawMin = autoscale.priceRange.minValue;
-    const rawMax = autoscale.priceRange.maxValue;
-
-    if (smoothMin === null || smoothMax === null) {
-      smoothMin = rawMin;
-      smoothMax = rawMax;
-    }
-
-    const smoothingFactor = 0.1;
-    smoothMin += (rawMin - smoothMin) * smoothingFactor;
-    smoothMax += (rawMax - smoothMax) * smoothingFactor;
-
-    return {
-      priceRange: {
-        minValue: smoothMin,
-        maxValue: smoothMax,
-      },
-    };
+  if (currentSpacing === null) {
+    currentSpacing = chart.timeScale().options().barSpacing;
   }
-});
+
+  const direction = Math.sign(event.deltaY);
+
+  // এক্সট্রিম ফাস্ট জুম ফ্যাক্টর
+  const zoomFactor = direction > 0 ? 0.3 : 2.0; // Zoom out দ্রুত: 30%, Zoom in দ্রুত: 200%
+
+  const minSpacing = 1;
+  const maxSpacing = 200;
+
+  let targetSpacing = currentSpacing * zoomFactor;
+  targetSpacing = Math.max(minSpacing, Math.min(maxSpacing, targetSpacing));
+
+  const smoothFactor = 0.85; // প্রতি ফ্রেমে 85% পরিবর্তন → খুব দ্রুত, কিন্তু স্মুথ
+
+  if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+  const animateZoom = () => {
+    const diff = targetSpacing - currentSpacing;
+    currentSpacing += diff * smoothFactor;
+
+    chart.applyOptions({
+      timeScale: {
+        ...chart.options().timeScale,
+        barSpacing: currentSpacing,
+      },
+    });
+
+    if (Math.abs(diff) > 0.5) {
+      animationFrameId = requestAnimationFrame(animateZoom);
+    } else {
+      currentSpacing = targetSpacing;
+      chart.applyOptions({
+        timeScale: {
+          ...chart.options().timeScale,
+          barSpacing: currentSpacing,
+        },
+      });
+    }
+  };
+
+  animateZoom();
+}, { passive: false });
 
 const candles = [];
 let lastClose = 100;
