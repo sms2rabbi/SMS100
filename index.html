@@ -769,6 +769,95 @@ for (let i = 0; i < 100; i++) {
 }
 candleSeries.setData(candles);
 
+<script>
+const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+  layout: {
+    background: { color: '#1C1F2E' },
+    textColor: '#ffffff',
+  },
+  grid: {
+    vertLines: { color: '#2c2f3a' },
+    horzLines: { color: '#2c2f3a' },
+  },
+  timeScale: {
+    timeVisible: true,
+    secondsVisible: true,
+    rightOffset: 5,
+    barSpacing: 25,
+    minBarSpacing: 1,
+  },
+  rightPriceScale: {
+    mode: 1,
+    autoScale: true,
+    scaleMargins: { top: 0.3, bottom: 0.3 }
+  },
+  handleScroll: {
+    horzTouchDrag: true,
+    vertTouchDrag: true,
+    pressedMouseMove: true,
+    mouseWheel: true,
+  },
+  handleScale: {
+    axisPressedMouseMove: true,
+    mouseWheel: true,
+    pinch: true,
+  }
+});
+
+const candleSeries = chart.addCandlestickSeries({
+  upColor: '#22b14c',
+  downColor: '#ff3b3b',
+  borderUpColor: '#22b14c',
+  borderDownColor: '#ff3b3b',
+  wickUpColor: '#22b14c',
+  wickDownColor: '#ff3b3b',
+});
+
+// স্মুথ স্কেলিং
+let smoothMin = null;
+let smoothMax = null;
+
+candleSeries.applyOptions({
+  autoscaleInfoProvider: (original) => {
+    const autoscale = original();
+    if (!autoscale || !autoscale.priceRange) return null;
+
+    const rawMin = autoscale.priceRange.minValue;
+    const rawMax = autoscale.priceRange.maxValue;
+
+    if (smoothMin === null || smoothMax === null) {
+      smoothMin = rawMin;
+      smoothMax = rawMax;
+    }
+
+    const smoothingFactor = 0.1;
+    smoothMin += (rawMin - smoothMin) * smoothingFactor;
+    smoothMax += (rawMax - smoothMax) * smoothingFactor;
+
+    return {
+      priceRange: {
+        minValue: smoothMin,
+        maxValue: smoothMax,
+      },
+    };
+  }
+});
+
+const candles = [];
+let lastClose = 100;
+let candleStartTime = Math.floor(Date.now() / 1000 / 60) * 60;
+let currentCandle = null;
+
+for (let i = 0; i < 100; i++) {
+  const open = lastClose;
+  const close = open + (Math.random() * 0.5 - 0.25);
+  const high = Math.max(open, close) + Math.random() * 0.1;
+  const low = Math.min(open, close) - Math.random() * 0.1;
+  candles.push({ time: candleStartTime - (100 - i) * 60, open, high, low, close });
+  lastClose = close;
+}
+candleSeries.setData(candles);
+
 setInterval(() => {
   const now = Math.floor(Date.now() / 1000);
   const newPrice = lastClose + (Math.random() * 0.4 - 0.2);
@@ -833,6 +922,7 @@ chart.timeScale().subscribeVisibleTimeRangeChange(() => {
   }
 });
 </script>
+  
     
 </body>
 </html>
